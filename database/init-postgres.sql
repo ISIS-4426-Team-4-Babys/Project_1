@@ -20,3 +20,8 @@ CREATE TABLE courses (
     department VARCHAR(100) NOT NULL,
     description TEXT NOT NULL
 );
+
+-- Relationship between courses and teachers (1 teacher teaches N courses)
+ALTER TABLE courses
+ADD COLUMN professor_id UUID NOT NULL,
+ADD CONSTRAINT fk_professor FOREIGN KEY (professor_id) REFERENCES users (id);
