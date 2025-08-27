@@ -1,0 +1,29 @@
+services:
+
+# Database 
+  database:
+    container_name: database
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    env_file:
+      - ./database/.env
+    volumes:
+      - database:/data/db
+    restart: unless-stopped
+
+# Adminer UI
+  adminer:
+    container_name: adminer
+    image: adminer
+    ports:
+      - "8081:8080"
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+
+# Volumes
+volumes:
+  database:
+    driver: local
