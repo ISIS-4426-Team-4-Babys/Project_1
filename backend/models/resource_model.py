@@ -1,0 +1,26 @@
+from sqlalchemy import Column, String, Text, Integer, TIMESTAMP, Enum, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+from config.database import Base
+import enum
+
+# Define Filetype enumeration
+class FileTypeEnum(enum.Enum):
+    pdf = "pdf"
+    docx = "docx"
+    pptx = "pptx"
+    txt = "txt"
+    md = "md"
+
+# Define resource model
+class Resource(Base):
+    __tablename__ = "resources"
+
+    name = Column(String(100), nullable = False)
+    filetype = Column(Enum(FileTypeEnum), nullable = False)
+    filepath = Column(Text, nullable = False)
+    size = Column(Integer, nullable = False)
+    timestamp = Column(TIMESTAMP, nullable = False)
+
+    consumed_by = Column(UUID(as_uuid = True), ForeignKey("agents.id", ondelete = "CASCADE"), nullable = False)
+    agent = relationship("Agent", backref = "resources")
