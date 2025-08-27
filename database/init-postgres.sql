@@ -16,7 +16,7 @@ CREATE TABLE courses (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name VARCHAR(100) NOT NULL UNIQUE,
     code VARCHAR(20) NOT NULL UNIQUE,
-    department VARCHAR(100) NOT NULL CHECK (department IN ('systems and computing engineering')),
+    department VARCHAR(100) NOT NULL CHECK (department IN ('DISC')),
     description TEXT NOT NULL
 );
 

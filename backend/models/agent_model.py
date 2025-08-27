@@ -3,6 +3,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from config.database import Base
 import enum
+import uuid
 
 # Define language enumeration
 class LanguageEnum(enum.Enum):
@@ -13,6 +14,7 @@ class LanguageEnum(enum.Enum):
 class Agent(Base):
     __tablename__ = "agents"
 
+    id = Column(UUID(as_uuid = True), primary_key = True, default = uuid.uuid4)
     name = Column(String(100), nullable = False)
     description = Column(Text, nullable = False)
     is_working = Column(Boolean, nullable = False)

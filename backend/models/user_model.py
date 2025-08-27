@@ -2,6 +2,7 @@ from sqlalchemy import Column, String, Text, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from config.database import Base
 import enum
+import uuid
 
 # Define role enumeration
 class UserRole(enum.Enum):
@@ -13,6 +14,7 @@ class UserRole(enum.Enum):
 class User(Base):
     __tablename__ = "users"
 
+    id = Column(UUID(as_uuid = True), primary_key = True, default = uuid.uuid4)
     name = Column(String(100), unique = True, nullable = False)
     email = Column(String(100), unique = True, nullable = False)
     password = Column(Text, nullable = False)

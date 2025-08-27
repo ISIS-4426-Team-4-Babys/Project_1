@@ -10,8 +10,9 @@ class UserResponse(BaseModel):
     name: str
     email: str
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
 
 # Define course base schema
 class CourseBase(BaseModel):
@@ -38,6 +39,7 @@ class CourseResponse(CourseBase):
     taught_by: UUID
     teacher: UserResponse
 
-    class Config:
-        orm_mode = True
+    model_config = {
+        "from_attributes": True
+    }
 

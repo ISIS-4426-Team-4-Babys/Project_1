@@ -3,15 +3,17 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from config.database import Base
 import enum
+import uuid
 
 # Define department enumeration
 class CourseDepartment(enum.Enum):
-    disc = "systems and computing engineering"
+    DISC = "systems and computing engineering"
 
 # Define course model
 class Course(Base):
     __tablename__ = "courses"
-
+    
+    id = Column(UUID(as_uuid = True), primary_key = True, default = uuid.uuid4)
     name = Column(String(100), unique = True, nullable = False)
     code = Column(String(20), unique = True, nullable = False)
     department = Column(Enum(CourseDepartment), nullable=False) 

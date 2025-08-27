@@ -3,6 +3,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from config.database import Base
 import enum
+import uuid
 
 # Define Filetype enumeration
 class FileTypeEnum(enum.Enum):
@@ -15,7 +16,8 @@ class FileTypeEnum(enum.Enum):
 # Define resource model
 class Resource(Base):
     __tablename__ = "resources"
-
+    
+    id = Column(UUID(as_uuid = True), primary_key = True, default = uuid.uuid4)
     name = Column(String(100), nullable = False)
     filetype = Column(Enum(FileTypeEnum), nullable = False)
     filepath = Column(Text, nullable = False)

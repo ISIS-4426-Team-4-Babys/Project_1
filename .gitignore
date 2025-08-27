@@ -6,3 +6,6 @@ env/
 
 # Carpeta autogenerada por visual
 .vscode/
+
+# Cache generado por python
+__pycache__/
