@@ -6,11 +6,11 @@ import os
 logger = logging.getLogger("app.config.db")
 
 # Get environment variables
-DB_USER = os.getenv("DB_USER","4-babys")
-DB_PASSWORD = os.getenv("DB_PASSWORD","maluma")
-DB_NAME = os.getenv("DB_NAME","agents-db")
-DB_HOST = os.getenv("DB_HOST","localhost")
-DB_PORT = os.getenv("DB_PORT","8082")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_NAME = os.getenv("DB_NAME")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = os.getenv("DB_PORT")
 
 # Connection URL
 DATABASE_URL = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
