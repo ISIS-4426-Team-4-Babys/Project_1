@@ -1,9 +1,9 @@
 from errors.course_errors import CourseNotFoundError, DuplicateCourseError
 from schemas.course_schema import CourseCreate, CourseUpdate
 from errors.db_errors import IntegrityConstraintError
+from sqlalchemy.orm import Session, selectinload
 from sqlalchemy.exc import IntegrityError
 from models.course_model import Course
-from sqlalchemy.orm import Session
 import logging
 
 logger = logging.getLogger("app.services.course")
@@ -37,6 +37,7 @@ def create_course(db: Session, course_data: CourseCreate):
         db.add(course)
         db.commit()
         db.refresh(course)
+        course = db.query(Course).options(selectinload(Course.teacher)).filter(Course.id == course.id).first()
         logger.info("Course created successfully id=%s", course.id)
         return course
     
@@ -49,33 +50,15 @@ def create_course(db: Session, course_data: CourseCreate):
 # Get all courses (GET)
 def get_courses(db: Session):
     logger.debug("Fetching all courses")
-    return db.query(Course).all()
+    return db.query(Course).options(selectinload(Course.teacher)).all()
 
 
 # Get course by id (GET)
 def get_course_by_id(db: Session, course_id: str):
     logger.debug("Fetching course by id=%s", course_id)
-    course = db.query(Course).filter(Course.id == course_id).first()
+    course = db.query(Course).options(selectinload(Course.teacher)).filter(Course.id == course_id).first()
     if not course:
         raise CourseNotFoundError("id", course_id)
-    return course
-
-
-# Get courses by code (GET)
-def get_course_by_code(db: Session, code: str):
-    logger.debug("Fetching course by code=%s", code)
-    course = db.query(Course).filter(Course.code == code).first()
-    if not course:
-        raise CourseNotFoundError("code", code)
-    return course
-
-
-# Get courses by name (GET)
-def get_course_by_name(db: Session, name: str):
-    logger.debug("Fetching course by name=%s", name)
-    course = db.query(Course).filter(Course.name == name).first()
-    if not course:
-        raise CourseNotFoundError("name", name)
     return course
 
 
@@ -105,6 +88,7 @@ def update_course(db: Session, course_id: str, course_data: CourseUpdate):
     try:
         db.commit()
         db.refresh(course)
+        course = db.query(Course).options(selectinload(Course.teacher)).filter(Course.id == course.id).first()
         logger.info("Course updated successfully id=%s", course.id)
         return course
     except IntegrityError as e:
