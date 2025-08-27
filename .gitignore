@@ -2,4 +2,7 @@
 .env
 
 # Entornos virtuales para aislar dependencias
-env
+env/
+
+# Carpeta autogenerada por visual
+.vscode/
