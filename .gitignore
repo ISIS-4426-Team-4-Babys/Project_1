@@ -1,1 +1,5 @@
+# Archivos con variables de entorno e información sensible
 .env
+
+# Entornos virtuales para aislar dependencias
+env
