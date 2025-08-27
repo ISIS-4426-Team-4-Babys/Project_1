@@ -8,6 +8,7 @@ import logging
 
 logger = logging.getLogger("app.services.course")
 
+
 # Create course (POST)
 def create_course(db: Session, course_data: CourseCreate):
     logger.info("Creating new course with code=%s", course_data.code)
@@ -44,10 +45,12 @@ def create_course(db: Session, course_data: CourseCreate):
         logger.error("IntegrityError when creating course: %s", str(e))
         raise IntegrityConstraintError("Create Course")
 
+
 # Get all courses (GET)
 def get_courses(db: Session):
     logger.debug("Fetching all courses")
     return db.query(Course).all()
+
 
 # Get course by id (GET)
 def get_course_by_id(db: Session, course_id: str):
@@ -57,6 +60,7 @@ def get_course_by_id(db: Session, course_id: str):
         raise CourseNotFoundError("id", course_id)
     return course
 
+
 # Get courses by code (GET)
 def get_course_by_code(db: Session, code: str):
     logger.debug("Fetching course by code=%s", code)
@@ -65,6 +69,7 @@ def get_course_by_code(db: Session, code: str):
         raise CourseNotFoundError("code", code)
     return course
 
+
 # Get courses by name (GET)
 def get_course_by_name(db: Session, name: str):
     logger.debug("Fetching course by name=%s", name)
@@ -72,6 +77,7 @@ def get_course_by_name(db: Session, name: str):
     if not course:
         raise CourseNotFoundError("name", name)
     return course
+
 
 # Update course (PUT)
 def update_course(db: Session, course_id: str, course_data: CourseUpdate):
@@ -105,6 +111,7 @@ def update_course(db: Session, course_id: str, course_data: CourseUpdate):
         db.rollback()
         logger.error("IntegrityError when creating course: %s", str(e))
         raise IntegrityConstraintError("Update Course")
+
 
 # Delete course (DELETE)
 def delete_course(db: Session, course_id: str):
