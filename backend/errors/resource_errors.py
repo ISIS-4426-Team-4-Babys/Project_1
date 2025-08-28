@@ -7,12 +7,7 @@ class ResourceNotFoundError(Exception):
 class DuplicateResourceError(Exception):
     def __init__(self, name: str):
         self.name = name
-        super().__init__(f"Resource with name {name} already exists")
-
-class InvalidFileTypeError(Exception):
-    def __init__(self, filetype: str):
-        self.filetype = filetype
-        super().__init__(f"Invalid file type: {filetype}. Allowed types are: pdf, docx, pptx, txt, md")
+        super().__init__(f"Resource with name {name} already consumed by the agent")
 
 class FileSizeError(Exception):
     def __init__(self, size: int, max_size: int):
