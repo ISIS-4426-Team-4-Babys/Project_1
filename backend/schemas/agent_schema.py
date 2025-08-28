@@ -1,8 +1,8 @@
+from models.course_model import CourseDepartment
+from models.agent_model import LanguageEnum
 from pydantic import BaseModel
 from typing import Optional
 from uuid import UUID
-from models.agent_model import LanguageEnum
-from models.course_model import CourseDepartment
 
 # Embedded Course Schema
 class CourseResponse(BaseModel):
