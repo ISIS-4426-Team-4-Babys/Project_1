@@ -23,6 +23,7 @@ class Resource(Base):
     filepath = Column(Text, nullable = False)
     size = Column(Integer, nullable = False)
     timestamp = Column(TIMESTAMP, nullable = False)
-
     consumed_by = Column(UUID(as_uuid = True), ForeignKey("agents.id", ondelete = "CASCADE"), nullable = False)
-    agent = relationship("Agent", backref = "resources")
+
+    agent = relationship("Agent", back_populates="resources")
+

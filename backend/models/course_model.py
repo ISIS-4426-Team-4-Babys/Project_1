@@ -20,5 +20,8 @@ class Course(Base):
     description = Column(Text, nullable = False)
     taught_by = Column(UUID(as_uuid = True), ForeignKey("users.id"), nullable = False)
 
-    teacher = relationship("User", backref = "courses_taught")
-    students = relationship("User", secondary = "courses_students", backref = "courses_taken")
+    teacher = relationship("User", back_populates = "courses_taught")
+    students = relationship("User", secondary = "courses_students", back_populates = "courses_taken")
+    agents = relationship("Agent", back_populates = "course", cascade = "all, delete-orphan")
+
+

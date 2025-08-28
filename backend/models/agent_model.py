@@ -22,8 +22,7 @@ class Agent(Base):
     model = Column(String(100), nullable = False)
     language = Column(Enum(LanguageEnum), nullable = False)
     retrieval_k = Column(Integer, nullable = False)
-
     associated_course = Column(UUID(as_uuid = True), ForeignKey("courses.id", ondelete = "CASCADE"), nullable = False)
-    course = relationship("Course", backref = "agents")
     
-    resources = relationship("Resource", back_populates="agent", cascade="all, delete-orphan")
+    course = relationship("Course", back_populates = "agents")
+    resources = relationship("Resource", back_populates = "agent", cascade = "all, delete-orphan")
