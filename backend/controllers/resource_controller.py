@@ -1,5 +1,5 @@
 from schemas.resource_schema import ResourceCreate, ResourceUpdate, ResourceResponse
-from errors.resource_errors import ResourceNotFoundError, DuplicateResourceError
+from errors.resource_errors import ResourceNotFoundError, DuplicateResourceError, InvalidFileTypeError, FileSizeError
 from fastapi import APIRouter, Depends, HTTPException, status
 from errors.db_errors import IntegrityConstraintError
 from sqlalchemy.orm import Session
@@ -20,6 +20,10 @@ def create_resource_endpoint(resource_data: ResourceCreate, db: Session = Depend
     try:
         return create_resource(db, resource_data)
     except DuplicateResourceError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except InvalidFileTypeError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except FileSizeError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except IntegrityConstraintError as e:
         raise HTTPException(status_code=400, detail=str(e))

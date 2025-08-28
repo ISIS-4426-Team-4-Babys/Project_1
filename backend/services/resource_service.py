@@ -1,9 +1,9 @@
-from errors.resource_errors import ResourceNotFoundError, DuplicateResourceError
+from errors.resource_errors import ResourceNotFoundError, DuplicateResourceError, InvalidFileTypeError, FileSizeError
 from schemas.resource_schema import ResourceCreate, ResourceUpdate
 from errors.db_errors import IntegrityConstraintError
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from models.resource_model import Resource
+from models.resource_model import Resource, FileTypeEnum
 import logging
 
 logger = logging.getLogger("app.services.resource")
@@ -16,6 +16,15 @@ def create_resource(db: Session, resource_data: ResourceCreate):
     existing_resource = db.query(Resource).filter(Resource.name == resource_data.name).first()
     if existing_resource:
         raise DuplicateResourceError(resource_data.name)
+        
+    # Validate file size (example: 100MB max)
+    MAX_FILE_SIZE = 100 * 1024 * 1024  # 100MB in bytes
+    if resource_data.size > MAX_FILE_SIZE:
+        raise FileSizeError(resource_data.size, MAX_FILE_SIZE)
+        
+    # Validate file type
+    if resource_data.filetype not in [t.value for t in FileTypeEnum]:
+        raise InvalidFileTypeError(resource_data.filetype)
     
     resource = Resource(
         id=str(resource_data.id),
