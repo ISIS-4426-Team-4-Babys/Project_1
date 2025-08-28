@@ -25,3 +25,5 @@ class Agent(Base):
 
     associated_course = Column(UUID(as_uuid = True), ForeignKey("courses.id", ondelete = "CASCADE"), nullable = False)
     course = relationship("Course", backref = "agents")
+    
+    resources = relationship("Resource", back_populates="agent", cascade="all, delete-orphan")
