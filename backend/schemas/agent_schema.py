@@ -1,5 +1,3 @@
-from models.course_model import CourseDepartment
-from models.resource_model import FileTypeEnum
 from models.agent_model import LanguageEnum
 from typing import Optional, List
 from pydantic import BaseModel
@@ -9,7 +7,7 @@ from uuid import UUID
 class ResourceResponse(BaseModel):
     id: UUID
     name: str
-    filetype: FileTypeEnum
+    filetype: str
     filepath: str
     size: int
 
@@ -22,7 +20,7 @@ class CourseResponse(BaseModel):
     id: UUID
     name: str
     code: str
-    department: CourseDepartment
+    department: str
     description: str
 
     model_config = {

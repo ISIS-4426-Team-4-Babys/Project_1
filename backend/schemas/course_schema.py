@@ -1,4 +1,3 @@
-from models.course_model import CourseDepartment
 from models.agent_model import LanguageEnum
 from typing import Optional, List
 from pydantic import BaseModel
@@ -33,7 +32,7 @@ class AgentResponse(BaseModel):
 class CourseBase(BaseModel):
     name: str
     code: str
-    department: CourseDepartment
+    department: str
     description: str
 
 # Create Course schema
@@ -44,7 +43,7 @@ class CourseCreate(CourseBase):
 class CourseUpdate(BaseModel):
     name: Optional[str] = None
     code: Optional[str] = None
-    department: Optional[CourseDepartment] = None
+    department: Optional[str] = None
     description: Optional[str] = None
     taught_by: Optional[UUID] = None
 

@@ -5,21 +5,13 @@ from config.database import Base
 import enum
 import uuid
 
-# Define Filetype enumeration
-class FileTypeEnum(enum.Enum):
-    pdf = "application/pdf"
-    docx = "docx"
-    pptx = "pptx"
-    txt = "txt"
-    md = "md"
-
 # Define resource model
 class Resource(Base):
     __tablename__ = "resources"
     
     id = Column(UUID(as_uuid = True), primary_key = True, default = uuid.uuid4)
     name = Column(String(100), nullable = False)
-    filetype = Column(Enum(FileTypeEnum), nullable = False)
+    filetype = Column(String(100), nullable = False)
     filepath = Column(Text, nullable = False)
     size = Column(Integer, nullable = False)
     timestamp = Column(TIMESTAMP, nullable = False)

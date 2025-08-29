@@ -1,4 +1,3 @@
-from models.resource_model import FileTypeEnum
 from models.agent_model import LanguageEnum
 from pydantic import BaseModel
 from datetime import datetime
@@ -21,7 +20,7 @@ class AgentResponse(BaseModel):
 # Base Resource schema
 class ResourceBase(BaseModel):
     name: str
-    filetype: FileTypeEnum
+    filetype: str
     filepath: str
     size: int
     timestamp: datetime
@@ -33,7 +32,7 @@ class ResourceCreate(ResourceBase):
 # Update Resource schema
 class ResourceUpdate(BaseModel):
     name: Optional[str] = None
-    filetype: Optional[FileTypeEnum] = None
+    filetype: Optional[str] = None
     filepath: Optional[str] = None
     size: Optional[int] = None
     timestamp: Optional[datetime] = None
