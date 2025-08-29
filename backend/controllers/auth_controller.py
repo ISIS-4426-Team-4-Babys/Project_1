@@ -1,16 +1,18 @@
+from schemas.user_schema import LoginRequest, TokenResponse, UserCreate, UserResponse
+from errors.user_errors import InvalidCredentialsError, DuplicateUserError
+from services.user_service import authenticate_user, create_user
 from fastapi import APIRouter, Depends, HTTPException, status
+from errors.db_errors import IntegrityConstraintError
+from config.jwt import create_access_token
 from sqlalchemy.orm import Session
 from config.database import get_db
-from schemas.user_schema import LoginRequest, TokenResponse, UserCreate, UserResponse
-from services.user_service import authenticate_user, create_user
-from config.jwt import create_access_token
-from errors.user_errors import InvalidCredentialsError, DuplicateUserError
-from errors.db_errors import IntegrityConstraintError
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 # Register new user
-@router.post("/register", response_model = UserResponse, status_code = status.HTTP_201_CREATED)
+@router.post("/register", 
+             response_model = UserResponse, 
+             status_code = status.HTTP_201_CREATED)
 def register_endpoint(data: UserCreate, db: Session = Depends(get_db)):
     try:
         return create_user(db, data)
@@ -21,7 +23,8 @@ def register_endpoint(data: UserCreate, db: Session = Depends(get_db)):
 
 
 # Login user
-@router.post("/login", response_model = TokenResponse)
+@router.post("/login", 
+             response_model = TokenResponse)
 def login_endpoint(req: LoginRequest, db: Session = Depends(get_db)):
     try:
         user = authenticate_user(db, req.email, req.password)

@@ -1,20 +1,27 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
-from config.database import get_db
 from schemas.user_schema import UserCreate, UserUpdate, UserResponse
-from services.user_service import (
-    create_user, get_users, get_user_by_id, get_user_by_email,
-    update_user, delete_user
-)
 from errors.user_errors import UserNotFoundError, DuplicateUserError
+from fastapi import APIRouter, Depends, HTTPException, status
 from errors.db_errors import IntegrityConstraintError
 from middlewares.jwt_auth import require_roles
 from models.user_model import UserRole
+from sqlalchemy.orm import Session
+from config.database import get_db
+from services.user_service import (
+    create_user, 
+    get_users, 
+    get_user_by_id, 
+    get_user_by_email,
+    update_user, delete_user
+)
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
+
 # Create User Admin Only
-@router.post("/", response_model = UserResponse, status_code = status.HTTP_201_CREATED, dependencies = [Depends(require_roles(UserRole.admin))])
+@router.post("/", 
+             response_model = UserResponse, 
+             status_code = status.HTTP_201_CREATED, 
+             dependencies = [Depends(require_roles(UserRole.admin))])
 def create_user_endpoint(data: UserCreate, db: Session = Depends(get_db)):
     try:
         return create_user(db, data)
@@ -25,13 +32,17 @@ def create_user_endpoint(data: UserCreate, db: Session = Depends(get_db)):
 
 
 # Get Users Admin Only
-@router.get("/", response_model=list[UserResponse], dependencies=[Depends(require_roles(UserRole.admin))])
+@router.get("/", 
+            response_model = list[UserResponse], 
+            dependencies = [Depends(require_roles(UserRole.admin))])
 def get_users_endpoint(db: Session = Depends(get_db)):
     return get_users(db)
 
 
 # Get User by Id
-@router.get("/{user_id}", response_model=UserResponse, dependencies=[Depends(require_roles(UserRole.admin, UserRole.professor, UserRole.student))])
+@router.get("/{user_id}", 
+            response_model = UserResponse, 
+            dependencies = [Depends(require_roles(UserRole.admin, UserRole.professor, UserRole.student))])
 def get_user_by_id_endpoint(user_id: str, db: Session = Depends(get_db)):
     try:
         return get_user_by_id(db, user_id)
@@ -40,7 +51,9 @@ def get_user_by_id_endpoint(user_id: str, db: Session = Depends(get_db)):
 
 
 # Get user by email admin only
-@router.get("/email/{email}", response_model=UserResponse,dependencies=[Depends(require_roles(UserRole.admin))])
+@router.get("/email/{email}", 
+            response_model = UserResponse,
+            dependencies = [Depends(require_roles(UserRole.admin))])
 def get_user_by_email_endpoint(email: str, db: Session = Depends(get_db)):
     try:
         return get_user_by_email(db, email)
@@ -49,7 +62,9 @@ def get_user_by_email_endpoint(email: str, db: Session = Depends(get_db)):
 
 
 # Update user admin only
-@router.put("/{user_id}", response_model=UserResponse, dependencies=[Depends(require_roles(UserRole.admin))])
+@router.put("/{user_id}", 
+            response_model = UserResponse, 
+            dependencies = [Depends(require_roles(UserRole.admin))])
 def update_user_endpoint(user_id: str, data: UserUpdate, db: Session = Depends(get_db)):
     try:
         return update_user(db, user_id, data)
@@ -62,7 +77,9 @@ def update_user_endpoint(user_id: str, data: UserUpdate, db: Session = Depends(g
 
 
 # Delete user admin only
-@router.delete("/{user_id}", response_model=UserResponse,dependencies=[Depends(require_roles(UserRole.admin))])
+@router.delete("/{user_id}", 
+               response_model = UserResponse,
+               dependencies = [Depends(require_roles(UserRole.admin))])
 def delete_user_endpoint(user_id: str, db: Session = Depends(get_db)):
     try:
         return delete_user(db, user_id)

@@ -1,8 +1,9 @@
-from backend.middlewares.jwt_auth import require_roles
 from schemas.agent_schema import AgentCreate, AgentUpdate, AgentResponse
 from fastapi import APIRouter, Depends, HTTPException, status
+from backend.middlewares.jwt_auth import require_roles
 from errors.db_errors import IntegrityConstraintError
 from errors.agent_errors import AgentNotFoundError
+from models.user_model import UserRole
 from config.database import get_db 
 from sqlalchemy.orm import Session
 from services.agent_service import (
@@ -12,12 +13,14 @@ from services.agent_service import (
     update_agent,
     delete_agent
 )
-from models.user_model import UserRole
 
 router = APIRouter(prefix = "/agents", tags = ["Agents"])
 
 # Create Agent
-@router.post("/", response_model = AgentResponse, status_code = status.HTTP_201_CREATED, dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))])
+@router.post("/", 
+             response_model = AgentResponse, 
+             status_code = status.HTTP_201_CREATED, 
+             dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))])
 def create_agent_endpoint(agent_data: AgentCreate, db: Session = Depends(get_db)):
     try:
         agent = create_agent(db, agent_data)
@@ -27,13 +30,19 @@ def create_agent_endpoint(agent_data: AgentCreate, db: Session = Depends(get_db)
 
 
 # Get All Agents
-@router.get("/", response_model = list[AgentResponse], status_code = status.HTTP_200_OK, dependencies = [Depends(require_roles(UserRole.admin))])
+@router.get("/", 
+            response_model = list[AgentResponse], 
+            status_code = status.HTTP_200_OK, 
+            dependencies = [Depends(require_roles(UserRole.admin))])
 def get_agents_endpoint(db: Session = Depends(get_db)):
     return get_agents(db)
 
 
 # Get Agent by ID
-@router.get("/{agent_id}", response_model = AgentResponse, status_code = status.HTTP_200_OK, dependencies = [Depends(require_roles(UserRole.admin))])
+@router.get("/{agent_id}", 
+            response_model = AgentResponse, 
+            status_code = status.HTTP_200_OK, 
+            dependencies = [Depends(require_roles(UserRole.admin))])
 def get_agent_by_id_endpoint(agent_id: int, db: Session = Depends(get_db)):
     try:
         agent = get_agent_by_id(db, agent_id)
@@ -43,17 +52,24 @@ def get_agent_by_id_endpoint(agent_id: int, db: Session = Depends(get_db)):
     
 
 # Update Agent
-@router.put("/{agent_id}", response_model = AgentResponse, status_code = status.HTTP_200_OK, dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))])
+@router.put("/{agent_id}", 
+            response_model = AgentResponse, 
+            status_code = status.HTTP_200_OK, 
+            dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))])
 def update_agent_endpoint(agent_id: int, agent_data: AgentUpdate, db: Session = Depends(get_db)):
     try:
         return update_agent(db, agent_id, agent_data)
     except AgentNotFoundError as e:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = str(e))
     except IntegrityConstraintError as e:
-        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = str(e))
+        raise HTTPException(status_code = status.HTTP_409_CONFLICT, detail = str(e))
+
 
 # Delete Agent
-@router.delete("/{agent_id}", response_model = AgentResponse, status_code = status.HTTP_200_OK, dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))])
+@router.delete("/{agent_id}", 
+               response_model = AgentResponse, 
+               status_code = status.HTTP_200_OK, 
+               dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))])
 def delete_agent_endpoint(agent_id: int, db: Session = Depends(get_db)):
     try:
         return delete_agent(db, agent_id)

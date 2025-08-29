@@ -1,22 +1,25 @@
-import logging
-from uuid import UUID as UUID_t
-from sqlalchemy.orm import Session, selectinload
-from sqlalchemy.exc import IntegrityError
 from errors.user_errors import UserNotFoundError, DuplicateUserError, InvalidCredentialsError
-from errors.db_errors import IntegrityConstraintError
-from models.user_model import User
 from schemas.user_schema import UserCreate, UserUpdate
+from errors.db_errors import IntegrityConstraintError
+from sqlalchemy.orm import Session, selectinload
 from passlib.context import CryptContext
+from sqlalchemy.exc import IntegrityError
+from models.user_model import User
+import logging
+
 
 logger = logging.getLogger("app.services.user")
 pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated = "auto")
+
 
 # Helpers to manage password securely
 def _hash_password(plain: str) -> str:
     return pwd_ctx.hash(plain)
 
+
 def _verify_password(plain: str, hashed: str) -> bool:
     return pwd_ctx.verify(plain, hashed)
+
 
 # Create user (POST)
 def create_user(db: Session, data: UserCreate):

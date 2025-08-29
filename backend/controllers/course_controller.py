@@ -1,9 +1,9 @@
-from backend.middlewares.jwt_auth import require_roles
-from backend.models.user_model import UserRole
 from schemas.course_schema import CourseCreate, CourseUpdate, CourseResponse
 from errors.course_errors import CourseNotFoundError, DuplicateCourseError
 from fastapi import APIRouter, Depends, HTTPException, status
+from backend.middlewares.jwt_auth import require_roles
 from errors.db_errors import IntegrityConstraintError
+from backend.models.user_model import UserRole
 from sqlalchemy.orm import Session
 from config.database import get_db
 from services.course_service import (
@@ -17,7 +17,10 @@ from services.course_service import (
 router = APIRouter(prefix = "/courses", tags = ["Courses"])
 
 # Create Course
-@router.post("/", response_model = CourseResponse, status_code = status.HTTP_201_CREATED, dependencies = [Depends(require_roles(UserRole.admin))])
+@router.post("/", 
+             response_model = CourseResponse, 
+             status_code = status.HTTP_201_CREATED, 
+             dependencies = [Depends(require_roles(UserRole.admin))])
 def create_course_endpoint(course_data: CourseCreate, db: Session = Depends(get_db)):
     try:
         return create_course(db, course_data)
@@ -28,13 +31,19 @@ def create_course_endpoint(course_data: CourseCreate, db: Session = Depends(get_
 
 
 # Get All Courses
-@router.get("/", response_model = list[CourseResponse], status_code = status.HTTP_200_OK, dependencies = [Depends(require_roles(UserRole.admin))])
+@router.get("/", 
+            response_model = list[CourseResponse], 
+            status_code = status.HTTP_200_OK, 
+            dependencies = [Depends(require_roles(UserRole.admin))])
 def get_courses_endpoint(db: Session = Depends(get_db)):
     return get_courses(db)
 
 
 # Get Course by ID
-@router.get("/{course_id}", response_model = CourseResponse, status_code = status.HTTP_200_OK, dependencies = [Depends(require_roles(UserRole.admin))])
+@router.get("/{course_id}", 
+            response_model = CourseResponse, 
+            status_code = status.HTTP_200_OK, 
+            dependencies = [Depends(require_roles(UserRole.admin))])
 def get_course_by_id_endpoint(course_id: str, db: Session = Depends(get_db)):
     try:
         return get_course_by_id(db, course_id)
@@ -43,7 +52,10 @@ def get_course_by_id_endpoint(course_id: str, db: Session = Depends(get_db)):
 
 
 # Update Course
-@router.put("/{course_id}", response_model = CourseResponse, status_code = status.HTTP_200_OK, dependencies = [Depends(require_roles(UserRole.admin))])
+@router.put("/{course_id}", 
+            response_model = CourseResponse, 
+            status_code = status.HTTP_200_OK, 
+            dependencies = [Depends(require_roles(UserRole.admin))])
 def update_course_endpoint(course_id: str, course_data: CourseUpdate, db: Session = Depends(get_db)):
     try:
         return update_course(db, course_id, course_data)
@@ -56,10 +68,12 @@ def update_course_endpoint(course_id: str, course_data: CourseUpdate, db: Sessio
 
 
 # Delete Course
-@router.delete("/{course_id}", response_model = CourseResponse, status_code = status.HTTP_200_OK, dependencies = [Depends(require_roles(UserRole.admin))])
+@router.delete("/{course_id}", 
+               response_model = CourseResponse, 
+               status_code = status.HTTP_200_OK, 
+               dependencies = [Depends(require_roles(UserRole.admin))])
 def delete_course_endpoint(course_id: str, db: Session = Depends(get_db)):
     try:
         return delete_course(db, course_id)
     except CourseNotFoundError as e:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = str(e))
-
