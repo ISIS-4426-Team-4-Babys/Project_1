@@ -1,3 +1,5 @@
+from backend.middlewares.jwt_auth import require_roles
+from backend.models.user_model import UserRole
 from errors.resource_errors import ResourceNotFoundError, DuplicateResourceError, InvalidFileTypeError, FileSizeError
 from schemas.resource_schema import ResourceCreate, ResourceUpdate, ResourceResponse
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -15,7 +17,7 @@ from config.database import get_db
 router = APIRouter(prefix="/resources", tags=["Resources"])
 
 # Create Resource
-@router.post("/", response_model = ResourceResponse, status_code = status.HTTP_201_CREATED)
+@router.post("/", response_model = ResourceResponse, status_code = status.HTTP_201_CREATED, dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))])
 def create_resource_endpoint(resource_data: ResourceCreate, db: Session = Depends(get_db)):
     try:
         return create_resource(db, resource_data)
@@ -27,12 +29,12 @@ def create_resource_endpoint(resource_data: ResourceCreate, db: Session = Depend
         raise HTTPException(status_code = status.HTTP_409_CONFLICT, detail = str(e))
 
 # Get All Resources
-@router.get("/", response_model = list[ResourceResponse], status_code = status.HTTP_200_OK)
+@router.get("/", response_model = list[ResourceResponse], status_code = status.HTTP_200_OK, dependencies = [Depends(require_roles(UserRole.admin))])
 def get_resources_endpoint(db: Session = Depends(get_db)):
     return get_resources(db)
 
 # Get Resource by ID
-@router.get("/{resource_id}", response_model = ResourceResponse, status_code = status.HTTP_200_OK)
+@router.get("/{resource_id}", response_model = ResourceResponse, status_code = status.HTTP_200_OK, dependencies = [Depends(require_roles(UserRole.admin))])
 def get_resource_by_id_endpoint(resource_id: str, db: Session = Depends(get_db)):
     try:
         return get_resource_by_id(db, resource_id)
@@ -40,7 +42,7 @@ def get_resource_by_id_endpoint(resource_id: str, db: Session = Depends(get_db))
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = str(e))
 
 # Update Resource
-@router.put("/{resource_id}", response_model = ResourceResponse, status_code = status.HTTP_200_OK)
+@router.put("/{resource_id}", response_model = ResourceResponse, status_code = status.HTTP_200_OK, dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))])
 def update_resource_endpoint(resource_id: str, resource_data: ResourceUpdate, db: Session = Depends(get_db)):
     try:
         return update_resource(db, resource_id, resource_data)
@@ -54,7 +56,7 @@ def update_resource_endpoint(resource_id: str, resource_data: ResourceUpdate, db
         raise HTTPException(status_code = status.HTTP_409_CONFLICT, detail = str(e))
 
 # Delete Resource
-@router.delete("/{resource_id}", response_model = ResourceResponse, status_code = status.HTTP_200_OK)
+@router.delete("/{resource_id}", response_model = ResourceResponse, status_code = status.HTTP_200_OK, dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))])
 def delete_resource_endpoint(resource_id: str, db: Session = Depends(get_db)):
     try:
         return delete_resource(db, resource_id)

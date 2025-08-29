@@ -19,6 +19,8 @@ if not JWT_SECRET:
 logger.info("JWT configuration loaded successfully")
 
 def create_access_token(subject: str, extra_claims: Optional[dict] = None) -> str:
+    logger.info("Creating JWT token")
+
     now = datetime.now(timezone.utc)
     to_encode = {
         "sub": subject,
@@ -26,10 +28,13 @@ def create_access_token(subject: str, extra_claims: Optional[dict] = None) -> st
         "exp": int((now + timedelta(minutes=JWT_EXPIRATION_MINUTES)).timestamp()),
         **(extra_claims or {}),
     }
+    logger.info("JWT token created")
     return jwt.encode(to_encode, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 def decode_token(token: str) -> dict:
+    logger.info("Decoding JWT token")
     try:
         return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
     except JWTError as e:
+        logger.info("Error decoding JWT token")
         raise ValueError(str(e))
