@@ -6,13 +6,16 @@ from sqlalchemy.orm import Session, selectinload
 from sqlalchemy.exc import IntegrityError
 from models.resource_model import Resource
 from models.agent_model import Agent
+from fastapi import UploadFile
 import logging
+import os
 
 logger = logging.getLogger("app.services.resource")
 MAX_FILE_SIZE = 100 * 1024 * 1024  
+UPLOAD_DIR = "backend/data"
 
 # Create resource (POST)
-def create_resource(db: Session, resource_data: ResourceCreate):
+def create_resource(db: Session, resource_data: ResourceCreate, file: UploadFile):
     logger.info("Creating new resource with name=%s", resource_data.name)
     
     # Verify associated agent
@@ -35,18 +38,27 @@ def create_resource(db: Session, resource_data: ResourceCreate):
         raise DuplicateResourceError(resource_data.name)
         
     # Validate max file size (100 MB)
-    if resource_data.size > MAX_FILE_SIZE:
+    contents = file.file.read()
+    file_size = len(contents)
+    if file_size > MAX_FILE_SIZE:
         logger.warning("Resource with name=%s exceeds max file size", resource_data.name)
-        raise FileSizeError(resource_data.size, MAX_FILE_SIZE)
+        raise FileSizeError(file_size, MAX_FILE_SIZE)
     
-    resource = Resource(
-        name = resource_data.name,
-        filetype = resource_data.filetype,
-        filepath = resource_data.filepath,
-        size = resource_data.size,
-        timestamp = resource_data.timestamp,
-        consumed_by = resource_data.consumed_by
-    )
+    # Create agent folder
+    agent_dir = os.path.join(UPLOAD_DIR, resource_data.consumed_by)
+    os.makedirs(agent_dir, exist_ok = True)
+
+    # Save file
+    filepath = os.path.join(agent_dir, file.filename)
+    with open(filepath, "wb") as f:
+        f.write(contents)
+
+    # Update data in the schema
+    resource_data.filepath = filepath
+    resource_data.size = file_size
+
+    # Create model
+    resource = Resource(**resource_data.model_dump())
 
     try:
         db.add(resource)

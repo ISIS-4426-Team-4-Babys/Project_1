@@ -36,6 +36,8 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    volumes:
+      - ./backend/data:/app/backend/data
     restart: unless-stopped
     
 # Volumes
