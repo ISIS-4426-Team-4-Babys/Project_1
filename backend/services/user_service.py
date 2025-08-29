@@ -147,8 +147,8 @@ def get_courses_for_student(db: Session, student_id: str):
         logger.warning("User id=%s is not a student (role=%s)", student_id, student.role)
         raise InvalidUserRoleError(student.role, "student")
 
-    logger.info("Found %s courses for student id=%s", len(student.courses), student_id)
-    return student.courses
+    logger.info("Found %s courses for student id=%s", len(student.courses_taken), student_id)
+    return student.courses_taken
 
 
 # Get all courses taught by a professor (GET)

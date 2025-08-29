@@ -100,6 +100,6 @@ def delete_agent(db: Session, agent_id: str):
 # Get all resources for an agent (GET)
 def get_resources_for_agent(db: Session, agent_id: str):
     logger.debug("Fetching resources for agent id=%s", agent_id)
-    agent = get_agent_by_id(agent_id)
+    agent = get_agent_by_id(db, agent_id)
     logger.info("Found %s resources for agent id=%s", len(agent.resources), agent_id)
     return agent.resources
