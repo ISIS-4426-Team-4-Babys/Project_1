@@ -8,7 +8,6 @@ import logging
 
 logger = logging.getLogger("app.services.course")
 
-
 # Create course (POST)
 def create_course(db: Session, course_data: CourseCreate):
     logger.info("Creating new course with code=%s", course_data.code)

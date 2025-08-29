@@ -8,8 +8,6 @@ from services.course_service import (
     create_course,
     get_courses,
     get_course_by_id,
-    get_course_by_code,
-    get_course_by_name,
     update_course,
     delete_course,
 )
@@ -22,9 +20,9 @@ def create_course_endpoint(course_data: CourseCreate, db: Session = Depends(get_
     try:
         return create_course(db, course_data)
     except DuplicateCourseError as e:
-        raise HTTPException(status_code = 400, detail = str(e))
+        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = str(e))
     except IntegrityConstraintError as e:
-        raise HTTPException(status_code = 400, detail = str(e))
+        raise HTTPException(status_code = status.HTTP_409_CONFLICT, detail = str(e))
 
 
 # Get All Courses
@@ -39,25 +37,7 @@ def get_course_by_id_endpoint(course_id: str, db: Session = Depends(get_db)):
     try:
         return get_course_by_id(db, course_id)
     except CourseNotFoundError as e:
-        raise HTTPException(status_code = 404, detail = str(e))
-
-
-# Get Course by Code
-@router.get("/code/{code}", response_model = CourseResponse, status_code = status.HTTP_200_OK)
-def get_course_by_code_endpoint(code: str, db: Session = Depends(get_db)):
-    try:
-        return get_course_by_code(db, code)
-    except CourseNotFoundError as e:
-        raise HTTPException(status_code = 404, detail = str(e))
-
-
-# Get Course by Name
-@router.get("/name/{name}", response_model = CourseResponse, status_code = status.HTTP_200_OK)
-def get_course_by_name_endpoint(name: str, db: Session = Depends(get_db)):
-    try:
-        return get_course_by_name(db, name)
-    except CourseNotFoundError as e:
-        raise HTTPException(status_code = 404, detail = str(e))
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = str(e))
 
 
 # Update Course
@@ -66,11 +46,11 @@ def update_course_endpoint(course_id: str, course_data: CourseUpdate, db: Sessio
     try:
         return update_course(db, course_id, course_data)
     except CourseNotFoundError as e:
-        raise HTTPException(status_code = 404, detail = str(e))
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = str(e))
     except DuplicateCourseError as e:
-        raise HTTPException(status_code = 400, detail = str(e))
+        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = str(e))
     except IntegrityConstraintError as e:
-        raise HTTPException(status_code = 400, detail = str(e))
+        raise HTTPException(status_code = status.HTTP_409_CONFLICT, detail = str(e))
 
 
 # Delete Course
@@ -79,5 +59,5 @@ def delete_course_endpoint(course_id: str, db: Session = Depends(get_db)):
     try:
         return delete_course(db, course_id)
     except CourseNotFoundError as e:
-        raise HTTPException(status_code = 404, detail = str(e))
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = str(e))
 

@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, Text, Enum
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 from config.database import Base
 import enum
 import uuid
@@ -20,3 +21,7 @@ class User(Base):
     password = Column(Text, nullable = False)
     role = Column(Enum(UserRole), nullable = False)
     profile_image = Column(Text)
+
+    courses_taught = relationship("Course", back_populates = "teacher")
+    courses_taken = relationship("Course", secondary = "courses_students", back_populates = "students")
+

@@ -2,7 +2,6 @@ from models.course_model import CourseDepartment
 from pydantic import BaseModel
 from typing import Optional
 from uuid import UUID
-import enum
 
 # Embedded user schema
 class UserResponse(BaseModel):
