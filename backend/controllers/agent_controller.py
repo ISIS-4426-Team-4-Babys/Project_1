@@ -80,7 +80,7 @@ def delete_agent_endpoint(agent_id: str, db: Session = Depends(get_db)):
 
 
 @router.get(
-    "/",
+    "/resources",
     response_model = list[ResourceResponse],
     status_code = status.HTTP_200_OK,
     dependencies = [Depends(require_roles(UserRole.admin, UserRole.professor))]
