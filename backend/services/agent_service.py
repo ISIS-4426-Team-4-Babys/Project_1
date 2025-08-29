@@ -1,9 +1,11 @@
 from schemas.agent_schema import AgentCreate, AgentUpdate
 from errors.db_errors import IntegrityConstraintError
 from errors.agent_errors import AgentNotFoundError
+from errors.course_errors import CourseNotFoundError
 from sqlalchemy.orm import Session, selectinload
 from sqlalchemy.exc import IntegrityError
 from models.agent_model import Agent
+from models.course_model import Course
 import logging
 
 logger = logging.getLogger("app.services.agent")
@@ -12,6 +14,12 @@ logger = logging.getLogger("app.services.agent")
 def create_agent(db: Session, agent_data: AgentCreate):
     logger.info("Creating new agent with name=%s", agent_data.name)
     
+    # Verify associated course
+    existing_course = db.query(Course).filter(Course.id == agent_data.associated_course).first()
+    if not existing_course:
+        logger.warning("Associated course not found id=%s", agent_data.associated_course)
+        raise CourseNotFoundError("id", agent_data.associated_course)
+
     agent = Agent(
         name = agent_data.name,
         description = agent_data.description,
@@ -56,9 +64,12 @@ def get_agent_by_id(db: Session, agent_id: str):
 def update_agent(db: Session, agent_id: str, agent_data: AgentUpdate):
     logger.info("Updating agent id=%s", agent_id)
     agent = get_agent_by_id(db, agent_id)
-    if not agent:
-        logger.warning("Agent not found id=%s", agent_id)
-        raise AgentNotFoundError("id", agent_id)
+    
+    if agent_data.associated_course is not None:
+        existing_course = db.query(Course).filter(Course.id == agent_data.associated_course).first()
+        if not existing_course:
+            logger.warning("Associated course not found id=%s", agent_data.associated_course)
+            raise CourseNotFoundError("id", agent_data.associated_course)
 
     for key, value in agent_data.model_dump(exclude_unset = True).items():
         setattr(agent, key, value)
@@ -69,6 +80,7 @@ def update_agent(db: Session, agent_id: str, agent_data: AgentUpdate):
         agent = db.query(Agent).options(selectinload(Agent.course)).filter(Agent.id == agent.id).first()
         logger.info("Agent updated successfully id=%s", agent.id)
         return agent
+    
     except IntegrityError as e:
         db.rollback()
         logger.error("IntegrityError when updating agent: %s", str(e))
@@ -79,9 +91,6 @@ def update_agent(db: Session, agent_id: str, agent_data: AgentUpdate):
 def delete_agent(db: Session, agent_id: str):
     logger.info("Deleting agent id=%s", agent_id)
     agent = get_agent_by_id(db, agent_id)
-    if not agent:
-        logger.warning("Agent not found id=%s", agent_id)
-        raise AgentNotFoundError("id", agent_id)
     db.delete(agent)
     db.commit()
     logger.info("Agent deleted successfully id=%s", agent_id)
