@@ -1,0 +1,66 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from config.database import get_db
+from schemas.user_schema import UserCreate, UserUpdate, UserResponse
+from services.user_service import (
+    create_user, get_users, get_user_by_id, get_user_by_email,
+    update_user, delete_user
+)
+from errors.user_errors import UserNotFoundError, DuplicateUserError
+from errors.db_errors import IntegrityConstraintError
+from middlewares.jwt_auth import require_roles
+from models.user_model import UserRole
+
+router = APIRouter(prefix="/users", tags=["Users"])
+
+# Admin-only
+@router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED,
+             dependencies=[Depends(require_roles(UserRole.admin))])
+def create_user_endpoint(data: UserCreate, db: Session = Depends(get_db)):
+    try:
+        return create_user(db, data)
+    except DuplicateUserError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except IntegrityConstraintError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/", response_model=list[UserResponse],
+            dependencies=[Depends(require_roles(UserRole.admin))])
+def get_users_endpoint(db: Session = Depends(get_db)):
+    return get_users(db)
+
+@router.get("/{user_id}", response_model=UserResponse,
+            dependencies=[Depends(require_roles(UserRole.admin, UserRole.professor, UserRole.student))])
+def get_user_by_id_endpoint(user_id: str, db: Session = Depends(get_db)):
+    try:
+        return get_user_by_id(db, user_id)
+    except UserNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+@router.get("/email/{email}", response_model=UserResponse,
+            dependencies=[Depends(require_roles(UserRole.admin))])
+def get_user_by_email_endpoint(email: str, db: Session = Depends(get_db)):
+    try:
+        return get_user_by_email(db, email)
+    except UserNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+@router.put("/{user_id}", response_model=UserResponse,
+            dependencies=[Depends(require_roles(UserRole.admin))])
+def update_user_endpoint(user_id: str, data: UserUpdate, db: Session = Depends(get_db)):
+    try:
+        return update_user(db, user_id, data)
+    except UserNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except DuplicateUserError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except IntegrityConstraintError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.delete("/{user_id}", response_model=UserResponse,
+               dependencies=[Depends(require_roles(UserRole.admin))])
+def delete_user_endpoint(user_id: str, db: Session = Depends(get_db)):
+    try:
+        return delete_user(db, user_id)
+    except UserNotFoundError as e:
+        raise HTTPException(status_code=404, detail=str(e))

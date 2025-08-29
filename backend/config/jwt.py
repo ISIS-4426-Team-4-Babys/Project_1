@@ -1,5 +1,9 @@
 import logging
+from datetime import datetime, timedelta, timezone
+from typing import Optional
 import os
+from jose import jwt, JWTError
+
 
 logger = logging.getLogger("app.config.jwt")
 
@@ -13,3 +17,19 @@ if not JWT_SECRET:
     raise RuntimeError("JWT_SECRET missing")
 
 logger.info("JWT configuration loaded successfully")
+
+def create_access_token(subject: str, extra_claims: Optional[dict] = None) -> str:
+    now = datetime.now(timezone.utc)
+    to_encode = {
+        "sub": subject,
+        "iat": int(now.timestamp()),
+        "exp": int((now + timedelta(minutes=JWT_EXPIRATION_MINUTES)).timestamp()),
+        **(extra_claims or {}),
+    }
+    return jwt.encode(to_encode, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+def decode_token(token: str) -> dict:
+    try:
+        return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+    except JWTError as e:
+        raise ValueError(str(e))
