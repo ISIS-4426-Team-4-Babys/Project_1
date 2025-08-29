@@ -1,6 +1,7 @@
+from errors.user_errors import UserNotFoundError, DuplicateUserError, InvalidUserRoleError
 from schemas.user_schema import UserCreate, UserUpdate, UserResponse
-from errors.user_errors import UserNotFoundError, DuplicateUserError
 from fastapi import APIRouter, Depends, HTTPException, status
+from schemas.course_schema import CourseResponse
 from errors.db_errors import IntegrityConstraintError
 from middlewares.jwt_auth import require_roles
 from models.user_model import UserRole
@@ -11,7 +12,10 @@ from services.user_service import (
     get_users, 
     get_user_by_id, 
     get_user_by_email,
-    update_user, delete_user
+    update_user, 
+    delete_user,
+    get_courses_for_professor,
+    get_courses_for_student
 )
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -85,3 +89,31 @@ def delete_user_endpoint(user_id: str, db: Session = Depends(get_db)):
         return delete_user(db, user_id)
     except UserNotFoundError as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+
+
+# Get all courses a student is enrolled in
+@router.get(
+    "/student/{student_id}",
+    response_model = list[CourseResponse],
+    status_code = status.HTTP_200_OK,
+    dependencies = [Depends(require_roles(UserRole.admin, UserRole.student))]
+)
+def get_courses_for_student_endpoint(student_id: str, db: Session = Depends(get_db)):
+    try:
+        return get_courses_for_student(db, student_id)
+    except InvalidUserRoleError as e:
+        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = str(e))
+
+
+# Get all courses taught by a professor
+@router.get(
+    "/professor/{professor_id}",
+    response_model = list[CourseResponse],
+    status_code = status.HTTP_200_OK,
+    dependencies = [Depends(require_roles(UserRole.admin, UserRole.professor))]
+)
+def get_courses_for_professor_endpoint(professor_id: str, db: Session = Depends(get_db)):
+    try:
+        return get_courses_for_professor(db, professor_id)
+    except InvalidUserRoleError as e:
+        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = str(e))

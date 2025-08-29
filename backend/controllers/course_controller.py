@@ -1,8 +1,10 @@
+from errors.course_errors import CourseNotFoundError, DuplicateCourseError, InvalidUserRoleError
 from schemas.course_schema import CourseCreate, CourseUpdate, CourseResponse
-from errors.course_errors import CourseNotFoundError, DuplicateCourseError
 from fastapi import APIRouter, Depends, HTTPException, status
 from middlewares.jwt_auth import require_roles
 from errors.db_errors import IntegrityConstraintError
+from schemas.agent_schema import AgentResponse
+from schemas.user_schema import UserResponse
 from models.user_model import UserRole
 from sqlalchemy.orm import Session
 from config.database import get_db
@@ -12,6 +14,10 @@ from services.course_service import (
     get_course_by_id,
     update_course,
     delete_course,
+    enroll_student,
+    unenroll_student,
+    get_agents_in_course,
+    get_students_in_course
 )
 
 router = APIRouter(prefix = "/courses", tags = ["Courses"])
@@ -77,3 +83,53 @@ def delete_course_endpoint(course_id: str, db: Session = Depends(get_db)):
         return delete_course(db, course_id)
     except CourseNotFoundError as e:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = str(e))
+
+
+# Enroll a student in a course
+@router.post(
+    "/{course_id}/students/{student_id}",
+    response_model = CourseResponse,
+    status_code = status.HTTP_200_OK,
+    dependencies = [Depends(require_roles(UserRole.admin))]
+)
+def enroll_student_endpoint(course_id: str, student_id: str, db: Session = Depends(get_db)):
+    try:
+        return enroll_student(db, course_id, student_id)
+    except InvalidUserRoleError as e:
+        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = str(e))
+
+
+# Unenroll a student from a course
+@router.delete(
+    "/{course_id}/students/{student_id}",
+    response_model = CourseResponse,
+    status_code = status.HTTP_200_OK,
+    dependencies = [Depends(require_roles(UserRole.admin))]
+)
+def unenroll_student_endpoint(course_id: str, student_id: str, db: Session = Depends(get_db)):
+    try:
+        return unenroll_student(db, course_id, student_id)
+    except InvalidUserRoleError as e:
+        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = str(e))
+
+
+# Get all students enrolled in a course
+@router.get(
+    "/{course_id}/students",
+    response_model = list[UserResponse],
+    status_code = status.HTTP_200_OK,
+    dependencies = [Depends(require_roles(UserRole.admin, UserRole.professor))]
+)
+def get_students_in_course_endpoint(course_id: str, db: Session = Depends(get_db)):
+    return get_students_in_course(db, course_id)
+
+
+# Get all agents associated with a course
+@router.get(
+    "/{course_id}/agents",
+    response_model = list[AgentResponse],
+    status_code = status.HTTP_200_OK,
+    dependencies = [Depends(require_roles(UserRole.admin, UserRole.admin, UserRole.student))]
+)
+def get_agents_in_course_endpoint(course_id: str, db: Session = Depends(get_db)):
+    return get_agents_in_course(db, course_id)
