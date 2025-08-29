@@ -1,21 +1,35 @@
 from models.course_model import CourseDepartment
+from models.resource_model import FileTypeEnum
 from models.agent_model import LanguageEnum
+from typing import Optional, List
 from pydantic import BaseModel
-from typing import Optional
 from uuid import UUID
 
-# Embedded Course Schema
-class CourseResponse(BaseModel):
+# Embedded Resource Schema
+class ResourceResponse(BaseModel):
+    id: UUID
     name: str
-    code: str
-    department: CourseDepartment
-    description: str
-    
+    filetype: FileTypeEnum
+    filepath: str
+    size: int
+
     model_config = {
         "from_attributes": True
     }
 
-# Define Agent base schema
+# Embedded Course Schema
+class CourseResponse(BaseModel):
+    id: UUID
+    name: str
+    code: str
+    department: CourseDepartment
+    description: str
+
+    model_config = {
+        "from_attributes": True
+    }
+
+# Base Agent Schema
 class AgentBase(BaseModel):
     name: str
     description: str
@@ -25,12 +39,12 @@ class AgentBase(BaseModel):
     language: LanguageEnum
     retrieval_k: int
 
-# Create agent (POST)
+# Agent Create Schema
 class AgentCreate(AgentBase):
     associated_course: UUID
 
-# Update agent (PUT)
-class AgentUpdate(AgentBase):
+# Agent Update Schema
+class AgentUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     is_working: Optional[bool] = None
@@ -40,12 +54,13 @@ class AgentUpdate(AgentBase):
     retrieval_k: Optional[int] = None
     associated_course: Optional[UUID] = None
 
-# Get Agent (GET)
+# Agent Response Schema
 class AgentResponse(AgentBase):
     id: UUID
     associated_course: UUID
-    course: CourseResponse
-    
+    course: Optional[CourseResponse] = None
+    resources: Optional[List[ResourceResponse]] = []
+
     model_config = {
         "from_attributes": True
     }

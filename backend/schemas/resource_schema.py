@@ -1,32 +1,36 @@
 from models.resource_model import FileTypeEnum
+from models.agent_model import LanguageEnum
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
-# Embedded agent schema
+# Embedded Agent schema 
 class AgentResponse(BaseModel):
     id: UUID
     name: str
     description: str
     is_working: bool
+    model: Optional[str] = None
+    language: Optional[LanguageEnum] = None
 
     model_config = {
         "from_attributes": True
     }
 
-# Define resource base schema
+# Base Resource schema
 class ResourceBase(BaseModel):
     name: str
     filetype: FileTypeEnum
+    filepath: str
     size: int
     timestamp: datetime
 
-# Create resource (POST)
+# Create Resource schema
 class ResourceCreate(ResourceBase):
-    consumed_by: UUID
+    consumed_by: UUID  
 
-# Update resource (PUT)
+# Update Resource schema
 class ResourceUpdate(BaseModel):
     name: Optional[str] = None
     filetype: Optional[FileTypeEnum] = None
@@ -35,11 +39,11 @@ class ResourceUpdate(BaseModel):
     timestamp: Optional[datetime] = None
     consumed_by: Optional[UUID] = None
 
-# Get resource (GET)
+# Response Resource schema
 class ResourceResponse(ResourceBase):
     id: UUID
     consumed_by: UUID
-    agent: AgentResponse
+    agent: Optional[AgentResponse] = None
 
     model_config = {
         "from_attributes": True
