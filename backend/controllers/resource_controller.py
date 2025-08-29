@@ -1,4 +1,4 @@
-from errors.resource_errors import ResourceNotFoundError, DuplicateResourceError, FileSizeError
+from errors.resource_errors import ResourceNotFoundError, DuplicateResourceError, FileSizeError, FileDeletionError, FolderDeletionError
 from schemas.resource_schema import ResourceCreate, ResourceUpdate, ResourceResponse
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from middlewares.jwt_auth import require_roles
@@ -94,3 +94,7 @@ def delete_resource_endpoint(resource_id: str, db: Session = Depends(get_db)):
         return delete_resource(db, resource_id)
     except ResourceNotFoundError as e:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = str(e))
+    except FileDeletionError as e:
+        raise HTTPException(status_code = status.HTTP_500_INTERNAL_SERVER_ERROR, detail = str(e))
+    except FolderDeletionError as e:
+        raise HTTPException(status_code = status.HTTP_500_INTERNAL_SERVER_ERROR, detail = str(e))

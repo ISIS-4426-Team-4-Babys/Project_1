@@ -1,12 +1,13 @@
+from errors.resource_errors import ResourceNotFoundError, DuplicateResourceError, FileSizeError, FileDeletionError, FolderDeletionError
 from schemas.resource_schema import ResourceCreate, ResourceUpdate
 from errors.db_errors import IntegrityConstraintError
-from errors.resource_errors import ResourceNotFoundError, DuplicateResourceError, FileSizeError
 from errors.agent_errors import AgentNotFoundError
 from sqlalchemy.orm import Session, selectinload
 from sqlalchemy.exc import IntegrityError
 from models.resource_model import Resource
 from models.agent_model import Agent
 from fastapi import UploadFile
+import shutil
 import logging
 import os
 
@@ -137,7 +138,27 @@ def update_resource(db: Session, resource_id: str, resource_data: ResourceUpdate
 def delete_resource(db: Session, resource_id: str):
     logger.info("Deleting resource id=%s", resource_id)
     resource = get_resource_by_id(db, resource_id)
+
+    # Delete resource using filepath
+    if resource.filepath and os.path.exists(resource.filepath):
+        try:
+            os.remove(resource.filepath)
+            logger.info("File deleted successfully path=%s", resource.filepath)
+        except Exception as e:
+            logger.error("Error deleting file path=%s: %s", resource.filepath, str(e))
+            raise FileDeletionError(resource.filepath, str(e))
+        
     db.delete(resource)
     db.commit()
+
+    agent_dir = os.path.dirname(resource.filepath)
+    try:
+        if os.path.isdir(agent_dir) and not os.listdir(agent_dir):
+            shutil.rmtree(agent_dir)
+            logger.info("Agent folder deleted because it was empty path=%s", agent_dir)
+    except Exception as e:
+        logger.error("Error cleaning agent folder path=%s: %s", agent_dir, str(e))
+        raise FolderDeletionError(agent_dir, str(e))
+
     logger.info("Resource deleted successfully id=%s", resource_id)
     return resource
