@@ -4,7 +4,7 @@ from errors.db_errors import IntegrityConstraintError
 from sqlalchemy.orm import Session, selectinload
 from passlib.context import CryptContext
 from sqlalchemy.exc import IntegrityError
-from models.user_model import User
+from models.user_model import User, UserRole
 import logging
 
 
@@ -143,7 +143,7 @@ def get_courses_for_student(db: Session, student_id: str):
     logger.debug("Fetching courses for student id=%s", student_id)
     student = get_user_by_id(db, student_id)
 
-    if student.role != "student":
+    if student.role != UserRole.student:
         logger.warning("User id=%s is not a student (role=%s)", student_id, student.role)
         raise InvalidUserRoleError(student.role, "student")
 
@@ -156,7 +156,7 @@ def get_courses_for_professor(db: Session, professor_id: str):
     logger.debug("Fetching courses for professor id=%s", professor_id)
     professor = get_user_by_id(db, professor_id)
 
-    if professor.role != "teacher":
+    if professor.role != UserRole.professor:
         logger.warning("User id=%s is not a teacher (role=%s)", professor_id, professor.role)
         raise InvalidUserRoleError(professor.role, "teacher")
 

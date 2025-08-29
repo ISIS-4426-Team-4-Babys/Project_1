@@ -123,7 +123,7 @@ def enroll_student(db: Session, course_id: str, student_id: str):
     student = get_user_by_id(db, student_id)
 
     # Verify student role
-    if student.role != "student":
+    if student.role != UserRole.student:
         logger.warning("User id=%s is not a student (role=%s)", student_id, student.role)
         raise InvalidUserRoleError(student.role, "student")
 
@@ -156,7 +156,7 @@ def unenroll_student(db: Session, course_id: str, student_id: str):
     student = get_user_by_id(db, student_id)
 
     # Verify student role
-    if student.role != "student":
+    if student.role != UserRole.student:
         logger.warning("User id=%s is not a student (role=%s)", student_id, student.role)
         raise InvalidUserRoleError(student.role, "student")
 
