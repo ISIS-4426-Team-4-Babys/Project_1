@@ -1,6 +1,6 @@
 from errors.resource_errors import ResourceNotFoundError, DuplicateResourceError, FileSizeError, FileDeletionError, FolderDeletionError
-from schemas.resource_schema import ResourceCreate, ResourceUpdate
 from errors.db_errors import IntegrityConstraintError
+from schemas.resource_schema import ResourceCreate
 from errors.agent_errors import AgentNotFoundError
 from sqlalchemy.orm import Session, selectinload
 from sqlalchemy.exc import IntegrityError
@@ -88,50 +88,6 @@ def get_resource_by_id(db: Session, resource_id: str):
     if not resource:
         raise ResourceNotFoundError("id", resource_id)
     return resource
-
-
-# Update resource (PUT)
-def update_resource(db: Session, resource_id: str, resource_data: ResourceUpdate):
-    logger.info("Updating resource id=%s", resource_id)
-    resource = get_resource_by_id(db, resource_id)
-    
-    # Verify associated agent if changed
-    if resource_data.consumed_by is not None:
-        existing_agent = db.query(Agent).filter(Agent.id == resource_data.consumed_by).first()
-        if not existing_agent:
-            logger.warning("Associated agent not found id=%s", resource_data.consumed_by)
-            raise AgentNotFoundError("id", resource_data.consumed_by)
-    
-    # Check for duplicate resource for the agent
-    if resource_data.name is not None and resource_data.consumed_by is not None:
-        existing_resource = (
-            db.query(Resource)
-            .filter(Resource.name == resource_data.name, Resource.consumed_by == resource_data.consumed_by)
-            .first()
-        )
-        if existing_resource and existing_resource.id != resource.id:
-            logger.warning("Resource with name=%s already consumed by the agent", resource_data.name)
-            raise DuplicateResourceError(resource_data.name)
-        
-    # Validate max file size
-    if resource_data.size is not None and resource_data.size > MAX_FILE_SIZE:
-        logger.warning("Resource with name=%s exceeds max file size", resource_data.name)
-        raise FileSizeError(resource_data.size, MAX_FILE_SIZE)
-    
-    for key, value in resource_data.model_dump(exclude_unset = True).items():
-        setattr(resource, key, value)
-
-    try:
-        db.commit()
-        db.refresh(resource)
-        logger.info("Resource updated successfully id=%s", resource.id)
-        resource = db.query(Resource).options(selectinload(Resource.agent)).filter(Resource.id == resource.id).first()
-        return resource
-    
-    except IntegrityError as e:
-        db.rollback()
-        logger.error("IntegrityError when updating resource: %s", str(e))
-        raise IntegrityConstraintError("Update Resource")
 
 
 # Delete resource (DELETE)

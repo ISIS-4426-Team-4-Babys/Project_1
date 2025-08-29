@@ -1,6 +1,6 @@
 from errors.resource_errors import ResourceNotFoundError, DuplicateResourceError, FileSizeError, FileDeletionError, FolderDeletionError
-from schemas.resource_schema import ResourceCreate, ResourceUpdate, ResourceResponse
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
+from schemas.resource_schema import ResourceCreate, ResourceResponse
 from middlewares.jwt_auth import require_roles
 from errors.db_errors import IntegrityConstraintError
 from models.user_model import UserRole
@@ -11,7 +11,6 @@ from services.resource_service import (
     create_resource,
     get_resources,
     get_resource_by_id,
-    update_resource,
     delete_resource,
 )
 
@@ -64,24 +63,6 @@ def get_resource_by_id_endpoint(resource_id: str, db: Session = Depends(get_db))
         return get_resource_by_id(db, resource_id)
     except ResourceNotFoundError as e:
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = str(e))
-
-
-# Update Resource
-@router.put("/{resource_id}", 
-            response_model = ResourceResponse, 
-            status_code = status.HTTP_200_OK, 
-            dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))])
-def update_resource_endpoint(resource_id: str, resource_data: ResourceUpdate, db: Session = Depends(get_db)):
-    try:
-        return update_resource(db, resource_id, resource_data)
-    except ResourceNotFoundError as e:
-        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = str(e))
-    except DuplicateResourceError as e:
-        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = str(e))
-    except FileSizeError as e:
-        raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = str(e))
-    except IntegrityConstraintError as e:
-        raise HTTPException(status_code = status.HTTP_409_CONFLICT, detail = str(e))
 
 
 # Delete Resource

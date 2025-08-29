@@ -29,15 +29,6 @@ class ResourceBase(BaseModel):
 class ResourceCreate(ResourceBase):
     consumed_by: UUID  
 
-# Update Resource schema
-class ResourceUpdate(BaseModel):
-    name: Optional[str] = None
-    filetype: Optional[str] = None
-    filepath: Optional[str] = None
-    size: Optional[int] = None
-    timestamp: Optional[datetime] = None
-    consumed_by: Optional[UUID] = None
-
 # Response Resource schema
 class ResourceResponse(ResourceBase):
     id: UUID
