@@ -1,9 +1,9 @@
 from errors.resource_errors import ResourceNotFoundError, DuplicateResourceError, FileSizeError
 from schemas.resource_schema import ResourceCreate, ResourceUpdate, ResourceResponse
 from fastapi import APIRouter, Depends, HTTPException, status
-from backend.middlewares.jwt_auth import require_roles
+from middlewares.jwt_auth import require_roles
 from errors.db_errors import IntegrityConstraintError
-from backend.models.user_model import UserRole
+from models.user_model import UserRole
 from sqlalchemy.orm import Session
 from config.database import get_db
 from services.resource_service import (

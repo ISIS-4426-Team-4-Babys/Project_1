@@ -1,9 +1,9 @@
 from schemas.course_schema import CourseCreate, CourseUpdate, CourseResponse
 from errors.course_errors import CourseNotFoundError, DuplicateCourseError
 from fastapi import APIRouter, Depends, HTTPException, status
-from backend.middlewares.jwt_auth import require_roles
+from middlewares.jwt_auth import require_roles
 from errors.db_errors import IntegrityConstraintError
-from backend.models.user_model import UserRole
+from models.user_model import UserRole
 from sqlalchemy.orm import Session
 from config.database import get_db
 from services.course_service import (

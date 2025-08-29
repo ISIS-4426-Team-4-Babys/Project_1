@@ -71,7 +71,7 @@ def get_resources(db: Session):
 # Get resource by id (GET)
 def get_resource_by_id(db: Session, resource_id: str):
     logger.debug("Fetching resource by id=%s", resource_id)
-    resource = db.query(Resource).options(selectinload(Resource.agent)).filter(Resource.id == resource.id).first()
+    resource = db.query(Resource).options(selectinload(Resource.agent)).filter(Resource.id == resource_id).first()
     if not resource:
         raise ResourceNotFoundError("id", resource_id)
     return resource
