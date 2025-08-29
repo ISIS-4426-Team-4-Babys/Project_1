@@ -7,7 +7,7 @@ import uuid
 
 # Define Filetype enumeration
 class FileTypeEnum(enum.Enum):
-    pdf = "pdf"
+    pdf = "application/pdf"
     docx = "docx"
     pptx = "pptx"
     txt = "txt"

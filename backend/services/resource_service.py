@@ -45,7 +45,7 @@ def create_resource(db: Session, resource_data: ResourceCreate, file: UploadFile
         raise FileSizeError(file_size, MAX_FILE_SIZE)
     
     # Create agent folder
-    agent_dir = os.path.join(UPLOAD_DIR, resource_data.consumed_by)
+    agent_dir = os.path.join(UPLOAD_DIR, str(resource_data.consumed_by))
     os.makedirs(agent_dir, exist_ok = True)
 
     # Save file

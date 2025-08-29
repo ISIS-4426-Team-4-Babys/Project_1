@@ -6,7 +6,7 @@ from errors.db_errors import IntegrityConstraintError
 from models.user_model import UserRole
 from sqlalchemy.orm import Session
 from config.database import get_db
-from datetime import datetime
+from datetime import datetime, timezone
 from services.resource_service import (
     create_resource,
     get_resources,
@@ -31,7 +31,7 @@ def create_resource_endpoint(db: Session = Depends(get_db), file: UploadFile = F
         filetype = file.content_type,
         filepath = "",
         size = 0,
-        timestamp = datetime.now(datetime.timezone.utc),
+        timestamp = datetime.now(timezone.utc),
         consumed_by = consumed_by
     )
     
