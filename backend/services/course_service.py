@@ -1,7 +1,8 @@
-from errors.course_errors import CourseNotFoundError, DuplicateCourseError
+from errors.course_errors import CourseNotFoundError, DuplicateCourseError, InvalidUserRoleError
 from schemas.course_schema import CourseCreate, CourseUpdate
 from errors.db_errors import IntegrityConstraintError
 from sqlalchemy.orm import Session, selectinload
+from services.user_service import get_user_by_id
 from errors.user_errors import UserNotFoundError
 from models.user_model import User, UserRole
 from sqlalchemy.exc import IntegrityError
@@ -57,13 +58,13 @@ def create_course(db: Session, course_data: CourseCreate):
 # Get all courses (GET)
 def get_courses(db: Session):
     logger.debug("Fetching all courses")
-    return db.query(Course).options(selectinload(Course.teacher)).all()
+    return db.query(Course).options(selectinload(Course.teacher), selectinload(Course.students), selectinload(Course.agents)).all()
 
 
 # Get course by id (GET)
 def get_course_by_id(db: Session, course_id: str):
     logger.debug("Fetching course by id=%s", course_id)
-    course = db.query(Course).options(selectinload(Course.teacher)).filter(Course.id == course_id).first()
+    course = db.query(Course).options(selectinload(Course.teacher), selectinload(Course.students), selectinload(Course.agents)).filter(Course.id == course_id).first()
     if not course:
         raise CourseNotFoundError("id", course_id)
     return course
@@ -113,3 +114,84 @@ def delete_course(db: Session, course_id: str):
     db.commit()
     logger.info("Course deleted successfully id=%s", course_id)
     return course
+
+
+# Enroll a student in a course (POST)
+def enroll_student(db: Session, course_id: str, student_id: str):
+    logger.info("Enrolling user id=%s with course id=%s", student_id, course_id)
+    course = get_course_by_id(db, course_id)
+    student = get_user_by_id(db, student_id)
+
+    # Verify student role
+    if student.role != "student":
+        logger.warning("User id=%s is not a student (role=%s)", student_id, student.role)
+        raise InvalidUserRoleError(student.role, "student")
+
+    # Verify that the student isnt enrolled in the course
+    if student in course.students:
+        logger.info("Student id=%s is already enrolled in course id=%s", student_id, course_id)
+        return course  
+
+    # Enroll student
+    course.students.append(student)
+
+    try:
+        db.commit()
+        db.refresh(course)
+        course = db.query(Course).options(selectinload(Course.students)).filter(Course.id == course.id).first()
+        logger.info("Student id=%s enrolled successfully in course id=%s", student_id, course_id)
+        return course
+    
+    except IntegrityError as e:
+        db.rollback()
+        logger.error("IntegrityError when enrolling student: %s", str(e))
+        raise IntegrityConstraintError("Enroll Student")
+
+
+# Unenroll a student from a course (DELETE)
+def unenroll_student(db: Session, course_id: str, student_id: str):
+    logger.info("Unenrolling user id=%s from course id=%s", student_id, course_id)
+
+    course = get_course_by_id(db, course_id)
+    student = get_user_by_id(db, student_id)
+
+    # Verify student role
+    if student.role != "student":
+        logger.warning("User id=%s is not a student (role=%s)", student_id, student.role)
+        raise InvalidUserRoleError(student.role, "student")
+
+    # Verify the student is enrolled in the course
+    if student not in course.students:
+        logger.info("Student id=%s is not enrolled in course id=%s", student_id, course_id)
+        return course 
+
+    # Remove student
+    course.students.remove(student)
+
+    try:
+        db.commit()
+        db.refresh(course)
+        course = db.query(Course).options(selectinload(Course.students)).filter(Course.id == course.id).first()
+        logger.info("Student id=%s unenrolled successfully from course id=%s", student_id, course_id)
+        return course
+    
+    except IntegrityError as e:
+        db.rollback()
+        logger.error("IntegrityError when unenrolling student: %s", str(e))
+        raise IntegrityConstraintError("Unenroll Student")
+
+
+# Get all students enrolled in a course (GET)
+def get_students_in_course(db: Session, course_id: str):
+    logger.debug("Fetching students for course id=%s", course_id)
+    course = get_course_by_id(db, course_id)
+    logger.info("Found %s students enrolled in course id=%s", len(course.students), course_id)
+    return course.students
+
+
+# Get all agents associated with a course (GET)
+def get_agents_in_course(db: Session, course_id: str):
+    logger.debug("Fetching agents for course id=%s", course_id)
+    course = get_course_by_id(db, course_id)
+    logger.info("Found %s agents associated with course id=%s", len(course.agents), course_id)
+    return course.agents

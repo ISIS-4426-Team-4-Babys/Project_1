@@ -48,13 +48,13 @@ def create_agent(db: Session, agent_data: AgentCreate):
 # Get all agents (GET)
 def get_agents(db: Session):
     logger.debug("Fetching all agents")
-    return db.query(Agent).options(selectinload(Agent.course)).all()
+    return db.query(Agent).options(selectinload(Agent.course), selectinload(Agent.resources)).all()
 
 
 # Get agent by ID (GET)
 def get_agent_by_id(db: Session, agent_id: str):
     logger.debug("Fetching agent by id=%s", agent_id)
-    agent = db.query(Agent).options(selectinload(Agent.course)).filter(Agent.id == agent_id).first()
+    agent = db.query(Agent).options(selectinload(Agent.course), selectinload(Agent.resources)).filter(Agent.id == agent_id).first()
     if not agent:
         raise AgentNotFoundError("id", agent_id)
     return agent
@@ -95,3 +95,11 @@ def delete_agent(db: Session, agent_id: str):
     db.commit()
     logger.info("Agent deleted successfully id=%s", agent_id)
     return agent
+
+
+# Get all resources for an agent (GET)
+def get_resources_for_agent(db: Session, agent_id: str):
+    logger.debug("Fetching resources for agent id=%s", agent_id)
+    agent = get_agent_by_id(agent_id)
+    logger.info("Found %s resources for agent id=%s", len(agent.resources), agent_id)
+    return agent.resources

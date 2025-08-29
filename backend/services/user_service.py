@@ -1,4 +1,4 @@
-from errors.user_errors import UserNotFoundError, DuplicateUserError, InvalidCredentialsError
+from errors.user_errors import UserNotFoundError, DuplicateUserError, InvalidCredentialsError, InvalidUserRoleError
 from schemas.user_schema import UserCreate, UserUpdate
 from errors.db_errors import IntegrityConstraintError
 from sqlalchemy.orm import Session, selectinload
@@ -48,7 +48,7 @@ def create_user(db: Session, data: UserCreate):
         db.add(user)
         db.commit()
         db.refresh(user)
-        user = db.query(User).options(selectinload(User.courses_taken), selectinload(User.courses_taught)).filter(User.id == user.id).first()
+        user = db.query(User).filter(User.id == user.id).first()
         logger.info("User created successfully id=%s", user.id)
         return user
     
@@ -108,7 +108,7 @@ def update_user(db: Session, user_id: str, data: UserUpdate):
     try:
         db.commit()
         db.refresh(user)
-        user = db.query(User).options(selectinload(User.courses_taken), selectinload(User.courses_taught)).filter(User.id == user.id).first()
+        user = db.query(User).filter(User.id == user.id).first()
         logger.info("User updated succesfully id=%s", user.id)
         return user
     
@@ -136,3 +136,29 @@ def authenticate_user(db: Session, user_email: str, password: str) -> User:
         logger.warning("Invalid credentials email=%s", user_email)
         raise InvalidCredentialsError()
     return user
+
+
+# Get all courses a student is enrolled in (GET)
+def get_courses_for_student(db: Session, student_id: str):
+    logger.debug("Fetching courses for student id=%s", student_id)
+    student = get_user_by_id(db, student_id)
+
+    if student.role != "student":
+        logger.warning("User id=%s is not a student (role=%s)", student_id, student.role)
+        raise InvalidUserRoleError(student.role, "student")
+
+    logger.info("Found %s courses for student id=%s", len(student.courses), student_id)
+    return student.courses
+
+
+# Get all courses taught by a professor (GET)
+def get_courses_for_professor(db: Session, professor_id: str):
+    logger.debug("Fetching courses for professor id=%s", professor_id)
+    professor = get_user_by_id(db, professor_id)
+
+    if professor.role != "teacher":
+        logger.warning("User id=%s is not a teacher (role=%s)", professor_id, professor.role)
+        raise InvalidUserRoleError(professor.role, "teacher")
+
+    logger.info("Found %s courses for professor id=%s", len(professor.courses_taught), professor_id)
+    return professor.courses_taught

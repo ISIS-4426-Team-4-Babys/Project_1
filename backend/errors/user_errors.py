@@ -13,3 +13,9 @@ class DuplicateUserError(Exception):
 class InvalidCredentialsError(Exception):
     def __init__(self):
         super().__init__("Invalid email or password")
+
+class InvalidUserRoleError(Exception):
+    def __init__(self, role: str, expected: str):
+        self.role = role
+        self.expected = expected
+        super().__init__(f"Invalid role {role}. Expected role {expected}")
