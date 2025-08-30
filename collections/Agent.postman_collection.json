@@ -1,0 +1,645 @@
+{
+	"info": {
+		"_postman_id": "0f48017c-b9d4-4b26-8b3f-2a1ba52932b0",
+		"name": "Agent",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47548803",
+		"_collection_link": "https://mrcheesyburgeru-3113691.postman.co/workspace/Nicolas-Rozo-Fajardo's-Workspac~d282d319-67a1-4bda-8570-f9f29991945d/collection/47548803-0f48017c-b9d4-4b26-8b3f-2a1ba52932b0?action=share&source=collection_link&creator=47548803"
+	},
+	"item": [
+		{
+			"name": "Create Agent",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"agent_id\", response.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Agente Administrativo\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"associated_course\": \"{{course_id}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/agents",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"agents"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Agent",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Agente Administrativo\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"associated_course\": \"{{course_id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{service_url}}/agents",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"agents"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:51:49 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "626"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Agente Administrativo\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"id\": \"2258d9d1-e0cf-43b5-8994-a6cfabdb5f35\",\n    \"associated_course\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"course\": {\n        \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n        \"name\": \"Diseño y Análisis de Algoritmos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"La mejor materia del pregrado\"\n    },\n    \"resources\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Agent (Delete)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"agent_delete_id\", response.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Agente Administrativo 2\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando el conocimiento de los documentos guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"associated_course\": \"{{course_id}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/agents",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"agents"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Agent (Delete)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Agente Administrativo 2\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando el conocimiento de los documentos guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"associated_course\": \"{{course_id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{service_url}}/agents",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"agents"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:53:16 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "646"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Agente Administrativo 2\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando el conocimiento de los documentos guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"id\": \"5e9aa5e7-4eea-4fed-9df9-8de4e3395939\",\n    \"associated_course\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"course\": {\n        \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n        \"name\": \"Diseño y Análisis de Algoritmos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"La mejor materia del pregrado\"\n    },\n    \"resources\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Get All Agents",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{service_url}}/agents",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"agents"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get All Agents",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{service_url}}/agents",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"agents"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:53:58 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "1275"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"name\": \"Agente Administrativo\",\n        \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n        \"is_working\": true,\n        \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n        \"model\": \"gpt-5\",\n        \"language\": \"es\",\n        \"retrieval_k\": 5,\n        \"id\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n        \"associated_course\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n        \"course\": {\n            \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n            \"name\": \"Diseño y Análisis de Algoritmos\",\n            \"code\": \"ISIS-1105\",\n            \"department\": \"Ingeniería de Sistemas y Computación\",\n            \"description\": \"La mejor materia del pregrado\"\n        },\n        \"resources\": []\n    },\n    {\n        \"name\": \"Agente Administrativo 2\",\n        \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n        \"is_working\": true,\n        \"system_prompt\": \"Eres un agente administrativo. Usando el conocimiento de los documentos guía al estudiante en el programa del curso\",\n        \"model\": \"gpt-5\",\n        \"language\": \"es\",\n        \"retrieval_k\": 5,\n        \"id\": \"5e9aa5e7-4eea-4fed-9df9-8de4e3395939\",\n        \"associated_course\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n        \"course\": {\n            \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n            \"name\": \"Diseño y Análisis de Algoritmos\",\n            \"code\": \"ISIS-1105\",\n            \"department\": \"Ingeniería de Sistemas y Computación\",\n            \"description\": \"La mejor materia del pregrado\"\n        },\n        \"resources\": []\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Get Agent By ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{service_url}}/agents/{{agent_id}}",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"agents",
+						"{{agent_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Agent By ID",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{service_url}}/agents/{{agent_id}}",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"agents",
+								"{{agent_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:55:02 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "626"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Agente Administrativo\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"id\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n    \"associated_course\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"course\": {\n        \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n        \"name\": \"Diseño y Análisis de Algoritmos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"La mejor materia del pregrado\"\n    },\n    \"resources\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Update Agent",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"retrieval_k\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/agents/{{agent_id}}",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"agents",
+						"{{agent_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update Agent",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"retrieval_k\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{service_url}}/agents/{{agent_id}}",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"agents",
+								"{{agent_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:55:53 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "627"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"name\": \"Agente Administrativo\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 10,\n    \"id\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n    \"associated_course\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"course\": {\n        \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n        \"name\": \"Diseño y Análisis de Algoritmos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"La mejor materia del pregrado\"\n    },\n    \"resources\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Agent",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"retrieval_k\": 10\n}"
+				},
+				"url": {
+					"raw": "{{service_url}}/agents/{{agent_delete_id}}",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"agents",
+						"{{agent_delete_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete Agent",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"retrieval_k\": 10\n}"
+						},
+						"url": {
+							"raw": "{{service_url}}/agents/{{agent_delete_id}}",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"agents",
+								"{{agent_delete_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 21:01:41 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "646"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Agente Administrativo 2\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando el conocimiento de los documentos guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"id\": \"5e9aa5e7-4eea-4fed-9df9-8de4e3395939\",\n    \"associated_course\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"course\": {\n        \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n        \"name\": \"Diseño y Análisis de Algoritmos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"La mejor materia del pregrado\"\n    },\n    \"resources\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Resources",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"retrieval_k\": 10\n}"
+				},
+				"url": {
+					"raw": "{{service_url}}/agents/{{agent_id}}/resources",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"agents",
+						"{{agent_id}}",
+						"resources"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Resources",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"retrieval_k\": 10\n}"
+						},
+						"url": {
+							"raw": "{{service_url}}/agents/{{agent_id}}/resources",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"agents",
+								"{{agent_id}}",
+								"resources"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "date",
+							"value": "Sat, 30 Aug 2025 01:44:03 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "547"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"name\": \"Pensum Ingeniería de Sistemas y Computación\",\n        \"filetype\": \"application/pdf\",\n        \"filepath\": \"backend/data/eccbe5ef-ee38-4385-922e-6bc923f31161/PENSUM INGENIERIA DE SISTEMAS.pdf\",\n        \"size\": 423103,\n        \"timestamp\": \"2025-08-30T01:43:46.036999\",\n        \"id\": \"c256506c-7146-47dc-b0af-4e7e8ef46a41\",\n        \"consumed_by\": \"eccbe5ef-ee38-4385-922e-6bc923f31161\",\n        \"agent\": {\n            \"id\": \"eccbe5ef-ee38-4385-922e-6bc923f31161\",\n            \"name\": \"Agente Administrativo\",\n            \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n            \"is_working\": true,\n            \"model\": \"gpt-5\",\n            \"language\": \"es\"\n        }\n    }\n]"
+				}
+			]
+		}
+	]
+}
