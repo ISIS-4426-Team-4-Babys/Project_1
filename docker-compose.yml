@@ -36,11 +36,47 @@ services:
     depends_on:
       database:
         condition: service_healthy
+      rabbitmq:
+        condition: service_started
     volumes:
       - ./backend/data:/app/backend/data
     restart: unless-stopped
-    
+
+ # RabbitMQ (con UI de administración)
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"   
+      - "15672:15672" 
+    restart: unless-stopped
+
+  # Ollama (servidor de LLM)
+  #ollama:
+  #  container_name: ollama
+  #  image: ollama/ollama:latest
+  #  ports:
+  #    - "11434:11434" 
+  #  volumes:
+  #    - ollama_data:/root/.ollama
+  #  restart: unless-stopped
+
+  # Worker: preprocesamiento a Markdown
+  worker-preprocess:
+    container_name: worker-preprocess
+    build:
+      context: ./pipelines/preprocess
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/data:/app/data   
+    depends_on:
+      - rabbitmq
+      #- ollama
+    restart: unless-stopped
+
 # Volumes
 volumes:
   database:
     driver: local
+  #ollama_data:
+  #  driver: local

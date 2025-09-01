@@ -9,3 +9,6 @@ env/
 
 # Cache generado por python
 __pycache__/
+
+# Ignorar todo el contenido de /data excepto su .gitignore
+backend/data/*

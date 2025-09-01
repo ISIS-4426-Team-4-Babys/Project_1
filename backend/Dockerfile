@@ -1,23 +1,22 @@
-# Use Python 3.11
+# Use Python 3.11 slim
 FROM python:3.11-slim
 
-# Environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# Prevent Python from writing .pyc files and buffer logs
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Create and set working directory
+# Set working directory inside the container
 WORKDIR /app
 
-# Copy requirements and install dependencies
-COPY ./requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+# Copy requirements and install them
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # Copy backend source code
-COPY . /app
+COPY . .
 
-# Expose the port where FastAPI will run
+# Expose FastAPI port
 EXPOSE 8000
 
-# Default command
+# Start FastAPI with Uvicorn
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
