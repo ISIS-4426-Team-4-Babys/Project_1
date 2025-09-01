@@ -40,22 +40,23 @@ def create_resource(db: Session, resource_data: ResourceCreate, file: UploadFile
     if existing_resource:
         logger.warning("Resource with name=%s already consumed by the agent", resource_data.name)
         raise DuplicateResourceError(resource_data.name)
-        
-    # Validate max file size (100 MB)
-    contents = file.file.read()
-    file_size = len(contents)
-    if file_size > MAX_FILE_SIZE:
-        logger.warning("Resource with name=%s exceeds max file size", resource_data.name)
-        raise FileSizeError(file_size, MAX_FILE_SIZE)
     
     # Create agent folder
     agent_dir = os.path.join(UPLOAD_DIR, str(resource_data.consumed_by))
     os.makedirs(agent_dir, exist_ok = True)
+    filepath = os.path.join(agent_dir, file.filename)
 
     # Save file
-    filepath = os.path.join(agent_dir, file.filename)
     with open(filepath, "wb") as f:
-        f.write(contents)
+        shutil.copyfileobj(file.file, f)
+    file_size = os.path.getsize(filepath)
+
+
+    if file_size > MAX_FILE_SIZE:
+        os.remove(filepath)
+        logger.warning("Resource with name=%s exceeds max file size", resource_data.name)
+        raise FileSizeError(file_size, MAX_FILE_SIZE)
+    
 
     # Update data in the schema
     resource_data.filepath = filepath
@@ -64,24 +65,28 @@ def create_resource(db: Session, resource_data: ResourceCreate, file: UploadFile
     # Create model
     resource = Resource(**resource_data.model_dump())
 
-    # Send to queue
-    message = resource_data.filepath
-    rabbitmq.publish("files", message)
-    logger.info("Resource published in files topic")
-    rabbitmq.close()
-
+    # Save in DB first
     try:
         db.add(resource)
         db.commit()
         db.refresh(resource)
         resource = db.query(Resource).options(selectinload(Resource.agent)).filter(Resource.id == resource.id).first()
-        logger.info("Resource created successfully id=%s", resource.id)
-        return resource
     
     except IntegrityError as e:
         db.rollback()
         logger.error("IntegrityError when creating resource: %s", str(e))
         raise IntegrityConstraintError("Create Resource")
+
+    # Send to RabbitMQ
+    message = resource.filepath
+    rabbitmq.publish("files", message)
+    logger.info("Resource published in files topic")
+
+    # Return full resoruce with agent loaded
+    logger.info("Resource created successfully id=%s", resource.id)
+    return resource
+
+
 
 
 # Get all resources (GET)
