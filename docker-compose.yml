@@ -37,46 +37,46 @@ services:
       database:
         condition: service_healthy
       rabbitmq:
-        condition: service_started
+        condition: service_healthy
     volumes:
       - ./backend/data:/app/backend/data
     restart: unless-stopped
 
  # RabbitMQ (con UI de administración)
   rabbitmq:
-    container_name: rabbitmq
     image: rabbitmq:3-management
+    container_name: rabbitmq
     ports:
-      - "5672:5672"   
-      - "15672:15672" 
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
     restart: unless-stopped
 
-  # Ollama (servidor de LLM)
-  #ollama:
-  #  container_name: ollama
-  #  image: ollama/ollama:latest
-  #  ports:
-  #    - "11434:11434" 
-  #  volumes:
-  #    - ollama_data:/root/.ollama
-  #  restart: unless-stopped
-
-  # Worker: preprocesamiento a Markdown
-  worker-preprocess:
-    container_name: worker-preprocess
+  # RabbitMQ Monitor
+  monitor:
+    container_name: monitor
     build:
-      context: ./pipelines/preprocess
+      context: ./queue
       dockerfile: Dockerfile
-    volumes:
-      - ./backend/data:/app/data   
+    environment:
+      RABBITMQ_HOST: rabbitmq   
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
     depends_on:
-      - rabbitmq
-      #- ollama
-    restart: unless-stopped
+      database:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
 # Volumes
 volumes:
   database:
     driver: local
-  #ollama_data:
-  #  driver: local

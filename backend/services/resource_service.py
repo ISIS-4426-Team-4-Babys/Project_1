@@ -5,6 +5,7 @@ from errors.agent_errors import AgentNotFoundError
 from sqlalchemy.orm import Session, selectinload
 from sqlalchemy.exc import IntegrityError
 from models.resource_model import Resource
+from config.rabbitmq import RabbitMQ
 from models.agent_model import Agent
 from fastapi import UploadFile
 import shutil
@@ -14,6 +15,8 @@ import os
 logger = logging.getLogger("app.services.resource")
 MAX_FILE_SIZE = 100 * 1024 * 1024  
 UPLOAD_DIR = "backend/data"
+
+rabbitmq = RabbitMQ()
 
 # Create resource (POST)
 def create_resource(db: Session, resource_data: ResourceCreate, file: UploadFile):
@@ -60,6 +63,12 @@ def create_resource(db: Session, resource_data: ResourceCreate, file: UploadFile
 
     # Create model
     resource = Resource(**resource_data.model_dump())
+
+    # Send to queue
+    message = resource_data.filepath
+    rabbitmq.publish("files", message)
+    logger.info("Resource published in files topic")
+    rabbitmq.close()
 
     try:
         db.add(resource)
