@@ -60,21 +60,33 @@ services:
     restart: unless-stopped
 
   # RabbitMQ Monitor
-  monitor:
-    container_name: monitor
+  #monitor:
+  #  container_name: monitor
+  #  build:
+  #    context: ./queue
+  #    dockerfile: Dockerfile
+  #  environment:
+  #    RABBITMQ_HOST: rabbitmq   
+  #    RABBITMQ_PORT: 5672
+  #    RABBITMQ_USER: guest
+  #    RABBITMQ_PASSWORD: guest
+  #  depends_on:
+  #    database:
+  #      condition: service_healthy
+  #    rabbitmq:
+  #      condition: service_healthy
+
+  preprocess:
+    container_name: preprocess
     build:
-      context: ./queue
+      context: ./pipelines/preprocess   # carpeta donde está tu main.py y Dockerfile del worker
       dockerfile: Dockerfile
-    environment:
-      RABBITMQ_HOST: rabbitmq   
-      RABBITMQ_PORT: 5672
-      RABBITMQ_USER: guest
-      RABBITMQ_PASSWORD: guest
     depends_on:
-      database:
-        condition: service_healthy
       rabbitmq:
         condition: service_healthy
+    volumes:
+      - ./backend/data:/app/backend/data  # comparte la misma carpeta de datos que el backend
+    restart: unless-stopped
 
 # Volumes
 volumes:
