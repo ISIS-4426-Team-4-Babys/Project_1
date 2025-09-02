@@ -90,6 +90,22 @@ services:
     volumes:
       - ./backend/data:/app/backend/data  
     restart: unless-stopped
+  
+  # Vectorize async worker
+  vectorize:
+    container_name: vectorize
+    build:
+      context: .  
+      dockerfile: pipelines/vectorize/Dockerfile
+    env_file:
+      - ./pipelines/vectorize/.env
+      - ./rabbitmq/.env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - ./backend/data:/app/backend/data  
+    restart: unless-stopped
 
 # Volumes
 volumes:

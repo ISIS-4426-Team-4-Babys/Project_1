@@ -1,6 +1,8 @@
 # Archivos con variables de entorno e información sensible
 #.env
 pipelines/format/.env
+
+pipelines/vectorize/.env
 # Entornos virtuales para aislar dependencias
 env/
 

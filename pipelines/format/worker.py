@@ -2,6 +2,7 @@ from openai import AzureOpenAI
 from rabbitmq import RabbitMQ
 import logging
 import os
+import json
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -46,8 +47,14 @@ def callback(ch, method, properties, body):
 
     with open(markdown_path, "w", encoding = "utf-8") as f:
         f.write(output)
+    
+    # TODO
+    message = {
+        "db_id": markdown_path.split("/")[4], 
+        "file_path": markdown_path
+    }
 
-    rabbitmq.publish("vect", "Done")
+    rabbitmq.publish("vectorize", json.dumps(message))
 
 rabbitmq.consume("format", callback)
 
