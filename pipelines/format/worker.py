@@ -5,21 +5,19 @@ import requests
 import time
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-OLLAMA_URL ="http://localhost:11434"
+OLLAMA_URL = "http://ollama:11434"
 
-
-while True:
-    try:
-        if requests.get(f"{OLLAMA_URL}/v1/models").status_code == 200:
-            break
-    except requests.exceptions.ConnectionError:
-        pass
-    logging.info("Esperando a que Ollama esté listo...")
-    time.sleep(1)
-
-logging.info("Ollama listo")
 rabbitmq = RabbitMQ()
 
+logging.info("Verificando modelo llama3...")
+r = requests.post(f"{OLLAMA_URL}/api/pull", json={"model": "llama3"}, stream=True)
+
+# Leer la respuesta en streaming (Ollama devuelve progreso)
+for line in r.iter_lines():
+    if line:
+        logging.info(line.decode("utf-8"))
+
+logging.info("Modelo llama3 disponible")
 
 def handle_request(ch, method, properties, body):
     logging.info(f"Message received with content = {body}")
@@ -37,7 +35,7 @@ def handle_request(ch, method, properties, body):
     response = requests.post(f"{OLLAMA_URL}/api/generate", json={
         "model": "llama3",
         "prompt": prompt,
-        "stream": False
+        "stream": True
     })
 
     logging.info("yikes")

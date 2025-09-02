@@ -17,10 +17,6 @@ RUN curl -fsSL https://ollama.com/install.sh | sh
 # Asegúrate de que el binario esté en PATH
 ENV PATH="/root/.ollama/bin:${PATH}"
 
-# Copiar e instalar dependencias Python
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
 # Copiar el código y el entrypoint
 COPY . /opt/ollama/
 WORKDIR /opt/ollama
@@ -28,6 +24,7 @@ WORKDIR /opt/ollama
 # Dar permisos de ejecución al entrypoint
 RUN chmod +x /opt/ollama/entrypoint.sh
 
+# Exponer puerto del servidor web de Ollama
 EXPOSE 11434
 
 # Ejecutar entrypoint al iniciar el contenedor
