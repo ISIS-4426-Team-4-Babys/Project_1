@@ -32,4 +32,8 @@ def callback(ch, method, properties, body):
 
     logging.info(f"Markdown file saved at {markdown_path}")
 
+    rabbitmq.publish("format", markdown_path)
+
+    logging.info(f"Markdown send with {markdown_path}")
+
 rabbitmq.consume("files", callback)
