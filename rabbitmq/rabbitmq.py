@@ -4,10 +4,10 @@ import os
 class RabbitMQ:
 
     def __init__(self):
-        self.user = os.getenv('RABBITMQ_USER', 'guest')
-        self.password = os.getenv('RABBITMQ_PASSWORD', 'guest')
-        self.host = os.getenv('RABBITMQ_HOST', 'rabbitmq')
-        self.port = int(os.getenv('RABBITMQ_PORT', 5672))
+        self.user = os.getenv('RABBITMQ_USER')
+        self.password = os.getenv('RABBITMQ_PASSWORD')
+        self.host = os.getenv('RABBITMQ_HOST')
+        self.port = int(os.getenv('RABBITMQ_PORT'))
         self.connection = None
         self.channel = None
         self.connect()
@@ -15,7 +15,7 @@ class RabbitMQ:
 
     def connect(self):
         credentials = pika.PlainCredentials(self.user, self.password)
-        parameters = pika.ConnectionParameters(host = self.host, port = self.port, credentials = credentials, heartbeat=600, blocked_connection_timeout=300)
+        parameters = pika.ConnectionParameters(host = self.host, port = self.port, credentials = credentials, heartbeat = 600, blocked_connection_timeout = 300)
         self.connection = pika.BlockingConnection(parameters)
         self.channel = self.connection.channel()
     
@@ -47,6 +47,6 @@ class RabbitMQ:
                                    routing_key = queue_name,
                                    body = message,
                                    properties = pika.BasicProperties(
-                                       delivery_mode = 2,  # make message persistent
+                                       delivery_mode = 2, 
                                    ))
         print(f"Sent message to queue {queue_name}: {message}")

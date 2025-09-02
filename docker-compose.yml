@@ -27,10 +27,11 @@ services:
   backend:
     container_name: backend
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     env_file:
       - ./backend/.env
+      - ./rabbitmq/.env
     ports:
       - "8000:8000"
     depends_on:
@@ -42,7 +43,7 @@ services:
       - ./backend/data:/app/backend/data
     restart: unless-stopped
 
- # RabbitMQ (con UI de administración)
+ # RabbitMQ (with admin web UI)
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -59,61 +60,35 @@ services:
       start_period: 30s
     restart: unless-stopped
 
-  # RabbitMQ Monitor
-  #monitor:
-  #  container_name: monitor
-  #  build:
-  #    context: ./queue
-  #    dockerfile: Dockerfile
-  #  environment:
-  #    RABBITMQ_HOST: rabbitmq   
-  #    RABBITMQ_PORT: 5672
-  #    RABBITMQ_USER: guest
-  #    RABBITMQ_PASSWORD: guest
-  #  depends_on:
-  #    database:
-  #      condition: service_healthy
-  #    rabbitmq:
-  #      condition: service_healthy
-
+  # Preprocess async woker
   preprocess:
     container_name: preprocess
     build:
-      context: ./pipelines/preprocess   # carpeta donde está tu main.py y Dockerfile del worker
-      dockerfile: Dockerfile
+      context: .   
+      dockerfile: pipelines/preprocess/Dockerfile
+    env_file:
+      - ./rabbitmq/.env
     depends_on:
       rabbitmq:
         condition: service_healthy
     volumes:
-      - ./backend/data:/app/backend/data  # comparte la misma carpeta de datos que el backend
+      - ./backend/data:/app/backend/data  
     restart: unless-stopped
   
-  ollama:
-    container_name: ollama
-    build:
-      context: ./ollama
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    environment:
-      - OLLAMA_HOST=0.0.0.0
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
-      interval: 5s
-      retries: 20
-      start_period: 5s
-  
+  # Format async worker
   format:
     container_name: format
     build:
-      context: ./pipelines/format   # carpeta donde está tu main.py y Dockerfile del worker
-      dockerfile: Dockerfile
+      context: .  
+      dockerfile: pipelines/format/Dockerfile
+    env_file:
+      - ./pipelines/format/.env
+      - ./rabbitmq/.env
     depends_on:
       rabbitmq:
         condition: service_healthy
-      ollama:
-        condition: service_healthy
     volumes:
-      - ./backend/data:/app/backend/data  # comparte la misma carpeta de datos que el backend
+      - ./backend/data:/app/backend/data  
     restart: unless-stopped
 
 # Volumes

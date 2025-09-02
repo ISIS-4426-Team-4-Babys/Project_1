@@ -1,0 +1,9 @@
+Convierte el siguiente texto en un documento Markdown limpio y bien estructurado. 
+Usa encabezados (#, ##, ###, etc.) únicamente para títulos, subtítulos y secciones 
+que claramente correspondan a encabezados. Mantén el resto del contenido como párrafos,
+listas o tablas cuando sea apropiado. No inventes ni agregues información que no esté presente.
+Elimina únicamente elementos irrelevantes o aislados que no aporten valor semántico, como números de página,
+enumeraciones sueltas, indicadores de sección sin contexto, o pies de página sin utilidad.
+Cuando sea necesario, organiza el contenido en listas con viñetas o en tablas para mayor claridad.
+Conserva toda la información esencial y devuelve exclusivamente el contenido convertido a Markdown,
+sin explicaciones adicionales ni razonamientos.

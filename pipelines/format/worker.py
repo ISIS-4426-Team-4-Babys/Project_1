@@ -1,26 +1,25 @@
-from subprocess import Popen, PIPE
+from openai import AzureOpenAI
 from rabbitmq import RabbitMQ
-import requests
 import logging
-import time
-import json
+import os
+
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-OLLAMA_URL = "http://ollama:11434"
+
+client = AzureOpenAI(
+    api_key = os.getenv("NANO_KEY"),
+    api_version = "2024-12-01-preview",
+    azure_endpoint = "https://uniandes-dev-ia-resource.openai.azure.com/"
+)
 
 rabbitmq = RabbitMQ()
 
-logging.info("Verificando modelo llama3...")
-r = requests.post(f"{OLLAMA_URL}/api/pull", json={"model": "deepseek-r1:latest"}, stream=True)
+prompt = ""
+with open("prompt.txt", "r", encoding = "utf-8") as f:
+    prompt = f.read()
 
-# Leer la respuesta en streaming (Ollama devuelve progreso)
-for line in r.iter_lines():
-    if line:
-        logging.info(line.decode("utf-8"))
 
-logging.info("Modelo llama3 disponible")
-
-def handle_request(ch, method, properties, body):
+def callback(ch, method, properties, body):
     logging.info(f"Message received with content = {body}")
     markdown_path = "/app/" + body.decode().strip()
     markdown_text = ""
@@ -28,41 +27,27 @@ def handle_request(ch, method, properties, body):
     with open(markdown_path, "r", encoding="utf-8") as f:
         markdown_text = f.read()
 
-    prompt = "Convierte el contenido a un documento markdown estructurado, infiriendo los lugares" \
-             "mas probables para poner títulos, subtítulos y otros elementos de formato. NO agregues " \
-             "información adicional a la dada por el contexto, tampoco elimines información dada, simplemente formatea y devuelve un texto" \
-             "que soporte una estrategia de segmentación por estructura de documento: " + markdown_text
-    
-    response = requests.post(f"{OLLAMA_URL}/api/generate", json={
-        "model": "deepseek-r1:latest",
-        "prompt": prompt,
-        "stream": True
-    })
-    
-    with open(markdown_path.replace(".md","_new.md"), "w", encoding="utf-8") as f:
-        for line in response.iter_lines(decode_unicode="utf-8"):
-            if line:
-                obj = json.loads(line)
-            try:
-                obj = json.loads(line)
-            except json.JSONDecodeError:
-                logging.debug(f"Línea no-JSON: {line!r}")
-                continue
+    response = client.chat.completions.create(
+        model = "gpt-5-nano-iau-ingenieria",
+        messages = [
+            {
+                "role" : "system",
+                "content" : prompt
+            },
+            {
+                "role" : "user",
+                "content" : markdown_text
+            }
+        ]
+    )
 
-            chunk = obj.get("response")
-            if chunk:
-                logging.info("Procesando línea: %r", chunk)
-                f.write(chunk)
-                f.flush()
+    output = response.choices[0].message.content
+    logging.info("Format completed succesfully")
 
-            # Cuando Ollama avisa que terminó, cortamos
-            if obj.get("done"):
-                break
-
-
-    logging.info("Generación completada.")
+    with open(markdown_path, "w", encoding = "utf-8") as f:
+        f.write(output)
 
     rabbitmq.publish("vect", "Done")
 
-rabbitmq.consume("format", handle_request)
+rabbitmq.consume("format", callback)
 

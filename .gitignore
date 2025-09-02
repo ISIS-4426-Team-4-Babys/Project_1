@@ -1,6 +1,6 @@
 # Archivos con variables de entorno e información sensible
 #.env
-
+pipelines/format/.env
 # Entornos virtuales para aislar dependencias
 env/
 
@@ -12,3 +12,4 @@ __pycache__/
 
 # Ignorar todo el contenido de /data excepto su .gitignore
 backend/data/*
+
