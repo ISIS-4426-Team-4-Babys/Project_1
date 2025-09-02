@@ -17,9 +17,10 @@ RUN curl -fsSL https://ollama.com/install.sh | sh
 # Asegúrate de que el binario esté en PATH
 ENV PATH="/root/.ollama/bin:${PATH}"
 
-# Copiar el código y el entrypoint
-COPY . /opt/ollama/
 WORKDIR /opt/ollama
+
+# Copiar el código y el entrypoint
+COPY entrypoint.sh ./entrypoint.sh
 
 # Dar permisos de ejecución al entrypoint
 RUN chmod +x /opt/ollama/entrypoint.sh
