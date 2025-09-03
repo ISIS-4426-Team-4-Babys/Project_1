@@ -15,3 +15,5 @@ __pycache__/
 # Ignorar todo el contenido de /data excepto su .gitignore
 backend/data/*
 
+pipelines/vectorize/databases/*
+

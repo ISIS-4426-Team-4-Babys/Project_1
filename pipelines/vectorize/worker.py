@@ -1,6 +1,6 @@
 from langchain.text_splitter import MarkdownHeaderTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from langchain.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain.schema import Document
 from rabbitmq import RabbitMQ
 from pathlib import Path
@@ -56,7 +56,7 @@ def process_and_store(db_id: str, file_path: str):
         db.add_documents(chunks)
         logging.info(f"Chunks added to existing vector database at {db_path}")
 
-    db.persist()
+    # db.persist()
     logging.info(f"Persistence completed at {db_path}")
 
     return str(db_path)

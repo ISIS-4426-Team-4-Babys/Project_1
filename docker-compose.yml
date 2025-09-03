@@ -105,9 +105,11 @@ services:
         condition: service_healthy
     volumes:
       - ./backend/data:/app/backend/data  
+      - ./pipelines/vectorize/databases:/app/databases
     restart: unless-stopped
 
 # Volumes
 volumes:
   database:
     driver: local
+  
