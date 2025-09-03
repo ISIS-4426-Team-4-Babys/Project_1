@@ -15,7 +15,7 @@ rabbitmq = RabbitMQ()
 
 headers_to_split_on = [("#", "H1"), ("##", "H2"), ("###", "H3"), ("####", "H4")]
 splitter = MarkdownHeaderTextSplitter(headers_to_split_on = headers_to_split_on, strip_headers = False)
-embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
+embeddings = GoogleGenerativeAIEmbeddings(model = "models/gemini-embedding-001")
 
 BASE_DB_DIR = "databases"
 
@@ -33,15 +33,14 @@ def process_and_store(db_id: str, file_path: str):
 
     filename = os.path.basename(file_path)
 
-    docs = [Document(page_content = markdown_text, metadata = {"source_file": filename})]
-    chunks = splitter.split_documents(docs)
+    doc = Document(page_content = markdown_text, metadata = {"source_file": filename})
+    chunks = splitter.split_text(doc.page_content)
 
     logging.info(f"{len(chunks)} chunks generated from file {filename}")
 
     db_path = Path(BASE_DB_DIR) / db_id
     os.makedirs(db_path, exist_ok = True)
 
-    # Create or load DB
     if not any(db_path.iterdir()):
         db = Chroma.from_documents(
             documents = chunks,
@@ -68,7 +67,6 @@ def callback(ch, method, properties, body):
         decoded_message = body.decode().strip()
         logging.info(f"Message received: {decoded_message}")
 
-        # Parse JSON payload
         payload = json.loads(decoded_message)
         db_id = payload.get("db_id")
         file_path = payload.get("file_path")
@@ -79,14 +77,12 @@ def callback(ch, method, properties, body):
 
         logging.info(f"Database ID received: {db_id}")
         logging.info(f"Filepath received: {file_path}")
-        # Process file into the vector DB
-        #db_path = process_and_store(db_id, file_path)
 
-        #if db_path:
-        #    # Publish result to "format" queue
-        #    result_msg = json.dumps({"db_id": db_id, "db_path": db_path})
-        #    rabbitmq.publish("format", result_msg)
-        #    logging.info(f"Published message to 'format': {result_msg}")
+        db_path = process_and_store(db_id, file_path)
+
+        if db_path:
+            rabbitmq.publish("counter", "yipi")
+            logging.info(f"Published message to 'counter'")
 
     except json.JSONDecodeError:
         logging.error("Failed to decode JSON message")
