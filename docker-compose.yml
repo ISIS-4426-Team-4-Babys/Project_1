@@ -136,13 +136,13 @@ services:
       - ./pipelines/vectorize/databases:/app/databases
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
-  
-  # Agent base image
+
+  # Agent base 
   agent-base:
-    image: agent-base
     build:
       context: .  
       dockerfile: pipelines/deploy/templates/Dockerfile
+    image: agent-base
     
 # Volumes
 volumes:
