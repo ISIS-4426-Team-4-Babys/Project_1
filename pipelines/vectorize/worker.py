@@ -15,7 +15,7 @@ rabbitmq = RabbitMQ()
 
 headers_to_split_on = [("#", "H1"), ("##", "H2"), ("###", "H3"), ("####", "H4")]
 splitter = MarkdownHeaderTextSplitter(headers_to_split_on = headers_to_split_on, strip_headers = False)
-embeddings = GoogleGenerativeAIEmbeddings(model = "models/gemini-embedding-001")
+embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
 
 BASE_DB_DIR = "databases"
 

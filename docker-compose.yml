@@ -130,6 +130,7 @@ services:
     env_file:
       - ./rabbitmq/.env
       - ./pipelines/vectorize/.env
+      - ./pipelines/deploy/.env
     depends_on:
       rabbitmq:
         condition: service_healthy

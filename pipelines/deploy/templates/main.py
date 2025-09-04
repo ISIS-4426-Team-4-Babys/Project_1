@@ -5,6 +5,14 @@ from fastapi import FastAPI, HTTPException
 from langchain_chroma import Chroma
 from pydantic import BaseModel
 import os
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,  # Muestra info, warning, error
+    format="%(asctime)s | %(levelname)s | %(message)s"
+)
+
+logger = logging.getLogger(__name__)
 
 PROMPT_TEMPLATE = os.getenv("PROMPT_TEMPLATE")
 DB_PATH = "/app/database/"
@@ -15,7 +23,7 @@ prompt = ChatPromptTemplate.from_template("""
 Eres un asistente especializado en responder preguntas sobre documentación administrativa de un curso.
 Utiliza únicamente la información del contexto proporcionado para responder la pregunta.
 Si no conoces la respuesta basándote en el contexto, indica claramente que no tienes esa información.
-Mantén las respuestas concisas, precisas y usa máximo tres oraciones.
+Mantén las respuestas concisas y precisas.
 
 Pregunta: {question}
 
@@ -26,11 +34,10 @@ Respuesta:
 
 llm = ChatGoogleGenerativeAI(
     model = "gemini-2.5-flash",
-    temperature = 0.1,
-    max_tokens = 200
+    temperature = 0.5,
 )
 
-embeddings = GoogleGenerativeAIEmbeddings(model = "models/gemini-embedding-001")
+embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
 
 def load_vector_store():
     if not os.path.exists(DB_PATH):
@@ -44,6 +51,15 @@ vector_store = load_vector_store()
 
 def ask_rag(question: str, vector_store, k = 3):
     retrieved_docs = vector_store.similarity_search(question, k = k)
+
+    logger.info("#total documentos %d", len(retrieved_docs))
+    
+    for i, doc in enumerate(retrieved_docs, start=1):
+        logger.info(f"Documento {i}: {doc.page_content[:500]}...")  # muestra los primeros 500 caracteres
+        logger.info(f"Metadata {i}: {doc.metadata}")
+
+    docs_content = "\n\n".join(doc.page_content for doc in retrieved_docs)
+
     docs_content = "\n\n".join(doc.page_content for doc in retrieved_docs)
     messages = prompt.invoke({
         "question": question,
