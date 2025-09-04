@@ -94,14 +94,8 @@ class BarrierNotifier:
             self.channel.start_consuming()
         
         finally:
-            self.channel.basic_publish(exchange = '',
-                                       routing_key = "deploy",
-                                       body = self.agent_id,
-                                       properties = pika.BasicProperties(
-                                           delivery_mode = 2,
-                                       ))
-            self.close()
             self.channel.queue_delete(queue = self.agent_id)
+            self.close()
     
     def start_in_thread(self):
 
