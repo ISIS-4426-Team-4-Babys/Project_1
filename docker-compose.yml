@@ -134,8 +134,16 @@ services:
         condition: service_healthy
     volumes:
       - ./pipelines/vectorize/databases:/app/databases
+      - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
-
+  
+  # Agent base image
+  agent-base:
+    image: agent-base
+    build:
+      context: .  
+      dockerfile: pipelines/deploy/templates/Dockerfile
+    
 # Volumes
 volumes:
   database:

@@ -24,7 +24,7 @@ def callback(ch, method, properties, body):
     decoded_message = body.decode().strip()
     logging.info(f"Message received with content = {body}")
     
-    payload = json.loads(decoded_message, )
+    payload = json.loads(decoded_message)
     filepath = payload.get("filepath")
     total_docs = payload.get("total_docs")
 
