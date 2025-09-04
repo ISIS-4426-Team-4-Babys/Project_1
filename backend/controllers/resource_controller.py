@@ -23,7 +23,7 @@ router = APIRouter(prefix="/resources", tags=["Resources"])
              response_model = ResourceResponse, 
              status_code = status.HTTP_201_CREATED, 
              dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))])
-def create_resource_endpoint(db: Session = Depends(get_db), file: UploadFile = File(...), name: str = Form(...), consumed_by: str = Form(...)):
+def create_resource_endpoint(db: Session = Depends(get_db), file: UploadFile = File(...), name: str = Form(...), consumed_by: str = Form(...), total_docs: str = Form(...)):
     
     resource_data = ResourceCreate(
         name = name,
@@ -31,7 +31,8 @@ def create_resource_endpoint(db: Session = Depends(get_db), file: UploadFile = F
         filepath = "",
         size = 0,
         timestamp = datetime.now(timezone.utc),
-        consumed_by = consumed_by
+        consumed_by = consumed_by,
+        total_docs = int(total_docs)
     )
     
     try:

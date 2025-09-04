@@ -70,19 +70,27 @@ def callback(ch, method, properties, body):
         payload = json.loads(decoded_message)
         db_id = payload.get("db_id")
         file_path = payload.get("file_path")
+        total_docs = payload.get("total_docs")
 
-        if not db_id or not file_path:
-            logging.error("Invalid message: 'db_id' or 'file_path' missing")
+        if not db_id or not file_path or not total_docs:
+            logging.error("Invalid message: 'db_id' or 'file_path' or 'total_docs' missing")
             return
 
         logging.info(f"Database ID received: {db_id}")
         logging.info(f"Filepath received: {file_path}")
+        logging.info(f"Total docs received: {total_docs}")
 
         db_path = process_and_store(db_id, file_path)
 
         if db_path:
-            rabbitmq.publish("counter", "yipi")
-            logging.info(f"Published message to 'counter'")
+
+            message = {
+                "agent_id": db_id, 
+                "total_docs": total_docs
+            } 
+
+            rabbitmq.publish("control", json.dumps(message))
+            logging.info(f"Published message to control topic")
 
     except json.JSONDecodeError:
         logging.error("Failed to decode JSON message")

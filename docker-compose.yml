@@ -108,6 +108,19 @@ services:
       - ./pipelines/vectorize/databases:/app/databases
     restart: unless-stopped
 
+  # 
+  barriers:
+    container_name: barriers
+    build:
+      context: .  
+      dockerfile: barriers/Dockerfile
+    env_file:
+      - ./rabbitmq/.env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
 # Volumes
 volumes:
   database:

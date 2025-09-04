@@ -28,6 +28,7 @@ class ResourceBase(BaseModel):
 # Create Resource schema
 class ResourceCreate(ResourceBase):
     consumed_by: UUID  
+    total_docs: int
 
 # Response Resource schema
 class ResourceResponse(ResourceBase):

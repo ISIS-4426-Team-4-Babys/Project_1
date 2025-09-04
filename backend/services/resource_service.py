@@ -10,6 +10,7 @@ from models.agent_model import Agent
 from fastapi import UploadFile
 import shutil
 import logging
+import json
 import os
 
 logger = logging.getLogger("app.services.resource")
@@ -62,8 +63,11 @@ def create_resource(db: Session, resource_data: ResourceCreate, file: UploadFile
     resource_data.filepath = filepath
     resource_data.size = file_size
 
+    # Get total document information
+    total_docs = resource_data.total_docs
+
     # Create model
-    resource = Resource(**resource_data.model_dump())
+    resource = Resource(**resource_data.model_dump(exclude = {"total_docs"}))
 
     # Save in DB first
     try:
@@ -78,8 +82,12 @@ def create_resource(db: Session, resource_data: ResourceCreate, file: UploadFile
         raise IntegrityConstraintError("Create Resource")
 
     # Send to RabbitMQ
-    message = resource.filepath
-    rabbitmq.publish("files", message)
+    message = {
+        "filepath": resource.filepath,
+        "total_docs": total_docs
+    }
+    
+    rabbitmq.publish("files", json.dumps(message))
     logger.info("Resource published in files topic")
 
     # Return full resoruce with agent loaded

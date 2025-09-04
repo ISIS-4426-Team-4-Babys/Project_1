@@ -21,11 +21,17 @@ with open("prompt.txt", "r", encoding = "utf-8") as f:
 
 
 def callback(ch, method, properties, body):
+    decoded_message = body.decode().strip()
     logging.info(f"Message received with content = {body}")
-    markdown_path = "/app/" + body.decode().strip()
+    
+    payload = json.loads(decoded_message, )
+    filepath = payload.get("filepath")
+    total_docs = payload.get("total_docs")
+
+    markdown_path = "/app/" + filepath
     markdown_text = ""
 
-    with open(markdown_path, "r", encoding="utf-8") as f:
+    with open(markdown_path, "r", encoding = "utf-8") as f:
         markdown_text = f.read()
 
     response = client.chat.completions.create(
@@ -48,10 +54,10 @@ def callback(ch, method, properties, body):
     with open(markdown_path, "w", encoding = "utf-8") as f:
         f.write(output)
     
-    # TODO
     message = {
         "db_id": markdown_path.split("/")[4], 
-        "file_path": markdown_path
+        "file_path": markdown_path,
+        "total_docs": total_docs
     }
 
     rabbitmq.publish("vectorize", json.dumps(message))
