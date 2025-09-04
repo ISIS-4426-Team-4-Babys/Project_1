@@ -6,12 +6,11 @@ from langchain_chroma import Chroma
 from pydantic import BaseModel
 import os
 
-DB_PATH = "/app/database/"
 PROMPT_TEMPLATE = os.getenv("PROMPT_TEMPLATE")
+DB_PATH = "/app/database/"
 
 app = FastAPI()
 
-# Prompt personalizado
 prompt = ChatPromptTemplate.from_template("""
 Eres un asistente especializado en responder preguntas sobre documentación administrativa de un curso.
 Utiliza únicamente la información del contexto proporcionado para responder la pregunta.
@@ -54,7 +53,7 @@ def ask_rag(question: str, vector_store, k = 3):
     return {
         "question": question,
         "answer": response.content,
-        "sources": [doc.metadata.get('source_file', 'unknown') for doc in retrieved_docs]
+        # "sources": [doc.metadata.get('source_file', 'unknown') for doc in retrieved_docs]
     }
 
 class AskRequest(BaseModel):

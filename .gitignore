@@ -3,6 +3,8 @@
 pipelines/format/.env
 
 pipelines/vectorize/.env
+pipelines/deploy/.env
+
 # Entornos virtuales para aislar dependencias
 env/
 

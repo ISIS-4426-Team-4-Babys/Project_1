@@ -5,22 +5,24 @@ import json
 import os
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+BASE_PATH = os.getenv("BASE_PATH")
+
 rabbitmq = RabbitMQ()
+
 
 def callback(ch, method, properties, body):
     decoded_message = body.decode().strip()
     logging.info(f"Message received with content = {body}")
 
     payload = json.loads(decoded_message)
-    event = payload.get("event")
     agent_id = payload.get("agent_id")
 
     image_name = "agent-base"
     container_name = f"agent_{agent_id}"
     
-
-    host_path = f"/home/nico/Desktop/Project_1/pipelines/vectorize/databases/{agent_id}"
+    host_path = BASE_PATH + agent_id
     container_path = "/app/database"
 
     host_port = int(agent_id[-4:], 16) % 10000 + 20000  
@@ -38,6 +40,7 @@ def callback(ch, method, properties, body):
         image_name
     ], check = True)
 
-    logging.info(f"Agente desplegado en http://localhost:{host_port} con ID {agent_id}")
+    logging.info(f"Agent deployed in http://localhost:{host_port} with ID {agent_id}")
+
 
 rabbitmq.consume("deploy", callback)
