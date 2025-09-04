@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+langchain
+langchain-core
+langchain-community
+langchain-experimental
+langchain-chroma
+langchain-google-genai
+langchain-text-splitters
+unstructured
+python-dotenv
+markdown
+datasets

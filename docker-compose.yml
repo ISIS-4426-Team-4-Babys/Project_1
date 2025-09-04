@@ -129,6 +129,7 @@ services:
       dockerfile: pipelines/deploy/Dockerfile
     env_file:
       - ./rabbitmq/.env
+      - ./pipelines/vectorize/.env
     depends_on:
       rabbitmq:
         condition: service_healthy
