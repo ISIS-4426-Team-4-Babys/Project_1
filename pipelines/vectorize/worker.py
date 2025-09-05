@@ -9,7 +9,6 @@ import os
 import json
 
 
-# Configuración de logging
 logging.basicConfig(level = logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 rabbitmq = RabbitMQ()
 
@@ -17,69 +16,83 @@ headers_to_split_on = [("#", "H1"), ("##", "H2"), ("###", "H3"), ("####", "H4")]
 markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on = headers_to_split_on, strip_headers = False)
 
 recursive_splitter = RecursiveCharacterTextSplitter(
-    chunk_size = 1000,       # Tamaño máximo por fragmento
-		chunk_overlap = 500,     # Solapamiento entre fragmentos
-		separators = [           # Separadores en orden de prioridad
-			"\n\n",    # Párrafos
-			"\n",      # Líneas
-			". ",      # Oraciones
-			", ",      # Cláusulas
-			" ",       # Palabras
-			""         # Caracteres individuales
+    chunk_size = 700,       
+		chunk_overlap = 150,     
+		separators = [           
+			"\n\n",    
+			"\n",      
+			". ",      
+			", ",      
+			" ",       
+			""         
 		]
 )
+
 embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
 
 BASE_DB_DIR = "databases"
 
 
-def process_and_store(db_id: str, file_path: str):
-
-    logging.info(f"Processing file: {file_path} into DB {db_id}")
+def chunk_file(file_path: str):
+    
+    logging.info(f"Processing file: {file_path}")
 
     if not os.path.exists(file_path):
         logging.error(f"The file {file_path} does not exist")
         return None
 
     with open(file_path, "r", encoding = "utf-8") as f:
-        markdown_text = f.read()
-
+        content = f.read()
+    
     filename = os.path.basename(file_path)
 
-    #doc = Document(page_content = markdown_text, metadata = {"source_file": filename})
-    structured_chunks = markdown_splitter.split_text(markdown_text)
-
-    logging.info(f"{len(structured_chunks)} chunks generated from file {filename}")
+    structured_chunks = markdown_splitter.split_text(content)
+    logging.info(f"{len(structured_chunks)} structured chunks generated from file {filename}")
 
     final_chunks = []
     for chunk in structured_chunks:
         docs = recursive_splitter.split_text(chunk.page_content)
         for doc in docs:
             final_chunks.append(
-                Document(page_content = doc, metadata = chunk.metadata)
+                Document(page_content = doc)
             )
 
-    db_path = Path(BASE_DB_DIR) / db_id
+    for i, chunk in enumerate(final_chunks):
+        chunk.metadata.update({
+            "source_file": filename,
+            "source_path": file_path,
+            "chunk_index": i,
+            "total_chunks_in_doc": len(final_chunks),
+            "chunking_strategy": "hybrid",
+            "chunk_size": len(chunk.page_content)
+        })
+    
+    return final_chunks
+
+
+def load_to_chromadb(db_id: str, chunks, collection_name = "rag_docs"):
+
+    db_path =  Path(BASE_DB_DIR) / db_id
     os.makedirs(db_path, exist_ok = True)
 
     if not any(db_path.iterdir()):
-        db = Chroma.from_documents(
-            documents = final_chunks,
+        vector_store = Chroma.from_documents(
+            collection_name = collection_name,
+            documents = chunks, 
             embedding = embeddings,
             persist_directory = str(db_path)
         )
         logging.info(f"Vector database created at {db_path}")
     else:
         db = Chroma(
+            collection_name = collection_name,
             embedding_function = embeddings,
             persist_directory = str(db_path)
         )
-        db.add_documents(final_chunks)
+        db.add_documents(chunks)
         logging.info(f"Chunks added to existing vector database at {db_path}")
 
-    # db.persist()
     logging.info(f"Persistence completed at {db_path}")
-
     return str(db_path)
 
 
@@ -101,7 +114,8 @@ def callback(ch, method, properties, body):
         logging.info(f"Filepath received: {file_path}")
         logging.info(f"Total docs received: {total_docs}")
 
-        db_path = process_and_store(db_id, file_path)
+        chunks = chunk_file(file_path)
+        db_path = load_to_chromadb(db_id, chunks)
 
         if db_path:
 

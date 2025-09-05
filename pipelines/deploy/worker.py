@@ -13,6 +13,7 @@ rabbitmq = RabbitMQ()
 
 
 def callback(ch, method, properties, body):
+
     decoded_message = body.decode().strip()
     logging.info(f"Message received with content = {body}")
 
@@ -47,6 +48,5 @@ def callback(ch, method, properties, body):
     ], check = True)
 
     logging.info(f"Agent deployed in http://localhost:{host_port} with ID {agent_id}")
-
 
 rabbitmq.consume("deploy", callback)
