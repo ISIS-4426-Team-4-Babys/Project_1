@@ -1,4 +1,4 @@
-from langchain.text_splitter import MarkdownHeaderTextSplitter
+from langchain.text_splitter import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_chroma import Chroma
 from langchain.schema import Document
@@ -14,7 +14,20 @@ logging.basicConfig(level = logging.INFO, format="%(asctime)s [%(levelname)s] %(
 rabbitmq = RabbitMQ()
 
 headers_to_split_on = [("#", "H1"), ("##", "H2"), ("###", "H3"), ("####", "H4")]
-splitter = MarkdownHeaderTextSplitter(headers_to_split_on = headers_to_split_on, strip_headers = False)
+markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on = headers_to_split_on, strip_headers = False)
+
+recursive_splitter = RecursiveCharacterTextSplitter(
+    chunk_size = 1000,       # Tamaño máximo por fragmento
+		chunk_overlap = 500,     # Solapamiento entre fragmentos
+		separators = [           # Separadores en orden de prioridad
+			"\n\n",    # Párrafos
+			"\n",      # Líneas
+			". ",      # Oraciones
+			", ",      # Cláusulas
+			" ",       # Palabras
+			""         # Caracteres individuales
+		]
+)
 embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
 
 BASE_DB_DIR = "databases"
@@ -33,17 +46,25 @@ def process_and_store(db_id: str, file_path: str):
 
     filename = os.path.basename(file_path)
 
-    doc = Document(page_content = markdown_text, metadata = {"source_file": filename})
-    chunks = splitter.split_text(doc.page_content)
+    #doc = Document(page_content = markdown_text, metadata = {"source_file": filename})
+    structured_chunks = markdown_splitter.split_text(markdown_text)
 
-    logging.info(f"{len(chunks)} chunks generated from file {filename}")
+    logging.info(f"{len(structured_chunks)} chunks generated from file {filename}")
+
+    final_chunks = []
+    for chunk in structured_chunks:
+        docs = recursive_splitter.split_text(chunk.page_content)
+        for doc in docs:
+            final_chunks.append(
+                Document(page_content = doc, metadata = chunk.metadata)
+            )
 
     db_path = Path(BASE_DB_DIR) / db_id
     os.makedirs(db_path, exist_ok = True)
 
     if not any(db_path.iterdir()):
         db = Chroma.from_documents(
-            documents = chunks,
+            documents = final_chunks,
             embedding = embeddings,
             persist_directory = str(db_path)
         )
@@ -53,7 +74,7 @@ def process_and_store(db_id: str, file_path: str):
             embedding_function = embeddings,
             persist_directory = str(db_path)
         )
-        db.add_documents(chunks)
+        db.add_documents(final_chunks)
         logging.info(f"Chunks added to existing vector database at {db_path}")
 
     # db.persist()

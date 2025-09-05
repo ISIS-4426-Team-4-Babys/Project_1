@@ -7,8 +7,10 @@ from sqlalchemy.exc import IntegrityError
 from models.agent_model import Agent
 from models.course_model import Course
 import logging
+import os
 
 logger = logging.getLogger("app.services.agent")
+UPLOAD_DIR = "backend/prompts"
 
 # Create agent (POST)
 def create_agent(db: Session, agent_data: AgentCreate):
@@ -37,6 +39,15 @@ def create_agent(db: Session, agent_data: AgentCreate):
         db.refresh(agent)
         agent = db.query(Agent).options(selectinload(Agent.course)).filter(Agent.id == agent.id).first()
         logger.info("Agent created successfully id=%s", agent.id)
+        
+        agent_id = agent.id
+        agent_dir =  os.path.join(UPLOAD_DIR, str(agent_id))
+        os.makedirs(agent_dir, exist_ok = True)
+        filepath = os.path.join(agent_dir, "prompt.txt")
+
+        with open(filepath, "w", encoding = "utf-8") as f:
+            f.write(agent.system_prompt)
+    
         return agent
     
     except IntegrityError as e:

@@ -41,6 +41,7 @@ services:
         condition: service_healthy
     volumes:
       - ./backend/data:/app/backend/data
+      - ./backend/prompts:/app/backend/prompts
     restart: unless-stopped
 
  # RabbitMQ (with admin web UI)
@@ -136,6 +137,7 @@ services:
         condition: service_healthy
     volumes:
       - ./pipelines/vectorize/databases:/app/databases
+      - ./backend/prompts:/app/prompts
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
 
@@ -144,6 +146,8 @@ services:
     build:
       context: .  
       dockerfile: pipelines/deploy/templates/Dockerfile
+    env_file:
+      - ./pipelines/vectorize/.env
     image: agent-base
     
 # Volumes

@@ -14,23 +14,12 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-PROMPT_TEMPLATE = os.getenv("PROMPT_TEMPLATE")
+PROMPT = os.getenv("PROMPT")
 DB_PATH = "/app/database/"
 
 app = FastAPI()
 
-prompt = ChatPromptTemplate.from_template("""
-Eres un asistente especializado en responder preguntas sobre documentación administrativa de un curso.
-Utiliza únicamente la información del contexto proporcionado para responder la pregunta.
-Si no conoces la respuesta basándote en el contexto, indica claramente que no tienes esa información.
-Mantén las respuestas concisas y precisas.
-
-Pregunta: {question}
-
-Contexto: {context}
-
-Respuesta:
-""")
+prompt = ChatPromptTemplate.from_template(PROMPT)
 
 llm = ChatGoogleGenerativeAI(
     model = "gemini-2.5-flash",
@@ -49,14 +38,14 @@ def load_vector_store():
 
 vector_store = load_vector_store()
 
-def ask_rag(question: str, vector_store, k = 3):
+def ask_rag(question: str, vector_store, k = 10):
     retrieved_docs = vector_store.similarity_search(question, k = k)
 
     logger.info("#total documentos %d", len(retrieved_docs))
     
-    for i, doc in enumerate(retrieved_docs, start=1):
-        logger.info(f"Documento {i}: {doc.page_content[:500]}...")  # muestra los primeros 500 caracteres
-        logger.info(f"Metadata {i}: {doc.metadata}")
+    # for i, doc in enumerate(retrieved_docs, start=1):
+    #    logger.info(f"Documento {i}: {doc.page_content[:500]}...")  # muestra los primeros 500 caracteres
+    #    logger.info(f"Metadata {i}: {doc.metadata}")
 
     docs_content = "\n\n".join(doc.page_content for doc in retrieved_docs)
 

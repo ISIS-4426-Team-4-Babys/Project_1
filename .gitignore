@@ -21,3 +21,6 @@ backend/data/*
 pipelines/vectorize/databases/*
 !pipelines/vectorize/databases/.gitkeep
 
+backend/prompts/*
+!backend/prompts/.gitkeep
+
