@@ -7,7 +7,7 @@ module.exports = function (app) {
   app.use(
     '/api',
     createProxyMiddleware({
-      target: 'http://localhost:8000',
+      target: 'http://backend:8000',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     })
@@ -18,7 +18,7 @@ module.exports = function (app) {
     '/agent',
     createProxyMiddleware({
       // ⬅️ pon aquí el puerto donde escucha tu reverse proxy (80, 8080, 8000, etc.)
-      target: 'http://localhost:80',
+      target: 'http://nginx-proxy:80',
       changeOrigin: true,
 
       // Acepta /agent y /agent/ask; siempre reescribe a /ask (conserva query)
@@ -30,7 +30,7 @@ module.exports = function (app) {
       },
 
       // Siempre mismo origen; la selección real va por el Host header
-      router: () => 'http://localhost:80',
+      router: () => 'http://nginx-proxy:80',
 
       // Setea Host para que nginx-proxy/Traefik rote al contenedor correcto
       onProxyReq: (proxyReq, req) => {
