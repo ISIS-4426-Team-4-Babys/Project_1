@@ -39,9 +39,12 @@ def callback(ch, method, properties, body):
         "run", 
         "-d", 
         "--name", container_name, 
+        "--network", "project_1_default",
         "-e", f"AGENT_ID={agent_id}", 
         "-e", f"GOOGLE_API_KEY={GOOGLE_API_KEY}", 
-        "-e", f"PROMPT={PROMPT}", 
+        "-e", f"PROMPT={PROMPT}",
+        "-e", f"VIRTUAL_HOST={container_name}",
+        "-e", f"VIRTUAL_PORT={container_port}",
         "-p", f"{host_port}:{container_port}", 
         "-v", f"{host_path}:{container_path}", 
         image_name

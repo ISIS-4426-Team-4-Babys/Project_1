@@ -1,0 +1,169 @@
+/* AgentsCards.css */
+
+/* Tunables */
+:root {
+  --agents-radius: 1rem;
+  --agents-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  --agents-shadow-hover: 0 10px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* Layout polish */
+.container.py-4 > .hstack {
+  gap: 0.75rem !important;
+}
+.container.py-4 h4 {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* Add button (keeps Bootstrap palette) */
+.container.py-4 .btn-primary {
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+}
+
+/* Cards */
+.container.py-4 .card {
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--agents-radius);
+  box-shadow: var(--agents-shadow);
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+  overflow: hidden;
+}
+.container.py-4 .card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--agents-shadow-hover);
+  border-color: color-mix(in oklab, var(--bs-primary) 25%, var(--bs-border-color));
+}
+.container.py-4 .card-title {
+  font-weight: 700;
+  line-height: 1.2;
+}
+.container.py-4 .card-subtitle {
+  font-weight: 500;
+}
+.container.py-4 .card-text {
+  color: var(--bs-body-color);
+  /* Clamp long descriptions to 3 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.container.py-4 .card-footer {
+  background: var(--bs-body-bg);
+  border-top: 1px dashed var(--bs-border-color);
+}
+
+/* Badges */
+.container.py-4 .badge {
+  border-radius: 999px;
+  padding: 0.4rem 0.65rem;
+  font-weight: 600;
+}
+.container.py-4 .badge.bg-success {
+  background-image: linear-gradient(180deg, color-mix(in oklab, #fff 20%, var(--bs-success)) , var(--bs-success));
+  border: 1px solid color-mix(in oklab, #000 10%, var(--bs-success));
+}
+.container.py-4 .badge.bg-secondary {
+  background-image: linear-gradient(180deg, color-mix(in oklab, #fff 18%, var(--bs-secondary)), var(--bs-secondary));
+  border: 1px solid color-mix(in oklab, #000 12%, var(--bs-secondary));
+}
+
+/* Resource chips inside cards & modal */
+.container.py-4 .card .badge.bg-light,
+.modal .badge {
+  border: 1px solid var(--bs-border-color);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+}
+.modal .badge button {
+  border: none;
+  background: transparent;
+  font-weight: 700;
+  line-height: 1;
+  margin-left: 0.25rem;
+  opacity: 0.7;
+}
+.modal .badge button:hover { opacity: 1; }
+
+/* Modal polish */
+.modal-content {
+  border-radius: calc(var(--agents-radius) + 0.25rem);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.22);
+}
+.modal-header {
+  background: color-mix(in oklab, var(--bs-primary-bg-subtle) 60%, transparent);
+  border-bottom: 1px solid var(--bs-border-color);
+}
+.modal-title {
+  font-weight: 700;
+}
+.modal-footer .btn-primary {
+  min-width: 180px;
+}
+
+/* Form elements */
+.modal .form-control,
+.modal .form-select {
+  border-radius: 0.75rem;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--bs-border-color);
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.modal .form-control:focus,
+.modal .form-select:focus {
+  border-color: color-mix(in oklab, var(--bs-primary) 40%, var(--bs-border-color));
+  box-shadow: 0 0 0 0.2rem color-mix(in oklab, var(--bs-primary) 15%, transparent);
+}
+
+/* Switch (is_working) */
+.form-check.form-switch .form-check-input {
+  width: 3rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+.form-check.form-switch .form-check-input:checked {
+  background-color: var(--bs-success);
+  border-color: color-mix(in oklab, var(--bs-success) 65%, #000);
+}
+
+/* Group boxes in modal */
+.modal .border.rounded.p-3 {
+  border-style: dashed !important;
+  border-radius: 0.9rem !important;
+  background: color-mix(in oklab, var(--bs-body-bg) 80%, transparent);
+}
+
+/* InputGroup in resources */
+.input-group .btn-outline-primary {
+  font-weight: 600;
+  border-radius: 0.75rem;
+}
+
+/* Focus ring for buttons */
+.btn:focus-visible {
+  box-shadow: 0 0 0 0.24rem color-mix(in oklab, var(--bs-primary) 25%, transparent);
+}
+
+/* Responsive: tighten grid spacing on very small screens */
+@media (max-width: 420px) {
+  .container.py-4 .row.g-3 {
+    --bs-gutter-x: 0.85rem;
+    --bs-gutter-y: 0.85rem;
+  }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --agents-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    --agents-shadow-hover: 0 10px 28px rgba(0, 0, 0, 0.6);
+  }
+  .container.py-4 .card-footer {
+    background: color-mix(in oklab, var(--bs-body-bg) 90%, black);
+  }
+  .modal .border.rounded.p-3 {
+    background: color-mix(in oklab, var(--bs-body-bg) 70%, black);
+  }
+}

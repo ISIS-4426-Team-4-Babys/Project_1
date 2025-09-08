@@ -1,0 +1,25 @@
+.item-list-container {
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.item-list-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.item-list-header {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.item-list-element {
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.item-list-element:hover {
+  background-color: #f8f9fa;
+  transform: scale(1.01);
+}
