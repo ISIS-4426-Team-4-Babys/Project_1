@@ -1,4 +1,4 @@
-from schemas.user_schema import LoginRequest, TokenResponse, UserCreate, UserResponse
+from schemas.user_schema import LoginRequest, TokenResponse, UserCreate, UserResponse, LoginResponse
 from errors.user_errors import InvalidCredentialsError, DuplicateUserError
 from services.user_service import authenticate_user, create_user
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -24,13 +24,13 @@ def register_endpoint(data: UserCreate, db: Session = Depends(get_db)):
 
 # Login user
 @router.post("/login", 
-             response_model = TokenResponse)
+             response_model = LoginResponse)
 def login_endpoint(req: LoginRequest, db: Session = Depends(get_db)):
     try:
         user = authenticate_user(db, req.email, req.password)
         token = create_access_token(subject = str(user.id), extra_claims = {
             "role": user.role.value,
         })
-        return TokenResponse(access_token = token)
+        return LoginResponse(access_token = token, user = user)
     except InvalidCredentialsError as e:
         raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED, detail = str(e))

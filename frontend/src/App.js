@@ -1,24 +1,30 @@
-import logo from './logo.svg';
+import Auth from './Auth/Auth.jsx';
 import './App.css';
+import { AuthProvider } from './Auth/AuthProvider.tsx';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import RequireAuth from './Auth/RequireAuth.jsx';
+import Courses from './Courses/Courses.jsx';
+import AgentsCards from './Agents/AgentCards.jsx';
+import AgentList from './Agents/AgentList.jsx';
+import Chat from './Chat/Chat.jsx';
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Auth />} />
+
+          <Route element={<RequireAuth />}>
+            <Route path="/" element={<Courses />} />
+            <Route path="/agentsT" element={<AgentsCards />} />
+            <Route path="/agentsS" element={<AgentList />} />
+            <Route path="/chat" element={<Chat />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
