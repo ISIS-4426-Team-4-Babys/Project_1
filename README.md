@@ -55,6 +55,50 @@ La aplicación está compuesta por los siguientes servicios:
 - **Git:** Control de versiones.
 - **Postman:** Colecciones de APIs documentadas.
 
+## 🔄 Flujo de Datos del Sistema
+
+### 1. Carga de Materiales 📚
+
+- El docente sube archivos en formato PDF, DOCX, PPT o TXT
+
+### 2. Pipeline de Transformación 🔄
+
+#### 2.1 Preprocesamiento 📋
+
+```mermaid
+flowchart TD
+    A[Documento Original] --> B[Texto Extraído]
+    B --> C[Chunks Optimizados]
+    C --> D[Markdown Base]
+```
+
+#### 2.2 Formateo Inteligente 🎨
+
+```mermaid
+flowchart TD
+    A[Markdown Base] --> B[Análisis GPT]
+    B --> C[Estructuración]
+    C --> D[Markdown Enriquecido]
+```
+
+#### 2.3 Vectorización 🧮
+
+```mermaid
+flowchart TD
+    A[Contenido Procesado] --> B[Google AI Embeddings]
+    B --> C[Indexación]
+    C --> D[ChromaDB]
+```
+
+#### 2.4 Despliegue del Agente 🚀
+
+```mermaid
+flowchart TD
+    A[Recursos Listos] --> B[Configuración]
+    B --> C[Contenedor Docker]
+    C --> D[Endpoint Activo]
+```
+
 ## 🚀 Inicio Rápido
 
 ### Prerrequisitos
