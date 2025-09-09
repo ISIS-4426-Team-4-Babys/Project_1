@@ -15,7 +15,7 @@ class RabbitMQ:
 
     def connect(self):
         credentials = pika.PlainCredentials(self.user, self.password)
-        parameters = pika.ConnectionParameters(host = self.host, port = self.port, credentials = credentials, heartbeat = 600, blocked_connection_timeout = 300)
+        parameters = pika.ConnectionParameters(host = self.host, port = self.port, credentials = credentials, heartbeat = 60, blocked_connection_timeout = 300)
         self.connection = pika.BlockingConnection(parameters)
         self.channel = self.connection.channel()
     
@@ -33,7 +33,7 @@ class RabbitMQ:
         self.channel.basic_consume(
             queue = queue_name,
             on_message_callback = callback,
-            auto_ack = True
+            auto_ack = False
         )
         print(f" [*] Esperando mensajes en la cola '{queue_name}'...")
         self.channel.start_consuming()

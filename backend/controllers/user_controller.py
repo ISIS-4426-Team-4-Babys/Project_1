@@ -1,8 +1,8 @@
 from errors.user_errors import UserNotFoundError, DuplicateUserError, InvalidUserRoleError
 from schemas.user_schema import UserCreate, UserUpdate, UserResponse
 from fastapi import APIRouter, Depends, HTTPException, status
-from schemas.course_schema import CourseResponse
 from errors.db_errors import IntegrityConstraintError
+from schemas.course_schema import CourseResponse
 from middlewares.jwt_auth import require_roles
 from models.user_model import UserRole
 from sqlalchemy.orm import Session
