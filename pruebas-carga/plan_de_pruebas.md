@@ -112,14 +112,14 @@ Evaluar la capacidad de la Aplicación bajo escenarios de **humo, carga progresi
 | ----------- | ------------------------ | --------- | --------------------------------- | ------------------------------- |
 | A – Chat    | 10→50→100→300→500        | 5–10 min  | p95, avg, error rate, req/min     | p95 ≤ 8 s, err < 1%             |
 | B – Ingesta | 20 trabajos concurrentes | 10–20 min | tiempo upload→indexed, chunks/min | p95 ≤ 3 min; ≥ 1000 chunks/min  |
-| C – Real(80)| 68 chat / 12 ingesta     | 15 min    | p95 chat, p95 ingesta             | p95 chat ≤ 8 s; ingesta ≤ 3 min |
+| C – Real (80)| 68 chat / 12 ingesta     | 15 min    | p95 chat, p95 ingesta             | p95 chat ≤ 8 s; ingesta ≤ 3 min |
 
 ---
 
 ## 9) Tabla de escenarios y resultados esperados (preliminares)
 
 ```mermaid
-flowchart LR
+flowchart TD
   LC[Load Client (JMeter/ab)] --> N[Nginx/Load Balancer]
   N --> API[Backend API - FastAPI]
   API --> PG[(PostgreSQL)]
