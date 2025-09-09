@@ -1,13 +1,10 @@
-# tests/conftest.py
 import os, sys, types, pathlib
 from unittest.mock import MagicMock
 
-# 1) Ensure project root is importable
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-# 2) Env defaults your app expects on import
 os.environ.setdefault("DB_DIALECT", "postgresql")
 os.environ.setdefault("DB_HOST", "localhost")
 os.environ.setdefault("DB_PORT", "5432")
@@ -20,7 +17,6 @@ os.environ.setdefault("JWT_ALGORITHM", "HS256")
 os.environ.setdefault("JWT_EXPIRATION_MINUTES", "60")
 os.environ.setdefault("JWT_REFRESH_EXPIRATION_MINUTES", "1440")
 
-# 3) Stub ONLY config.rabbitmq (do NOT replace the whole config package)
 try:
     import config as _config  # use real package if present
 except ModuleNotFoundError:
@@ -41,7 +37,6 @@ if "config.rabbitmq" not in sys.modules:
     sys.modules["config.rabbitmq"] = rabbit_mod
     setattr(_config, "rabbitmq", rabbit_mod)
 
-# 4) Import the app and override get_db with a fake session that has .query()
 from main import app
 from config.database import get_db
 
@@ -87,5 +82,4 @@ def _fake_get_db():
     finally:
         db.close()
 
-# IMPORTANT: override the exact callable used in Depends(get_db)
 app.dependency_overrides[get_db] = _fake_get_db

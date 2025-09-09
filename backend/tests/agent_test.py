@@ -1,5 +1,3 @@
-# tests/agent_test.py
-
 import os
 import sys
 import types
@@ -13,9 +11,6 @@ import pytest
 from fastapi.testclient import TestClient
 from fastapi import HTTPException, status
 
-# ------------------------------------------------------------------------------
-# 0) Ensure project root import & env vars
-# ------------------------------------------------------------------------------
 ROOT = pathlib.Path(__file__).resolve().parent.parent  # backend/
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -32,9 +27,6 @@ os.environ.setdefault("JWT_ALGORITHM", "HS256")
 os.environ.setdefault("JWT_EXPIRATION_MINUTES", "60")
 os.environ.setdefault("JWT_REFRESH_EXPIRATION_MINUTES", "1440")
 
-# ------------------------------------------------------------------------------
-# 1) Stub ONLY config.rabbitmq (so imports don't fail)
-# ------------------------------------------------------------------------------
 try:
     import config as _config
 except ModuleNotFoundError:
@@ -55,9 +47,6 @@ if "config.rabbitmq" not in sys.modules:
     sys.modules["config.rabbitmq"] = rabbit_mod
     setattr(_config, "rabbitmq", rabbit_mod)
 
-# ------------------------------------------------------------------------------
-# 1.5) Stub passlib CryptContext (avoid bcrypt backend)
-# ------------------------------------------------------------------------------
 import passlib.context as _plctx
 
 class _DummyCryptContext:
@@ -68,9 +57,6 @@ class _DummyCryptContext:
 
 _plctx.CryptContext = lambda *a, **k: _DummyCryptContext()
 
-# ------------------------------------------------------------------------------
-# 2) Import app (and replace any module-level pwd_context if present)
-# ------------------------------------------------------------------------------
 from main import app
 
 for modname in ("config.security", "services.user_service", "controllers.auth_controller"):
@@ -81,9 +67,6 @@ for modname in ("config.security", "services.user_service", "controllers.auth_co
     except Exception:
         pass
 
-# ------------------------------------------------------------------------------
-# 3) Override ANY Depends(get_db) with a safe DummySession
-# ------------------------------------------------------------------------------
 class DummySession:
     def __init__(self):
         self._closed = False
@@ -142,9 +125,6 @@ def _override_all_db_dependencies(app_, fake_dep_gen):
 
 _override_all_db_dependencies(app, _fake_get_db)
 
-# ------------------------------------------------------------------------------
-# 4) Role/auth dependency overrides (skip DB deps)
-# ------------------------------------------------------------------------------
 def _noop_auth_dependency():
     return None
 
@@ -169,9 +149,6 @@ def _override_all_role_dependencies(dep_func):
                 continue
             app.dependency_overrides[fn] = dep_func
 
-# ------------------------------------------------------------------------------
-# 5) Schema-aware builders + JSON-safe encoder
-# ------------------------------------------------------------------------------
 from schemas.agent_schema import AgentCreate, AgentUpdate, AgentResponse
 from schemas.resource_schema import ResourceResponse
 
@@ -305,17 +282,11 @@ AGENT_UPDATE_PAYLOAD = build_from_model(
     json_safe=True,
 )
 
-# ------------------------------------------------------------------------------
-# 6.5) Helper: subset assertion (only check keys that are present)
-# ------------------------------------------------------------------------------
 def assert_subset(subset: dict, full: dict):
     for k, v in subset.items():
         if k in full:
             assert full[k] == v, f"Mismatch for key '{k}': {full[k]} != {v}"
 
-# ------------------------------------------------------------------------------
-# 7) Fixtures
-# ------------------------------------------------------------------------------
 @pytest.fixture(autouse=True)
 def clear_overrides():
     yield
@@ -343,9 +314,6 @@ def client_unauthorized():
     with TestClient(app) as c:
         yield c
 
-# ------------------------------------------------------------------------------
-# 8) Patch controller-level symbols the routes actually call
-# ------------------------------------------------------------------------------
 CTRL = "controllers.agent_controller"
 
 # =======================================================
