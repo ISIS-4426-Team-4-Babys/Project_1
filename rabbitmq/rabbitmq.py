@@ -33,7 +33,7 @@ class RabbitMQ:
         self.channel.basic_consume(
             queue = queue_name,
             on_message_callback = callback,
-            auto_ack = True
+            auto_ack = False
         )
         print(f" [*] Esperando mensajes en la cola '{queue_name}'...")
         self.channel.start_consuming()

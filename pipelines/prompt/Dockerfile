@@ -5,13 +5,11 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y docker.io && rm -rf /var/lib/apt/lists/*
-
-COPY pipelines/deploy/requirements.txt .
+COPY pipelines/prompt/requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY pipelines/deploy/ .
+COPY pipelines/prompt/ .
 COPY rabbitmq/rabbitmq.py ./rabbitmq.py
 
 CMD ["python", "worker.py"]

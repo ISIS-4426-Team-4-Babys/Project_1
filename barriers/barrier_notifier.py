@@ -9,7 +9,6 @@ logging.basicConfig(level = logging.INFO, format = "%(asctime)s [%(levelname)s] 
 class BarrierNotifier:
 
     def __init__(self, agent_id: str, total_docs: int, ):
-        # Manejar conexion
         self.user = os.getenv('RABBITMQ_USER')
         self.password = os.getenv('RABBITMQ_PASSWORD')
         self.host = os.getenv('RABBITMQ_HOST')
@@ -17,7 +16,6 @@ class BarrierNotifier:
         self.connection = None
         self.channel = None
 
-        # Control de la barrera
         self.agent_id = agent_id
         self.total_docs = total_docs
         self.counter = 0
@@ -39,9 +37,6 @@ class BarrierNotifier:
             queue = self.agent_id,
             durable = True,
             auto_delete = False,
-            #arguments = {
-            #    "x-single-active-consumer": True
-            #}
         ) 
 
         logging.info("Barrier declared with name = %s", self.agent_id)
@@ -59,7 +54,7 @@ class BarrierNotifier:
             self.counter += 1
             logging.info("On tick barrier %s / %d", self.agent_id, self.counter)
             ch.basic_ack(method.delivery_tag)
-
+            
             if self.counter == self.total_docs:
 
                 evt = {
@@ -77,11 +72,12 @@ class BarrierNotifier:
                     )
                 )
                 logging.info("Completed message published agent %s", self.agent_id)
-
+                
                 ch.stop_consuming()
 
         except Exception as e:
             logging.exception("Notifier error in _on_tick: %s", e)
+            ch.basic_nack(method.delivery_tag, requeue = True)
 
     def run(self):
         try:

@@ -1,12 +1,12 @@
 from errors.resource_errors import ResourceNotFoundError, DuplicateResourceError, FileSizeError, FileDeletionError, FolderDeletionError
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from schemas.resource_schema import ResourceCreate, ResourceResponse
-from middlewares.jwt_auth import require_roles
 from errors.db_errors import IntegrityConstraintError
+from middlewares.jwt_auth import require_roles
+from datetime import datetime, timezone
 from models.user_model import UserRole
 from sqlalchemy.orm import Session
 from config.database import get_db
-from datetime import datetime, timezone
 from services.resource_service import (
     create_resource,
     get_resources,

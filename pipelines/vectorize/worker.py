@@ -125,12 +125,14 @@ def callback(ch, method, properties, body):
             } 
 
             rabbitmq.publish("control", json.dumps(message))
+            ch.basic_ack(method.delivery_tag)
             logging.info(f"Published message to control topic")
 
     except json.JSONDecodeError:
         logging.error("Failed to decode JSON message")
     except Exception as e:
         logging.error(f"Error processing message: {e}")
+        ch.basic_nack(method.delivery_tag, requeue = True)
 
 
 rabbitmq.consume("vectorize", callback)

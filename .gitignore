@@ -1,20 +1,18 @@
-# Archivos con variables de entorno e información sensible
-#.env
-pipelines/format/.env
-
+# Files with sensible api keys or secrets
 pipelines/vectorize/.env
+pipelines/format/.env
 pipelines/deploy/.env
 
-# Entornos virtuales para aislar dependencias
+# Virtual environments to isolate dependencies
 env/
 
-# Carpeta autogenerada por visual
+# Visual Studio Code Configuration
 .vscode/
 
-# Cache generado por python
+# Auto Generated Python Cache
 __pycache__/
 
-# Ignorar todo el contenido de /data excepto su .gitignore
+# Shared volumes, without .gitkeep
 backend/data/*
 !backend/data/.gitkeep
 

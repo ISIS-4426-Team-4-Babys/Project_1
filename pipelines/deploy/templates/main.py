@@ -15,9 +15,6 @@ logging.basicConfig(level = logging.INFO,  format = "%(asctime)s | %(levelname)s
 logger = logging.getLogger(__name__)
 
 embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
-#"BAAI/bge-reranker-base"
-#"cross-encoder/ms-marco-MiniLM-L-6-v2"
-#BAAI/bge-reranker-v2-m3
 hf_cross_encoder = HuggingFaceCrossEncoder(model_name = "BAAI/bge-reranker-v2-m3")
 reranker = CrossEncoderReranker(model = hf_cross_encoder, top_n = 10)
 
@@ -83,7 +80,6 @@ def ask_rag(question: str, prompt, llm, compression_retriever, k=5):
         logger.info("Doc #%d (score=%s, source=%s): %s...", 
                     i, score, doc.metadata.get("source_file", "unknown"), snippet)
 
-    # Mostrar cada documento y su metadata
     for i, doc in enumerate(retrieved_docs, start=1):
         snippet = doc.page_content[:200].replace("\n", " ")
         logger.debug("Doc #%d (source=%s): %s...", 
@@ -92,7 +88,6 @@ def ask_rag(question: str, prompt, llm, compression_retriever, k=5):
     # Construir contexto
     docs_content = "\n\n".join(doc.page_content for doc in retrieved_docs)
 
-    # Invocar prompt + LLM
     messages = prompt.invoke({
         "question": question,
         "context": docs_content
