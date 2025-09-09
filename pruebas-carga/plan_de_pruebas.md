@@ -79,7 +79,7 @@ Evaluar la capacidad de la Aplicación bajo escenarios de **humo, carga progresi
 - **ApacheBench (ab)** para pruebas rápidas de endpoints.
 
 ### 6.3 Infraestructura del generador de carga
-- **EC2 t3.xlarge** (4 vCPU, 16 GB RAM, 100 GB SSD) en `us-east-1`.  
+- **EC2** (4 vCPU, 16 GB RAM, 100 GB SSD) en `us-east-1`.  
   **Justificación**: suficiente para **~1000 usuarios virtuales** y baja latencia.
 
 ### 6.4 Monitoreo durante las pruebas
