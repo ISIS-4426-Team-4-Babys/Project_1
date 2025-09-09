@@ -119,7 +119,7 @@ Evaluar la capacidad de la Aplicación bajo escenarios de **humo, carga progresi
 ## 9) Tabla de escenarios y resultados esperados (preliminares)
 
 ```mermaid
-flowchart TD
+flowchart LR
   LC[Load Client (JMeter/ab)] --> N[Nginx/Load Balancer]
   N --> API[Backend API - FastAPI]
   API --> PG[(PostgreSQL)]
