@@ -39,7 +39,7 @@ Evaluar la capacidad de la Aplicación bajo escenarios de **humo, carga progresi
 
 ### A. Chat web
 1. Login estudiante → listar agentes accesibles  
-2. `POST /api/agents/{id}/chat` con prompts de distintas longitudes.
+2. Chat con prompts de distintas longitudes.
 3. Validar **citas** en la respuesta (`sources.length > 0`)  
 
 **Métricas:** latencia (avg/p95), error rate, throughput (req/min).  
