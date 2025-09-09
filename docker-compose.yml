@@ -113,6 +113,22 @@ services:
       - ./backend/data:/app/backend/data  
     restart: unless-stopped
   
+  # Prompt async worker
+  prompt:
+    container_name: prompt
+    build:
+      context: .  
+      dockerfile: pipelines/prompt/Dockerfile
+    env_file:
+      - ./pipelines/format/.env
+      - ./rabbitmq/.env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - ./backend/prompts:/app/backend/prompts
+    restart: unless-stopped
+
   # Vectorize async worker
   vectorize:
     container_name: vectorize

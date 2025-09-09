@@ -54,7 +54,7 @@ class BarrierNotifier:
             self.counter += 1
             logging.info("On tick barrier %s / %d", self.agent_id, self.counter)
             ch.basic_ack(method.delivery_tag)
-
+            
             if self.counter == self.total_docs:
 
                 evt = {
@@ -72,7 +72,7 @@ class BarrierNotifier:
                     )
                 )
                 logging.info("Completed message published agent %s", self.agent_id)
-
+                
                 ch.stop_consuming()
 
         except Exception as e:

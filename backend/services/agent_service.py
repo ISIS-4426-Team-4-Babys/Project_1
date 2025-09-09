@@ -6,11 +6,15 @@ from sqlalchemy.orm import Session, selectinload
 from sqlalchemy.exc import IntegrityError
 from models.course_model import Course
 from models.agent_model import Agent
+from config.rabbitmq import RabbitMQ
 import logging
+import json
 import os
 
 logger = logging.getLogger("app.services.agent")
 UPLOAD_DIR = "backend/prompts"
+
+rabbitmq = RabbitMQ()
 
 # Create agent (POST)
 def create_agent(db: Session, agent_data: AgentCreate):
@@ -47,7 +51,14 @@ def create_agent(db: Session, agent_data: AgentCreate):
 
         with open(filepath, "w", encoding = "utf-8") as f:
             f.write(agent.system_prompt)
-    
+
+        message = {
+            "filepath": filepath
+        }
+
+        rabbitmq.publish("prompt", json.dumps(message))
+        logger.info("Prompt path published in prompt topic")
+
         return agent
     
     except IntegrityError as e:
