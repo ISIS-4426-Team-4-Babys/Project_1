@@ -116,24 +116,11 @@ Evaluar la capacidad de la Aplicación bajo escenarios de **humo, carga progresi
 
 ---
 
-## 9) Tabla de escenarios y resultados esperados (preliminares)
-
-```mermaid
-flowchart LR
-  LC[Load Client (JMeter/ab)] --> N[Nginx/Load Balancer]
-  N --> API[Backend API - FastAPI]
-  API --> PG[(PostgreSQL)]
-  API --> VDB[(ChromaDB)]
-  API --> MQ[(RabbitMQ)]
-  MQ --> WK[Workers RAG]
-  WK --> AI[Google AI APIs]
-```
-
-## 10) Criterios de salida (stoppers)
+## 9) Criterios de salida (stoppers)
 
 - Error rate ≥ 5% sostenido (≥ 3 min).
 - p95 > 12 s en Chat durante la prueba de estrés.
 - CPU > 95% sostenida o throttling de IO/Net prolongado.
 
-## 11) Recomendaciones para escalar la solución
+## 10) Recomendaciones para escalar la solución
 
