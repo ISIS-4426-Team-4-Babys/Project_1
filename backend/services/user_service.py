@@ -2,9 +2,9 @@ from errors.user_errors import UserNotFoundError, DuplicateUserError, InvalidCre
 from schemas.user_schema import UserCreate, UserUpdate
 from errors.db_errors import IntegrityConstraintError
 from sqlalchemy.orm import Session, selectinload
+from models.user_model import User, UserRole
 from passlib.context import CryptContext
 from sqlalchemy.exc import IntegrityError
-from models.user_model import User, UserRole
 import logging
 
 

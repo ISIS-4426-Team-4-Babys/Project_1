@@ -1,11 +1,11 @@
 from schemas.agent_schema import AgentCreate, AgentUpdate
 from errors.db_errors import IntegrityConstraintError
-from errors.agent_errors import AgentNotFoundError
 from errors.course_errors import CourseNotFoundError
+from errors.agent_errors import AgentNotFoundError
 from sqlalchemy.orm import Session, selectinload
 from sqlalchemy.exc import IntegrityError
-from models.agent_model import Agent
 from models.course_model import Course
+from models.agent_model import Agent
 import logging
 import os
 

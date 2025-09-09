@@ -9,7 +9,6 @@ logging.basicConfig(level = logging.INFO, format = "%(asctime)s [%(levelname)s] 
 class BarrierNotifier:
 
     def __init__(self, agent_id: str, total_docs: int, ):
-        # Manejar conexion
         self.user = os.getenv('RABBITMQ_USER')
         self.password = os.getenv('RABBITMQ_PASSWORD')
         self.host = os.getenv('RABBITMQ_HOST')
@@ -17,7 +16,6 @@ class BarrierNotifier:
         self.connection = None
         self.channel = None
 
-        # Control de la barrera
         self.agent_id = agent_id
         self.total_docs = total_docs
         self.counter = 0
@@ -39,9 +37,6 @@ class BarrierNotifier:
             queue = self.agent_id,
             durable = True,
             auto_delete = False,
-            #arguments = {
-            #    "x-single-active-consumer": True
-            #}
         ) 
 
         logging.info("Barrier declared with name = %s", self.agent_id)

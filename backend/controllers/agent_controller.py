@@ -1,9 +1,9 @@
 from schemas.agent_schema import AgentCreate, AgentUpdate, AgentResponse
 from fastapi import APIRouter, Depends, HTTPException, status
-from schemas.resource_schema import ResourceResponse
-from middlewares.jwt_auth import require_roles
 from errors.db_errors import IntegrityConstraintError
+from schemas.resource_schema import ResourceResponse
 from errors.agent_errors import AgentNotFoundError
+from middlewares.jwt_auth import require_roles
 from models.user_model import UserRole
 from config.database import get_db 
 from sqlalchemy.orm import Session
@@ -79,6 +79,7 @@ def delete_agent_endpoint(agent_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = str(e))
 
 
+# Get Agent Resources
 @router.get(
     "/{agent_id}/resources",
     response_model = list[ResourceResponse],

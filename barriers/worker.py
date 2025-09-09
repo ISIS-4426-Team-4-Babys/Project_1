@@ -24,7 +24,6 @@ def callback(ch, methos, properties, body):
     logging.info(f"Total documents received: {total_docs}")
 
     if agent_id not in received_agents:
-        # Es el primer documento procesado del agente
         logging.info(f"Creating barrier notifier for agent: {agent_id}")
         BarrierNotifier(agent_id, total_docs).start_in_thread()
         logging.info(f"Barrier notifier created for agent: {agent_id}")

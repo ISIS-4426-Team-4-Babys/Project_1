@@ -1,4 +1,4 @@
-from schemas.user_schema import LoginRequest, TokenResponse, UserCreate, UserResponse, LoginResponse
+from schemas.user_schema import LoginRequest, UserCreate, UserResponse, LoginResponse
 from errors.user_errors import InvalidCredentialsError, DuplicateUserError
 from services.user_service import authenticate_user, create_user
 from fastapi import APIRouter, Depends, HTTPException, status
