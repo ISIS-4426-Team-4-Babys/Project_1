@@ -76,7 +76,6 @@ def crear_grafica_ingesta():
     plt.savefig(out/"ingesta_vs_tamano.png", dpi=300, bbox_inches='tight')
     plt.close()
 
-# Función principal para generar todas las gráficas
 def main():
     print("Generando gráficas de simulación...")
     crear_grafica_throughput()
