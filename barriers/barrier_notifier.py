@@ -77,6 +77,7 @@ class BarrierNotifier:
 
         except Exception as e:
             logging.exception("Notifier error in _on_tick: %s", e)
+            ch.basic_nack(method.delivery_tag, requeue = True)
 
     def run(self):
         try:
