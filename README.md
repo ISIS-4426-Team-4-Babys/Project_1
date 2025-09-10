@@ -103,6 +103,63 @@ flowchart TD
 
 ### Prerrequisitos
 
-Antes de ejecutar la aplicación, asegurese de contar con las siguientes dependencias en su dispositivo:
+Antes de ejecutar la aplicación, asegúrese de tener instalado en su dispositivo:
+- [Docker](https://docs.docker.com/get-docker/) y [Docker Compose](https://docs.docker.com/compose/)
+- [Newman](https://www.npmjs.com/package/newman) (para pruebas automáticas)
 
+### ▶️ Ejecución con Docker
+1. Clonar el repositorio:
+   ```bash
+   git clone https://github.com/uniandes/proyecto1-agentes.git
+   cd proyecto1-agentes
+     ```
+2. Construir los contenedores:
+   ```bash
+   git clone https://github.com/uniandes/proyecto1-agentes.git
+   cd proyecto1-agentes
+     ```
+3. Levantar los servicios:
+   ```bash
+   git clone https://github.com/uniandes/proyecto1-agentes.git
+   cd proyecto1-agentes
+     ```   
+4. La aplicación quedará disponible en:
+- **Frontend:** http://localhost:3000
+- **Backend (API):** http://localhost:8000
+- **Swagger UI:** http://localhost:8000/docs
+- **ReDoc:** http://localhost:8000/redoc
+
+### 📖 Documentación de la API
+
+**La API está definida en OpenAPI**
+
+Puedes consultarla de dos maneras:
+
+- Swagger UI: en http://localhost:8000/docs
+- ReDoc: en http://localhost:8000/redoc
+
+También está disponible el archivo fuente:
+
+- /api-docs/openapi.yaml
+
+### 🧪 Pruebas Automatizadas
+
+El proyecto incluye colecciones de Postman para validar los endpoints de la API.
+
+**Ejecutar pruebas con Newman**
+
+Instalar Newman globalmente:
+```bash
+npm install -g newman
+```
+
+Correr la colección:
+```bash
+newman run tests/collection.json --environment tests/environment.json --reporters cli,html --reporter-html-export tests/report.html
+```
+
+Revisar el reporte generado en:
+```bash
+tests/report.html
+```
 
