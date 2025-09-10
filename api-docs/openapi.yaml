@@ -1,0 +1,1236 @@
+openapi: 3.0.3
+info:
+  title: Project API
+  version: "1.0.0"
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://localhost:8000
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    LanguageEnum:
+      type: string
+      enum: [es, en]
+    UserRole:
+      type: string
+      enum: [student, professor, admin]
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code: { type: string, example: "BAD_REQUEST" }
+            message: { type: string, example: "Invalid payload" }
+            detail: { type: string, nullable: true, example: "email is required" }
+    ChatRequest:
+      type: object
+      required: [message]
+      properties:
+        message: {type: string}
+    ChatSource:
+      type: object
+      required: [resource_id, chunk_index]
+      properties:
+        resource_id: {type: string, format: uuid}
+        chunk_index: {type: integer}
+    ChatResponse:
+      type: object
+      required: [answer, sources]
+      properties:
+        answer: {type: string}
+        sources:
+          type: array
+          items: {$ref: '#/components/schemas/ChatSource'}
+    CourseMinimal:
+      type: object
+      required: [id, name, code]
+      properties:
+        id: {type: string, format: uuid}
+        name: {type: string}
+        code: {type: string}
+    UserBase:
+      type: object
+      required: [name, email, role]
+      properties:
+        name: {type: string}
+        email: {type: string}
+        role: {$ref: '#/components/schemas/UserRole'}
+        profile_image: {type: string, nullable: true}
+    UserCreate:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+        - type: object
+          required: [password]
+          properties:
+            password: {type: string}
+    UserUpdate:
+      type: object
+      properties:
+        name: {type: string}
+        email: {type: string}
+        role: {$ref: '#/components/schemas/UserRole'}
+        profile_image: {type: string}
+        password: {type: string}
+    UserResponse:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+        - type: object
+          required: [id]
+          properties:
+            id: {type: string, format: uuid}
+            courses_taught:
+              type: array
+              items: {$ref: '#/components/schemas/CourseMinimal'}
+            courses_taken:
+              type: array
+              items: {$ref: '#/components/schemas/CourseMinimal'}
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: {type: string}
+        password: {type: string}
+    LoginResponse:
+      type: object
+      required: [user, access_token]
+      properties:
+        user: {$ref: '#/components/schemas/UserResponse'}
+        access_token: {type: string}
+        token_type: {type: string, default: bearer}
+    AgentResource:
+      type: object
+      required: [id, name, filetype, filepath, size]
+      properties:
+        id: {type: string, format: uuid}
+        name: {type: string}
+        filetype: {type: string}
+        filepath: {type: string}
+        size: {type: integer}
+    AgentCourse:
+      type: object
+      required: [id, name, code, department, description]
+      properties:
+        id: {type: string, format: uuid}
+        name: {type: string}
+        code: {type: string}
+        department: {type: string}
+        description: {type: string}
+    AgentBase:
+      type: object
+      required: [name, description, is_working, system_prompt, model, language, retrieval_k]
+      properties:
+        name: {type: string}
+        description: {type: string}
+        is_working: {type: boolean}
+        system_prompt: {type: string}
+        model: {type: string}
+        language: {$ref: '#/components/schemas/LanguageEnum'}
+        retrieval_k: {type: integer}
+    AgentCreate:
+      allOf:
+        - $ref: '#/components/schemas/AgentBase'
+        - type: object
+          required: [associated_course]
+          properties:
+            associated_course: {type: string, format: uuid}
+    AgentUpdate:
+      type: object
+      properties:
+        name: {type: string}
+        description: {type: string}
+        is_working: {type: boolean}
+        system_prompt: {type: string}
+        model: {type: string}
+        language: {$ref: '#/components/schemas/LanguageEnum'}
+        retrieval_k: {type: integer}
+        associated_course: {type: string, format: uuid}
+    AgentResponse:
+      allOf:
+        - $ref: '#/components/schemas/AgentBase'
+        - type: object
+          required: [id, associated_course]
+          properties:
+            id: {type: string, format: uuid}
+            associated_course: {type: string, format: uuid}
+            course: {$ref: '#/components/schemas/AgentCourse', nullable: true}
+            resources:
+              type: array
+              items: {$ref: '#/components/schemas/AgentResource'}
+    ResourceBase:
+      type: object
+      required: [name, filetype, filepath, size, timestamp]
+      properties:
+        name: {type: string}
+        filetype: {type: string}
+        filepath: {type: string}
+        size: {type: integer}
+        timestamp: {type: string, format: date-time}
+    ResourceCreate:
+      allOf:
+        - $ref: '#/components/schemas/ResourceBase'
+        - type: object
+          required: [consumed_by, total_docs]
+          properties:
+            consumed_by: {type: string, format: uuid}
+            total_docs: {type: integer}
+    ResourceAgent:
+      type: object
+      required: [id, name, description, is_working]
+      properties:
+        id: {type: string, format: uuid}
+        name: {type: string}
+        description: {type: string}
+        is_working: {type: boolean}
+        model: {type: string, nullable: true}
+        language: {$ref: '#/components/schemas/LanguageEnum', nullable: true}
+    ResourceResponse:
+      allOf:
+        - $ref: '#/components/schemas/ResourceBase'
+        - type: object
+          required: [id, consumed_by]
+          properties:
+                id: {type: string, format: uuid}
+                consumed_by: {type: string, format: uuid}
+                agent: {$ref: '#/components/schemas/ResourceAgent', nullable: true}
+    CourseBase:
+      type: object
+      required: [name, code, department, description]
+      properties:
+        name: {type: string}
+        code: {type: string}
+        department: {type: string}
+        description: {type: string}
+    CourseCreate:
+      allOf:
+        - $ref: '#/components/schemas/CourseBase'
+        - type: object
+          required: [taught_by]
+          properties:
+            taught_by: {type: string, format: uuid}
+    CourseUpdate:
+      type: object
+      properties:
+        name: {type: string}
+        code: {type: string}
+        department: {type: string}
+        description: {type: string}
+        taught_by: {type: string, format: uuid}
+    CourseUser:
+      type: object
+      required: [id, name, email]
+      properties:
+        id: {type: string, format: uuid}
+        name: {type: string}
+        email: {type: string}
+    CourseAgent:
+      type: object
+      required: [id, name, description, is_working, system_prompt, model, language, retrieval_k]
+      properties:
+        id: {type: string, format: uuid}
+        name: {type: string}
+        description: {type: string}
+        is_working: {type: boolean}
+        system_prompt: {type: string}
+        model: {type: string}
+        language: {$ref: '#/components/schemas/LanguageEnum'}
+        retrieval_k: {type: integer}
+    CourseResponse:
+      allOf:
+        - $ref: '#/components/schemas/CourseBase'
+        - type: object
+          required: [id, taught_by, teacher]
+          properties:
+            id: {type: string, format: uuid}
+            taught_by: {type: string, format: uuid}
+            teacher: {$ref: '#/components/schemas/CourseUser'}
+            agents:
+              type: array
+              items: {$ref: '#/components/schemas/CourseAgent'}
+            students:
+              type: array
+              items: {$ref: '#/components/schemas/CourseUser'}
+
+paths:
+  /auth/register:
+    post:
+      operationId: auth_register
+      security: []  # pública
+      summary: Register new user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/UserCreate'}
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/UserResponse'}
+        '400':
+          description: Duplicate user
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '409':
+          description: Integrity error
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /auth/login:
+    post:
+      operationId: auth_login
+      security: []  # pública
+      summary: Login user
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/LoginRequest'}
+      responses:
+        '200':
+          description: Authenticated
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/LoginResponse'}
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  # ---- Agents ----
+  /agents:
+    post:
+      operationId: agents_create
+      summary: Create agent
+      tags: [Agents]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/AgentCreate'}
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AgentResponse'}
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '409':
+          description: Integrity error
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+    get:
+      operationId: agents_list
+      summary: List agents
+      tags: [Agents]
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/AgentResponse'}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /agents/{agent_id}:
+    get:
+      operationId: agents_get
+      summary: Get agent by ID
+      tags: [Agents]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: agent_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Agent found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AgentResponse'}
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+    put:
+      operationId: agents_update
+      summary: Update agent
+      tags: [Agents]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: agent_id
+          required: true
+          schema: {type: string, format: uuid}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/AgentUpdate'}
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AgentResponse'}
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '409':
+          description: Integrity error
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+    delete:
+      operationId: agents_delete
+      summary: Delete agent
+      tags: [Agents]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: agent_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AgentResponse'}
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /agents/{agent_id}/resources:
+    get:
+      operationId: agents_listResources
+      summary: List resources consumed by an agent
+      tags: [Agents]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: agent_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/ResourceResponse'}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '404':
+          description: Agent not found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /agents/{agent_id}/chat:
+    post:
+      operationId: agents_chat
+      summary: Chat with agent and get sources
+      tags: [Agents]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: agent_id
+          required: true
+          schema: {type: string, format: uuid}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/ChatRequest'}
+      responses:
+        '200':
+          description: Chat response with sources
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ChatResponse'}
+        '404':
+          description: Agent not found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /courses:
+    post:
+      operationId: courses_create
+      summary: Create course
+      tags: [Courses]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/CourseCreate'}
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CourseResponse'}
+        '400':
+          description: Duplicate course
+        '409':
+          description: Integrity error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+    get:
+      operationId: courses_list
+      summary: List courses
+      tags: [Courses]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/CourseResponse'}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /courses/{course_id}:
+    get:
+      operationId: courses_get
+      summary: Get course by ID
+      tags: [Courses]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: course_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Course found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CourseResponse'}
+        '404':
+          description: Not found
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+    put:
+      operationId: courses_update
+      summary: Update course
+      tags: [Courses]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: course_id
+          required: true
+          schema: {type: string, format: uuid}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/CourseUpdate'}
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CourseResponse'}
+        '400':
+          description: Duplicate course
+        '404':
+          description: Not found
+        '409':
+          description: Integrity error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+    delete:
+      operationId: courses_delete
+      summary: Delete course
+      tags: [Courses]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: course_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CourseResponse'}
+        '404':
+          description: Not found
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /courses/{course_id}/students/{student_id}:
+    post:
+      operationId: courses_enrollStudent
+      summary: Enroll student in course
+      tags: [Courses]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: course_id
+          required: true
+          schema: {type: string, format: uuid}
+        - in: path
+          name: student_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Enrolled
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CourseResponse'}
+        '400':
+          description: Invalid role
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+    delete:
+      operationId: courses_unenrollStudent
+      summary: Unenroll student from course
+      tags: [Courses]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: course_id
+          required: true
+          schema: {type: string, format: uuid}
+        - in: path
+          name: student_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Unenrolled
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CourseResponse'}
+        '400':
+          description: Invalid role
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /courses/{course_id}/students:
+    get:
+      operationId: courses_listStudents
+      summary: List students in course
+      tags: [Courses]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: course_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/UserResponse'}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /courses/{course_id}/agents:
+    get:
+      operationId: courses_listAgents
+      summary: List agents in course
+      tags: [Courses]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: course_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/AgentResponse'}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  # ---- Resources ----
+  /resources:
+    post:
+      operationId: resources_create
+      summary: Create resource
+      tags: [Resources]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, name, consumed_by, total_docs]
+              properties:
+                file: {type: string, format: binary}
+                name: {type: string}
+                consumed_by: {type: string, format: uuid}
+                total_docs: {type: integer}
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ResourceResponse'}
+        '400':
+          description: Invalid resource
+        '409':
+          description: Integrity error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+    get:
+      operationId: resources_list
+      summary: List resources
+      tags: [Resources]
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/ResourceResponse'}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /resources/{resource_id}:
+    get:
+      operationId: resources_get
+      summary: Get resource by ID
+      tags: [Resources]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: resource_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Resource found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ResourceResponse'}
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+    delete:
+      operationId: resources_delete
+      summary: Delete resource
+      tags: [Resources]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: path
+          name: resource_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ResourceResponse'}
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '500':
+          description: Deletion error
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /users:
+    post:
+      operationId: users_create
+      summary: Create user
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/UserCreate'}
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/UserResponse'}
+        '400':
+          description: Duplicate user
+        '409':
+          description: Integrity error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+    get:
+      operationId: users_list
+      summary: List users
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/UserResponse'}
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /users/{user_id}:
+    get:
+      operationId: users_get
+      summary: Get user by ID
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/UserResponse'}
+        '404':
+          description: Not found
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+    put:
+      operationId: users_update
+      summary: Update user
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema: {type: string, format: uuid}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/UserUpdate'}
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/UserResponse'}
+        '400':
+          description: Duplicate user
+        '404':
+          description: Not found
+        '409':
+          description: Integrity error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+    delete:
+      operationId: users_delete
+      summary: Delete user
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/UserResponse'}
+        '404':
+          description: Not found
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /users/email/{email}:
+    get:
+      operationId: users_getByEmail
+      summary: Get user by email (admin only)
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: email
+          required: true
+          schema: {type: string}
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/UserResponse'}
+        '404':
+          description: Not found
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /users/student/{student_id}:
+    get:
+      operationId: users_listCoursesTaken
+      summary: Courses taken by student
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: student_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/CourseResponse'}
+        '400':
+          description: Invalid role
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+
+  /users/professor/{professor_id}:
+    get:
+      operationId: users_listCoursesTaught
+      summary: Courses taught by professor
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: professor_id
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/CourseResponse'}
+        '400':
+          description: Invalid role
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/ErrorResponse'}
