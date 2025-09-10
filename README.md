@@ -110,24 +110,20 @@ Antes de ejecutar la aplicación, asegúrese de tener instalado en su dispositiv
 ### ▶️ Ejecución con Docker
 1. Clonar el repositorio:
    ```bash
-   git clone https://github.com/uniandes/proyecto1-agentes.git
-   cd proyecto1-agentes
+   git clone [https://github.com/uniandes/proyecto1-agentes.git](https://github.com/ISIS-4426-Team-4-Babys/Project_1.git)
+   cd Proyecto_1
      ```
 2. Construir los contenedores:
    ```bash
-   git clone https://github.com/uniandes/proyecto1-agentes.git
-   cd proyecto1-agentes
+   docker compose build
      ```
 3. Levantar los servicios:
    ```bash
-   git clone https://github.com/uniandes/proyecto1-agentes.git
-   cd proyecto1-agentes
+   docker compose up
      ```   
 4. La aplicación quedará disponible en:
 - **Frontend:** http://localhost:3000
 - **Backend (API):** http://localhost:8000
-- **Swagger UI:** http://localhost:8000/docs
-- **ReDoc:** http://localhost:8000/redoc
 
 ### 📖 Documentación de la API
 
@@ -135,12 +131,13 @@ Antes de ejecutar la aplicación, asegúrese de tener instalado en su dispositiv
 
 Puedes consultarla de dos maneras:
 
-- Swagger UI: en http://localhost:8000/docs
-- ReDoc: en http://localhost:8000/redoc
+- **Swagger UI**: en http://localhost:8000/docs
+- **ReDoc:** en http://localhost:8000/redoc
 
 También está disponible el archivo fuente:
-
-- /api-docs/openapi.yaml
+```bash
+/api-docs/openapi.yaml
+```
 
 ### 🧪 Pruebas Automatizadas
 
