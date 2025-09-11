@@ -8,9 +8,17 @@ Evaluar la capacidad de la Aplicación bajo escenarios de **humo, carga progresi
 ## 2) Entorno de pruebas
 
 ### 2.1 Arquitectura bajo prueba
-- **Backend**: Python/FastAPI en Docker; PostgreSQL (metadatos); **ChromaDB** (vectorial); **RabbitMQ** (colas asíncronas); Workers (ingesta → extracción → chunking → embeddings → upsert).  
+- **Backend**: Python/FastAPI en Docker; PostgreSQL (metadatos); **ChromaDB** (vectorial); **RabbitMQ** (colas asíncronas).
+- **Workers Pipeline**:
+  1. Preprocesamiento → conversión a texto plano
+  2. Refinamiento Markdown → estructura y formato
+  3. Vectorización → generación de embeddings
+  4. Despliegue → configuración del agente
+  - Worker Paralelo: Refinamiento de prompts del sistema
 - **Frontend**: React servido por **Nginx**; panel docente y chat estudiante.  
-- **Servicios de IA**: Google AI (embeddings y LLM) → invocación desde workers/API.  
+- **Servicios de IA**: 
+  - Google AI (embeddings y LLM)
+  - Modelo local para reranking de resultados 
 - **Observabilidad**: Prometheus + Grafana (app/infra); logs centralizados.
 
 ### 2.2 Limitaciones
@@ -23,12 +31,19 @@ Evaluar la capacidad de la Aplicación bajo escenarios de **humo, carga progresi
 
 ## 3) Criterios de aceptación (SLOs)
 
+### Workers Pipeline
+- **Preprocesamiento (texto plano):** p95 ≤ 5 s por 100 páginas.
+- **Refinamiento Markdown:** p95 ≤ 45 s por documento.
+- **Vectorización (embeddings):** ≥ 1000 chunks/min.
+- **Publicación del agente:** p95 ≤ 2min.
+- **Refinamiento de prompts (paralelo):** p95 ≤ 30 s por actualización.
+
 ### Web Chat
 - **p95 ≤ 8 s**, promedio ≤ 5 s, **error rate < 1%** por agente.
 
 ### Ingesta
-- Documento **20 MB**: **p95 upload→indexed ≤ 3 min** (chunking + embeddings en workers).  
-- **Throughput de upsert**: ≥ **1000 chunks/min**.
+- Documento **20 MB**: **p95 upload→indexed ≤ 3 min** (pipeline completo)
+- **Throughput de upsert**: ≥ 1000 chunks/min.
 
 ### Utilización de recursos
 - **CPU** promedio < 80%, **RAM** < 85%, **disco** < 70%.
