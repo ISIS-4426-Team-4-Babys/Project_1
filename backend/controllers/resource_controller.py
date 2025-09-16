@@ -17,12 +17,57 @@ from services.resource_service import (
 
 router = APIRouter(prefix="/resources", tags=["Resources"])
 
+create_resource_responses = {
+    400: {
+        "description": "Invalid resource payload (duplicate or file too large)",
+        "content": {"application/json": {"examples": {
+            "duplicate_resource": {"summary": "Duplicate resource name",
+                                   "value": {"detail": r"Duplicate resource with name={name}"}},
+            "file_too_large": {"summary": "File exceeds maximum size",
+                               "value": {"detail": r"File size {size_mb}MB exceeds limit {limit_mb}MB"}},
+        }}},
+    },
+    409: {
+        "description": "Integrity constraint violation",
+        "content": {"application/json": {"example":
+            {"detail": r"Integrity constraint violation: {constraint_name}"}
+        }},
+    },
+}
+
+get_resource_by_id_responses = {
+    404: {
+        "description": "Resource not found",
+        "content": {"application/json": {"example":
+            {"detail": r"Resource with id={resource_id} not found"}
+        }},
+    },
+}
+
+delete_resource_responses = {
+    404: {
+        "description": "Resource not found",
+        "content": {"application/json": {"example":
+            {"detail": r"Resource with id={resource_id} not found"}
+        }},
+    },
+    500: {
+        "description": "Filesystem error while deleting underlying files/folders",
+        "content": {"application/json": {"examples": {
+            "file_delete_error": {"summary": "File deletion error",
+                                  "value": {"detail": r"Could not delete file at {path}: {reason}"}},
+            "folder_delete_error": {"summary": "Folder deletion error",
+                                    "value": {"detail": r"Could not delete folder at {path}: {reason}"}},
+        }}},
+    },
+}
 
 # Create Resource
 @router.post("/", 
              response_model = ResourceResponse, 
              status_code = status.HTTP_201_CREATED, 
-             dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))])
+             dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))],
+             responses=create_resource_responses)
 def create_resource_endpoint(db: Session = Depends(get_db), file: UploadFile = File(...), name: str = Form(...), consumed_by: str = Form(...), total_docs: str = Form(...)):
     
     resource_data = ResourceCreate(
@@ -58,7 +103,8 @@ def get_resources_endpoint(db: Session = Depends(get_db)):
 @router.get("/{resource_id}", 
             response_model = ResourceResponse, 
             status_code = status.HTTP_200_OK, 
-            dependencies = [Depends(require_roles(UserRole.admin))])
+            dependencies = [Depends(require_roles(UserRole.admin))],
+            responses=get_resource_by_id_responses)
 def get_resource_by_id_endpoint(resource_id: str, db: Session = Depends(get_db)):
     try:
         return get_resource_by_id(db, resource_id)
@@ -70,7 +116,8 @@ def get_resource_by_id_endpoint(resource_id: str, db: Session = Depends(get_db))
 @router.delete("/{resource_id}", 
                response_model = ResourceResponse, 
                status_code = status.HTTP_200_OK, 
-               dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))])
+               dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))],
+               responses=delete_resource_responses)
 def delete_resource_endpoint(resource_id: str, db: Session = Depends(get_db)):
     try:
         return delete_resource(db, resource_id)
