@@ -5,11 +5,11 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY barriers/requirements.txt .
+COPY workers/barrier/requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY barriers/ .
+COPY workers/barrier/ .
 COPY rabbitmq/rabbitmq.py ./rabbitmq.py
 
 CMD ["python", "worker.py"]

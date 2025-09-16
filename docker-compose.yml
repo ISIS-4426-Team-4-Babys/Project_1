@@ -151,7 +151,7 @@ services:
     container_name: barriers
     build:
       context: .  
-      dockerfile: barriers/Dockerfile
+      dockerfile: workers/barrier/Dockerfile
     env_file:
       - ./rabbitmq/.env
     depends_on:
