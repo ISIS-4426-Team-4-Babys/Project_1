@@ -16,7 +16,3 @@ app.include_router(auth_controller.router)
 app.include_router(course_controller.router)
 app.include_router(resource_controller.router)
 app.include_router(user_controller.router)
-
-@app.on_event("shutdown")
-def shutdown_event():
-    rabbitmq.close()

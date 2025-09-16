@@ -3,7 +3,7 @@ import sys
 import types
 import pathlib
 import uuid
-import datetime
+from datetime import datetime, timezone, date
 import typing
 import enum
 
@@ -156,7 +156,7 @@ def jsonify(obj):
     """Convert UUID/datetime/date/Enum recursively to JSON-serializable values."""
     if isinstance(obj, uuid.UUID):
         return str(obj)
-    if isinstance(obj, (datetime.datetime, datetime.date)):
+    if isinstance(obj, (datetime, date)):
         return obj.isoformat()
     if isinstance(obj, enum.Enum):
         return obj.value if hasattr(obj, "value") else obj.name
@@ -203,8 +203,9 @@ def _dummy_for_type(ann, name=""):
     if ann in (bool,):
         return False
 
-    if ann in (datetime.datetime,):
-        return datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
+    if ann in (datetime,):
+        return datetime.now(timezone.utc).isoformat()
+
     if ann in (datetime.date,):
         return datetime.date.today().isoformat()
 
