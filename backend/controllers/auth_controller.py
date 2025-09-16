@@ -9,10 +9,35 @@ from config.database import get_db
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
+register_responses = {
+    400: {
+        "description": "Duplicate user",
+        "content": {"application/json": {"example": 
+             {"detail": r"Duplicate user with email:{email}"}
+        }},
+    },
+    409: {
+        "description": "Integrity constraint violation",
+        "content": {"application/json": {"example":
+            {"detail": r"Duplicate user with name={name}"}
+        }},
+    },
+}
+
+login_responses = {
+    401: {
+        "description": "Invalid credentials",
+        "content": {"application/json": {"example":
+            {"detail": "Invalid email or password"}
+        }},
+    },
+}
+
 # Register new user
 @router.post("/register", 
              response_model = UserResponse, 
-             status_code = status.HTTP_201_CREATED)
+             status_code = status.HTTP_201_CREATED,
+             responses=register_responses)
 def register_endpoint(data: UserCreate, db: Session = Depends(get_db)):
     try:
         return create_user(db, data)
@@ -24,7 +49,8 @@ def register_endpoint(data: UserCreate, db: Session = Depends(get_db)):
 
 # Login user
 @router.post("/login", 
-             response_model = LoginResponse)
+             response_model = LoginResponse,
+             responses=login_responses)
 def login_endpoint(req: LoginRequest, db: Session = Depends(get_db)):
     try:
         user = authenticate_user(db, req.email, req.password)
