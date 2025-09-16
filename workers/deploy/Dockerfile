@@ -7,11 +7,11 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y docker.io && rm -rf /var/lib/apt/lists/*
 
-COPY pipelines/deploy/requirements.txt .
+COPY workers/deploy/requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY pipelines/deploy/ .
+COPY workers/deploy/ .
 COPY rabbitmq/rabbitmq.py ./rabbitmq.py
 
 CMD ["python", "worker.py"]

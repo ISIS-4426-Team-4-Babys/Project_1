@@ -5,12 +5,12 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY pipelines/vectorize/requirements.txt .
+COPY workers/vectorize/requirements.txt .
 
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY pipelines/vectorize/ .
+COPY workers/vectorize/ .
 COPY rabbitmq/rabbitmq.py ./rabbitmq.py
 
 CMD ["python", "worker.py"]

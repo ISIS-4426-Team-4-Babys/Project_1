@@ -5,10 +5,10 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY pipelines/deploy/templates/requirements.txt .
+COPY workers/deploy/templates/requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY pipelines/deploy/templates/ .
+COPY workers/deploy/templates/ .
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

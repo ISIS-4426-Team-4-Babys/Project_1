@@ -5,12 +5,12 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-COPY pipelines/preprocess/requirements.txt .
+COPY workers/preprocess/requirements.txt .
 
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY pipelines/preprocess/ .
+COPY workers/preprocess/ .
 COPY rabbitmq/rabbitmq.py ./rabbitmq.py
 
 CMD ["python", "worker.py"]
