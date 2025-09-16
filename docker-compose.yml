@@ -87,7 +87,7 @@ services:
     container_name: preprocess
     build:
       context: .   
-      dockerfile: pipelines/preprocess/Dockerfile
+      dockerfile: workers/preprocess/Dockerfile
     env_file:
       - ./rabbitmq/.env
     depends_on:
@@ -102,9 +102,9 @@ services:
     container_name: format
     build:
       context: .  
-      dockerfile: pipelines/format/Dockerfile
+      dockerfile: workers/format/Dockerfile
     env_file:
-      - ./pipelines/format/.env
+      - ./workers/format/.env
       - ./rabbitmq/.env
     depends_on:
       rabbitmq:
@@ -118,9 +118,9 @@ services:
     container_name: prompt
     build:
       context: .  
-      dockerfile: pipelines/prompt/Dockerfile
+      dockerfile: workers/prompt/Dockerfile
     env_file:
-      - ./pipelines/format/.env
+      - ./workers/format/.env
       - ./rabbitmq/.env
     depends_on:
       rabbitmq:
@@ -134,16 +134,16 @@ services:
     container_name: vectorize
     build:
       context: .  
-      dockerfile: pipelines/vectorize/Dockerfile
+      dockerfile: workers/vectorize/Dockerfile
     env_file:
-      - ./pipelines/vectorize/.env
+      - ./workers/vectorize/.env
       - ./rabbitmq/.env
     depends_on:
       rabbitmq:
         condition: service_healthy
     volumes:
       - ./backend/data:/app/backend/data  
-      - ./pipelines/vectorize/databases:/app/databases
+      - ./workers/vectorize/databases:/app/databases
     restart: unless-stopped
 
   # 
@@ -164,16 +164,16 @@ services:
     container_name: deploy
     build:
       context: .  
-      dockerfile: pipelines/deploy/Dockerfile
+      dockerfile: workers/deploy/Dockerfile
     env_file:
       - ./rabbitmq/.env
-      - ./pipelines/vectorize/.env
-      - ./pipelines/deploy/.env
+      - ./workers/vectorize/.env
+      - ./workers/deploy/.env
     depends_on:
       rabbitmq:
         condition: service_healthy
     volumes:
-      - ./pipelines/vectorize/databases:/app/databases
+      - ./workers/vectorize/databases:/app/databases
       - ./backend/prompts:/app/prompts
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
@@ -182,9 +182,9 @@ services:
   agent-base:
     build:
       context: .  
-      dockerfile: pipelines/deploy/templates/Dockerfile
+      dockerfile: workers/deploy/templates/Dockerfile
     env_file:
-      - ./pipelines/vectorize/.env
+      - ./workers/vectorize/.env
     image: agent-base
     
 # Volumes

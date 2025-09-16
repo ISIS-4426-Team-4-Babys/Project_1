@@ -1,7 +1,7 @@
 # Files with sensible api keys or secrets
-pipelines/vectorize/.env
-pipelines/format/.env
-pipelines/deploy/.env
+workers/vectorize/.env
+workers/format/.env
+workers/deploy/.env
 
 # Virtual environments to isolate dependencies
 env/
@@ -16,8 +16,8 @@ __pycache__/
 backend/data/*
 !backend/data/.gitkeep
 
-pipelines/vectorize/databases/*
-!pipelines/vectorize/databases/.gitkeep
+workers/vectorize/databases/*
+!workers/vectorize/databases/.gitkeep
 
 backend/prompts/*
 !backend/prompts/.gitkeep

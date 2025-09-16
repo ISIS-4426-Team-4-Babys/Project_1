@@ -39,7 +39,7 @@ La aplicación está compuesta por los siguientes servicios:
 - Autenticación JWT
 - ChromaDB para almacenamiento vectorial
 
-### 🔄 Pipelines de Procesamiento
+### 🔄 workers de Procesamiento
 - **Preprocesador:** Conversión de documentos a formato unificado.
 - **Formateador:** Estructuración inteligente del contenido.
 - **Vectorizador:** Generación de embeddings con Google AI.
