@@ -1,4 +1,4 @@
-from examples.agent_examples import resource_response_example, course_response_example, agent_create_example, agent_update_example, agent_response_example
+from .examples.agent_examples import resource_response_example, course_response_example, agent_create_example, agent_update_example, agent_response_example
 from models.agent_model import LanguageEnum
 from typing import Optional, List
 from pydantic import BaseModel

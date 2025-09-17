@@ -1,4 +1,4 @@
-from examples.course_example import course_create_example, course_update_example, course_response_example
+from .examples.course_example import course_create_example, course_update_example, course_response_example
 from models.agent_model import LanguageEnum
 from typing import Optional, List
 from pydantic import BaseModel

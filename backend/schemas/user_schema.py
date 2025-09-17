@@ -1,4 +1,4 @@
-from examples.user_example import user_create_example, user_update_example, user_response_example, token_response_example, login_request_example, login_response_example
+from .examples.user_example import user_create_example, user_update_example, user_response_example, token_response_example, login_request_example, login_response_example
 from models.user_model import UserRole
 from typing import Optional, List
 from pydantic import BaseModel

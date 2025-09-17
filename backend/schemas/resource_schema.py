@@ -1,4 +1,4 @@
-from examples.resource_example import agent_response_example, resource_create_example, resource_response_example
+from .examples.resource_example import agent_response_example, resource_create_example, resource_response_example
 from models.agent_model import LanguageEnum
 from pydantic import BaseModel
 from datetime import datetime
