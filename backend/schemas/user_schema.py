@@ -1,11 +1,9 @@
+from examples.user_example import user_create_example, user_update_example, user_response_example, token_response_example, login_request_example, login_response_example
 from models.user_model import UserRole
 from typing import Optional, List
 from pydantic import BaseModel
 from uuid import UUID
 
-# Examples
-UUID_USER = "9f8f5e64-5717-4562-b3fc-2c963f66afa6"
-UUID_COURSE = "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 
 # Embedded schemas 
 class CourseResponseMinimal(BaseModel):
@@ -39,15 +37,7 @@ class UserCreate(UserBase):
     password: str
     
     model_config = {
-        "json_schema_extra": {
-            "examples": [{
-                "name": "John Doe",
-                "email": "john.doe@example.edu",
-                "role": "student",
-                "profile_image": "https://cdn.example.com/u/juan.png",
-                "password": "S3cure!Passw0rd"
-            }]
-        }
+        "json_schema_extra": user_create_example
     }
 
 # Update User schema
@@ -59,13 +49,7 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
 
     model_config = {
-        "json_schema_extra": {
-            "examples": [{
-                "name": "John Doe",
-                "role": "professor",
-                "password": "New!S3cureP4ss"
-            }]
-        }
+        "json_schema_extra": user_update_example
     }
 
 # Response User schema
@@ -73,24 +57,10 @@ class UserResponse(UserBase):
     id: UUID
     courses_taught: Optional[List[CourseResponseMinimal]] = []
     courses_taken: Optional[List[CourseResponseMinimal]] = []
-
-    model_config = {
-        "from_attributes": True
-    }
     
     model_config = {
         "from_attributes": True,
-        "json_schema_extra": {
-            "examples": [{
-                "id": UUID_USER,
-                "name": "John Doe",
-                "email": "john.doe@example.edu",
-                "role": "student",
-                "profile_image": "https://cdn.example.com/u/juan.png",
-                "courses_taught": [],
-                "courses_taken": []
-            }]
-        }
+        "json_schema_extra": user_response_example
     }
 
 # Auth schemas
@@ -99,12 +69,7 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
 
     model_config = {
-        "json_schema_extra": {
-            "examples": [{
-                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                "token_type": "bearer"
-            }]
-        }
+        "json_schema_extra": token_response_example
     }
 
 class LoginRequest(BaseModel):
@@ -112,12 +77,7 @@ class LoginRequest(BaseModel):
     password: str
 
     model_config = {
-        "json_schema_extra": {
-            "examples": [{
-                "email": "john.doe@example.edu",
-                "password": "S3cure!Passw0rd"
-            }]
-        }
+        "json_schema_extra": login_request_example
     }
     
 class LoginResponse(BaseModel):
@@ -126,27 +86,5 @@ class LoginResponse(BaseModel):
     token_type: str = "bearer"
     
     model_config = {
-        "json_schema_extra": {
-            "examples": [{
-                "user": {
-                    "id": UUID_USER,
-                    "name": "John Doe",
-                    "email": "john.doe@example.edu",
-                    "role": "student",
-                    "profile_image": "https://cdn.example.com/u/juan.png",
-                    "courses_taught": [{
-                        "id": UUID_COURSE,
-                        "name": "Secure Coding 101",
-                        "code": "SEC-101"
-                    }],
-                    "courses_taken": [{
-                        "id": "7c6c1d2e-aaaa-bbbb-cccc-ddddeeeeffff",
-                        "name": "Networks & Security",
-                        "code": "NET-201"
-                    }]
-                },
-                "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                "token_type": "bearer"
-            }]
-        }
+        "json_schema_extra": login_response_example
     }

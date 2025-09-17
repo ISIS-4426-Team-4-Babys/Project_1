@@ -1,13 +1,10 @@
+from examples.resource_example import agent_response_example, resource_create_example, resource_response_example
 from models.agent_model import LanguageEnum
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
-# Examples
-UUID_AGENT = "11111111-2222-3333-4444-555555555555"
-UUID_RESOURCE = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
-ISO_TS = "2025-01-15T14:32:00Z"
 
 # Embedded Agent schema 
 class AgentResponse(BaseModel):
@@ -20,16 +17,7 @@ class AgentResponse(BaseModel):
 
     model_config = {
         "from_attributes": True,
-        "json_schema_extra": {
-            "examples": [{
-                "id": UUID_AGENT,
-                "name": "Agent Introduction",
-                "description": "Answers FAQs and onboarding questions",
-                "is_working": True,
-                "model": "gpt-4o-mini",
-                "language": "es"
-            }]
-        }
+        "json_schema_extra": agent_response_example
     }
 
 # Base Resource schema
@@ -47,17 +35,7 @@ class ResourceCreate(ResourceBase):
     
 
     model_config = {
-        "json_schema_extra": {
-            "examples": [{
-                "name": "Week 1 - Secure Coding Slides",
-                "filetype": "application/pdf",
-                "filepath": "/data/resources/SEC-101/week1.pdf",
-                "size": 2487310,
-                "timestamp": ISO_TS,
-                "consumed_by": UUID_AGENT,
-                "total_docs": 12
-            }]
-        }
+        "json_schema_extra": resource_create_example
     }
 
 # Response Resource schema
@@ -68,24 +46,6 @@ class ResourceResponse(ResourceBase):
     
     model_config = {
         "from_attributes": True,
-        "json_schema_extra": {
-            "examples": [{
-                "id": UUID_RESOURCE,
-                "name": "Week 1 - Secure Coding Slides",
-                "filetype": "application/pdf",
-                "filepath": "/data/resources/SEC-101/week1.pdf",
-                "size": 2487310,
-                "timestamp": ISO_TS,  
-                "consumed_by": UUID_AGENT,
-                "agent": {
-                    "id": UUID_AGENT,
-                    "name": "Agent Introduction",
-                    "description": "Answers FAQs and onboarding questions",
-                    "is_working": True,
-                    "model": "gpt-4o-mini",
-                    "language": "es"
-                }
-            }]
-        }
+        "json_schema_extra": resource_response_example
     }
 
