@@ -1,3 +1,4 @@
+from responses.agent_responses import create_agent_responses, get_agent_by_id_responses, update_agent_responses, delete_agent_responses
 from schemas.agent_schema import AgentCreate, AgentUpdate, AgentResponse
 from fastapi import APIRouter, Depends, HTTPException, status
 from errors.db_errors import IntegrityConstraintError
@@ -18,64 +19,13 @@ from services.agent_service import (
 
 router = APIRouter(prefix = "/agents", tags = ["Agents"])
 
-create_agent_responses = {
-    409: {
-        "description": "Integrity constraint violation",
-        "content": {"application/json": {"example":
-            {"detail": r"Duplicate agent with name={name}"}
-        }},
-    },
-}
-
-get_agent_by_id_responses = {
-    404: {
-        "description": "Agent not found",
-        "content": {"application/json": {"example":
-            {"detail": r"Agent with id={agent_id} not found"}
-        }},
-    },
-}
-
-update_agent_responses = {
-    404: {
-        "description": "Agent not found",
-        "content": {"application/json": {"example":
-            {"detail": r"Agent with id={agent_id} not found"}
-        }},
-    },
-    409: {
-        "description": "Integrity constraint violation",
-        "content": {"application/json": {"example":
-            {"detail": r"Duplicate agent with name={name}"}
-        }},
-    },
-}
-
-delete_agent_responses = {
-    404: {
-        "description": "Agent not found",
-        "content": {"application/json": {"example":
-            {"detail": r"Agent with id={agent_id} not found"}
-        }},
-    },
-}
-
-agent_resources_responses = {
-    404: {
-        "description": "Agent not found",
-        "content": {"application/json": {"example":
-            {"detail": r"Agent with id={agent_id} not found"}
-        }},
-    },
-}
-
 
 # Create Agent
 @router.post("/", 
              response_model = AgentResponse, 
              status_code = status.HTTP_201_CREATED, 
              dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))],
-             responses=create_agent_responses)
+             responses = create_agent_responses)
 def create_agent_endpoint(agent_data: AgentCreate, db: Session = Depends(get_db)):
     try:
         agent = create_agent(db, agent_data)
@@ -99,7 +49,7 @@ def get_agents_endpoint(db: Session = Depends(get_db)):
             response_model = AgentResponse, 
             status_code = status.HTTP_200_OK, 
             dependencies = [Depends(require_roles(UserRole.admin))],
-            responses=get_agent_by_id_responses)
+            responses = get_agent_by_id_responses)
 def get_agent_by_id_endpoint(agent_id: str, db: Session = Depends(get_db)):
     try:
         agent = get_agent_by_id(db, agent_id)
@@ -113,7 +63,7 @@ def get_agent_by_id_endpoint(agent_id: str, db: Session = Depends(get_db)):
             response_model = AgentResponse, 
             status_code = status.HTTP_200_OK, 
             dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))],
-            responses=update_agent_responses)
+            responses = update_agent_responses)
 def update_agent_endpoint(agent_id: str, agent_data: AgentUpdate, db: Session = Depends(get_db)):
     try:
         return update_agent(db, agent_id, agent_data)
@@ -128,7 +78,7 @@ def update_agent_endpoint(agent_id: str, agent_data: AgentUpdate, db: Session = 
                response_model = AgentResponse, 
                status_code = status.HTTP_200_OK, 
                dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))],
-               responses=delete_agent_responses)
+               responses = delete_agent_responses)
 def delete_agent_endpoint(agent_id: str, db: Session = Depends(get_db)):
     try:
         return delete_agent(db, agent_id)

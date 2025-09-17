@@ -1,3 +1,4 @@
+from responses.user_responses import create_user_responses, get_user_by_id_responses, get_user_by_email_responses, update_user_responses, delete_user_responses, student_courses_responses, professor_courses_responses
 from errors.user_errors import UserNotFoundError, DuplicateUserError, InvalidUserRoleError
 from schemas.user_schema import UserCreate, UserUpdate, UserResponse
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -21,94 +22,12 @@ from services.user_service import (
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-
-create_user_responses = {
-    400: {
-        "description": "Duplicate user",
-        "content": {"application/json": {"example":
-            {"detail": r"Duplicate user with email:{email}"}
-        }},
-    },
-    409: {
-        "description": "Integrity constraint violation",
-        "content": {"application/json": {"example":
-            {"detail": r"Duplicate user with name={name}"}
-        }},
-    },
-}
-
-get_user_by_id_responses = {
-    404: {
-        "description": "User not found",
-        "content": {"application/json": {"example":
-            {"detail": r"User with id={user_id} not found"}
-        }},
-    },
-}
-
-get_user_by_email_responses = {
-    404: {
-        "description": "User not found",
-        "content": {"application/json": {"example":
-            {"detail": r"User with email={email} not found"}
-        }},
-    },
-}
-
-update_user_responses = {
-    404: {
-        "description": "User not found",
-        "content": {"application/json": {"example":
-            {"detail": r"User with id={user_id} not found"}
-        }},
-    },
-    400: {
-        "description": "Duplicate user",
-        "content": {"application/json": {"example":
-            {"detail": r"Duplicate user with email:{email}"}
-        }},
-    },
-    409: {
-        "description": "Integrity constraint violation",
-        "content": {"application/json": {"example":
-            {"detail": r"Duplicate user with name={name}"}
-        }},
-    },
-}
-
-delete_user_responses = {
-    404: {
-        "description": "User not found",
-        "content": {"application/json": {"example":
-            {"detail": r"User with id={user_id} not found"}
-        }},
-    },
-}
-
-student_courses_responses = {
-    400: {
-        "description": "Invalid user role",
-        "content": {"application/json": {"example":
-            {"detail": r"User id={student_id} is not a student"}
-        }},
-    },
-}
-
-professor_courses_responses = {
-    400: {
-        "description": "Invalid user role",
-        "content": {"application/json": {"example":
-            {"detail": r"User id={professor_id} is not a professor"}
-        }},
-    },
-}
-
 # Create User Admin Only
 @router.post("/", 
              response_model = UserResponse, 
              status_code = status.HTTP_201_CREATED, 
              dependencies = [Depends(require_roles(UserRole.admin))],
-             responses=create_user_responses,)
+             responses = create_user_responses,)
 def create_user_endpoint(data: UserCreate, db: Session = Depends(get_db)):
     try:
         return create_user(db, data)
@@ -130,7 +49,7 @@ def get_users_endpoint(db: Session = Depends(get_db)):
 @router.get("/{user_id}", 
             response_model = UserResponse, 
             dependencies = [Depends(require_roles(UserRole.admin, UserRole.professor, UserRole.admin))],
-            responses=get_user_by_id_responses)
+            responses = get_user_by_id_responses)
 def get_user_by_id_endpoint(user_id: str, db: Session = Depends(get_db)):
     try:
         return get_user_by_id(db, user_id)
@@ -142,7 +61,7 @@ def get_user_by_id_endpoint(user_id: str, db: Session = Depends(get_db)):
 @router.get("/email/{email}", 
             response_model = UserResponse,
             dependencies = [Depends(require_roles(UserRole.admin))],
-            responses=get_user_by_email_responses)
+            responses = get_user_by_email_responses)
 def get_user_by_email_endpoint(email: str, db: Session = Depends(get_db)):
     try:
         return get_user_by_email(db, email)
@@ -154,7 +73,7 @@ def get_user_by_email_endpoint(email: str, db: Session = Depends(get_db)):
 @router.put("/{user_id}", 
             response_model = UserResponse, 
             dependencies = [Depends(require_roles(UserRole.admin))],
-            responses=update_user_responses)
+            responses = update_user_responses)
 def update_user_endpoint(user_id: str, data: UserUpdate, db: Session = Depends(get_db)):
     try:
         return update_user(db, user_id, data)
@@ -170,7 +89,7 @@ def update_user_endpoint(user_id: str, data: UserUpdate, db: Session = Depends(g
 @router.delete("/{user_id}", 
                response_model = UserResponse,
                dependencies = [Depends(require_roles(UserRole.admin))],
-               responses=delete_user_responses)
+               responses = delete_user_responses)
 def delete_user_endpoint(user_id: str, db: Session = Depends(get_db)):
     try:
         return delete_user(db, user_id)
@@ -184,7 +103,7 @@ def delete_user_endpoint(user_id: str, db: Session = Depends(get_db)):
     response_model = list[CourseResponse],
     status_code = status.HTTP_200_OK,
     dependencies = [Depends(require_roles(UserRole.admin, UserRole.student))],
-    responses=student_courses_responses
+    responses = student_courses_responses
 )
 def get_courses_for_student_endpoint(student_id: str, db: Session = Depends(get_db)):
     try:
@@ -199,7 +118,7 @@ def get_courses_for_student_endpoint(student_id: str, db: Session = Depends(get_
     response_model = list[CourseResponse],
     status_code = status.HTTP_200_OK,
     dependencies = [Depends(require_roles(UserRole.admin, UserRole.professor))],
-    responses=professor_courses_responses
+    responses = professor_courses_responses
 )
 def get_courses_for_professor_endpoint(professor_id: str, db: Session = Depends(get_db)):
     try:

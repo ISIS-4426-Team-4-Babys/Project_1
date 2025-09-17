@@ -1,3 +1,4 @@
+from responses.course_responses import create_course_responses, get_course_by_id_responses, update_course_responses, delete_course_responses, enroll_student_responses, unenroll_student_responses
 from errors.course_errors import CourseNotFoundError, DuplicateCourseError, InvalidUserRoleError
 from schemas.course_schema import CourseCreate, CourseUpdate, CourseResponse
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -22,96 +23,13 @@ from services.course_service import (
 
 router = APIRouter(prefix = "/courses", tags = ["Courses"])
 
-create_course_responses = {
-    400: {
-        "description": "Duplicate course",
-        "content": {"application/json": {"example":
-            {"detail": r"Duplicate course with code={course_code}"}
-        }},
-    },
-    409: {
-        "description": "Integrity constraint violation",
-        "content": {"application/json": {"example":
-            {"detail": r"Integrity constraint violation: {constraint_name}"}
-        }},
-    },
-}
-
-get_course_by_id_responses = {
-    404: {
-        "description": "Course not found",
-        "content": {"application/json": {"example":
-            {"detail": r"Course with id={course_id} not found"}
-        }},
-    },
-}
-
-update_course_responses = {
-    404: {
-        "description": "Course not found",
-        "content": {"application/json": {"example":
-            {"detail": r"Course with id={course_id} not found"}
-        }},
-    },
-    400: {
-        "description": "Duplicate course",
-        "content": {"application/json": {"example":
-            {"detail": r"Duplicate course with code={course_code}"}
-        }},
-    },
-    409: {
-        "description": "Integrity constraint violation",
-        "content": {"application/json": {"example":
-            {"detail": r"Integrity constraint violation: {constraint_name}"}
-        }},
-    },
-}
-
-delete_course_responses = {
-    404: {
-        "description": "Course not found",
-        "content": {"application/json": {"example":
-            {"detail": r"Course with id={course_id} not found"}
-        }},
-    },
-}
-
-enroll_student_responses = {
-    400: {
-        "description": "Invalid user role",
-        "content": {"application/json": {"example":
-            {"detail": r"User id={student_id} is not a student"}
-        }},
-    },
-    404: {
-        "description": "Course not found",
-        "content": {"application/json": {"example":
-            {"detail": r"Course with id={course_id} not found"}
-        }},
-    },
-}
-
-unenroll_student_responses = {
-    400: {
-        "description": "Invalid user role",
-        "content": {"application/json": {"example":
-            {"detail": r"User id={student_id} is not a student"}
-        }},
-    },
-    404: {
-        "description": "Course not found",
-        "content": {"application/json": {"example":
-            {"detail": r"Course with id={course_id} not found"}
-        }},
-    },
-}
 
 # Create Course
 @router.post("/", 
              response_model = CourseResponse, 
              status_code = status.HTTP_201_CREATED, 
              dependencies = [Depends(require_roles(UserRole.admin))],
-             responses=create_course_responses)
+             responses = create_course_responses)
 def create_course_endpoint(course_data: CourseCreate, db: Session = Depends(get_db)):
     try:
         return create_course(db, course_data)
@@ -135,7 +53,7 @@ def get_courses_endpoint(db: Session = Depends(get_db)):
             response_model = CourseResponse, 
             status_code = status.HTTP_200_OK, 
             dependencies = [Depends(require_roles(UserRole.admin))],
-            responses=get_course_by_id_responses)
+            responses = get_course_by_id_responses)
 def get_course_by_id_endpoint(course_id: str, db: Session = Depends(get_db)):
     try:
         return get_course_by_id(db, course_id)
@@ -165,7 +83,7 @@ def update_course_endpoint(course_id: str, course_data: CourseUpdate, db: Sessio
                response_model = CourseResponse, 
                status_code = status.HTTP_200_OK, 
                dependencies = [Depends(require_roles(UserRole.admin))],
-               responses=delete_course_responses)
+               responses = delete_course_responses)
 def delete_course_endpoint(course_id: str, db: Session = Depends(get_db)):
     try:
         return delete_course(db, course_id)
@@ -179,7 +97,7 @@ def delete_course_endpoint(course_id: str, db: Session = Depends(get_db)):
     response_model = CourseResponse,
     status_code = status.HTTP_200_OK,
     dependencies = [Depends(require_roles(UserRole.admin))],
-    responses=enroll_student_responses
+    responses = enroll_student_responses
 )
 def enroll_student_endpoint(course_id: str, student_id: str, db: Session = Depends(get_db)):
     try:
@@ -196,7 +114,7 @@ def enroll_student_endpoint(course_id: str, student_id: str, db: Session = Depen
     response_model = CourseResponse,
     status_code = status.HTTP_200_OK,
     dependencies = [Depends(require_roles(UserRole.admin))],
-    responses=unenroll_student_responses
+    responses = unenroll_student_responses
 )
 def unenroll_student_endpoint(course_id: str, student_id: str, db: Session = Depends(get_db)):
     try:
