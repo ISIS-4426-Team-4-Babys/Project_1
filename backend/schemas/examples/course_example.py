@@ -21,7 +21,6 @@ course_update_example = {
         }
 
 course_response_example = {
-    {
             "examples": [{
                 "id": UUID_COURSE,
                 "name": "Secure Coding 101",
@@ -38,4 +37,3 @@ course_response_example = {
                 "students": []
             }]
         }
-}
