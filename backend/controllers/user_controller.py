@@ -1,4 +1,4 @@
-from responses.user_responses import create_user_responses, get_user_by_id_responses, get_user_by_email_responses, update_user_responses, delete_user_responses, student_courses_responses, professor_courses_responses
+from .responses.user_responses import create_user_responses, get_user_by_id_responses, get_user_by_email_responses, update_user_responses, delete_user_responses, student_courses_responses, professor_courses_responses
 from errors.user_errors import UserNotFoundError, DuplicateUserError, InvalidUserRoleError
 from schemas.user_schema import UserCreate, UserUpdate, UserResponse
 from fastapi import APIRouter, Depends, HTTPException, status

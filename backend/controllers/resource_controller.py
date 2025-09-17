@@ -1,4 +1,4 @@
-from responses.resource_responses import create_resource_responses, openapi_extra, get_resource_by_id_responses, delete_resource_responses
+from .responses.resource_responses import create_resource_responses, openapi_extra, get_resource_by_id_responses, delete_resource_responses
 from errors.resource_errors import ResourceNotFoundError, DuplicateResourceError, FileSizeError, FileDeletionError, FolderDeletionError
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from schemas.resource_schema import ResourceCreate, ResourceResponse

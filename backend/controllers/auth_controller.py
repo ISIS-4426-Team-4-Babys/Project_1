@@ -1,6 +1,6 @@
 from schemas.user_schema import LoginRequest, UserCreate, UserResponse, LoginResponse
 from errors.user_errors import InvalidCredentialsError, DuplicateUserError
-from responses.auth_responses import register_responses, login_responses
+from .responses.auth_responses import register_responses, login_responses
 from services.user_service import authenticate_user, create_user
 from fastapi import APIRouter, Depends, HTTPException, status
 from errors.db_errors import IntegrityConstraintError

@@ -1,4 +1,4 @@
-from responses.course_responses import create_course_responses, get_course_by_id_responses, update_course_responses, delete_course_responses, enroll_student_responses, unenroll_student_responses
+from .responses.course_responses import create_course_responses, get_course_by_id_responses, update_course_responses, delete_course_responses, enroll_student_responses, unenroll_student_responses
 from errors.course_errors import CourseNotFoundError, DuplicateCourseError, InvalidUserRoleError
 from schemas.course_schema import CourseCreate, CourseUpdate, CourseResponse
 from fastapi import APIRouter, Depends, HTTPException, status

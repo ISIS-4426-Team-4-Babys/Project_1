@@ -1,4 +1,4 @@
-from responses.agent_responses import create_agent_responses, get_agent_by_id_responses, update_agent_responses, delete_agent_responses
+from .responses.agent_responses import create_agent_responses, get_agent_by_id_responses, update_agent_responses, delete_agent_responses
 from schemas.agent_schema import AgentCreate, AgentUpdate, AgentResponse
 from fastapi import APIRouter, Depends, HTTPException, status
 from errors.db_errors import IntegrityConstraintError
