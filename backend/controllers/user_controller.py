@@ -129,7 +129,7 @@ def get_users_endpoint(db: Session = Depends(get_db)):
 # Get User by Id
 @router.get("/{user_id}", 
             response_model = UserResponse, 
-            dependencies = [Depends(require_roles(UserRole.admin))],
+            dependencies = [Depends(require_roles(UserRole.admin, UserRole.professor, UserRole.admin))],
             responses=get_user_by_id_responses)
 def get_user_by_id_endpoint(user_id: str, db: Session = Depends(get_db)):
     try:

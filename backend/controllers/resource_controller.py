@@ -62,12 +62,33 @@ delete_resource_responses = {
     },
 }
 
+openapi_extra = {
+  "requestBody": {
+    "content": {
+      "multipart/form-data": {
+        "schema": {
+          "title": "CreateResourceRequest",
+          "type": "object",
+          "properties": {
+            "file": {"type": "string", "format": "binary"},
+            "name": {"type": "string"},
+            "consumed_by": {"type": "string"},
+            "total_docs": {"type": "integer"}
+          },
+          "required": ["file", "name", "consumed_by", "total_docs"]
+        }
+      }
+    }
+  }
+}
+
 # Create Resource
 @router.post("/", 
              response_model = ResourceResponse, 
              status_code = status.HTTP_201_CREATED, 
              dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))],
-             responses=create_resource_responses)
+             responses=create_resource_responses,
+             openapi_extra=openapi_extra)
 def create_resource_endpoint(db: Session = Depends(get_db), file: UploadFile = File(...), name: str = Form(...), consumed_by: str = Form(...), total_docs: str = Form(...)):
     
     resource_data = ResourceCreate(
