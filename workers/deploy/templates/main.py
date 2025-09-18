@@ -7,6 +7,7 @@ from fastapi import FastAPI, HTTPException
 from langchain_chroma import Chroma
 from pydantic import BaseModel
 import logging
+import sys
 import os
 
 from langchain_community.cross_encoders import HuggingFaceCrossEncoder
@@ -19,7 +20,7 @@ hf_cross_encoder = HuggingFaceCrossEncoder(model_name = "BAAI/bge-reranker-v2-m3
 reranker = CrossEncoderReranker(model = hf_cross_encoder, top_n = 10)
 
 
-PROMPT = os.getenv("PROMPT")
+PROMPT = os.getenv("PROMPT", "")
 DB_PATH = "/app/database/"
 
 
@@ -36,7 +37,8 @@ llm = ChatGoogleGenerativeAI(
 
 def load_vector_store():
     if not os.path.exists(DB_PATH):
-        raise RuntimeError(f"No se encontró la base de datos en {DB_PATH}")
+        logger.warning(f"No se encontró la base de datos en {DB_PATH}")
+        return None
     return Chroma( 
         collection_name = "rag_docs",
         persist_directory = DB_PATH,
@@ -44,7 +46,7 @@ def load_vector_store():
     )
 
 vector_store = load_vector_store()
-
+compression_retriever = None
 
 def create_compression_retriever(vector_store, reranker, k = 25, search_type = "similarity"):
     logger.info("Creando retriever base con search_type='%s' y k=%d", search_type, k)
@@ -64,7 +66,13 @@ def create_compression_retriever(vector_store, reranker, k = 25, search_type = "
     return compression_retriever
 
 
-compression_retriever = create_compression_retriever(vector_store, reranker)
+if vector_store:
+    compression_retriever = create_compression_retriever(vector_store, reranker)
+    logger.info("DB encontrada: servidor FastAPI listo para recibir requests")
+else:
+    logger.warning("No hay DB: el servidor no se iniciará")
+    # Aquí hacemos que el contenedor termine automáticamente
+    sys.exit(0)
 
 
 def ask_rag(question: str, prompt, llm, compression_retriever, k=5):
@@ -109,10 +117,14 @@ class AskRequest(BaseModel):
 
 @app.post("/ask")
 def ask(req: AskRequest):
+    if compression_retriever is None:
+        raise HTTPException(
+            status_code = 500,
+            detail = "No hay base de datos cargada, el retriever no está inicializado"
+        )
     try:
         result = ask_rag(req.question, prompt, llm, compression_retriever)
         return result
-    
     except Exception as e:
         raise HTTPException(status_code = 500, detail = str(e))
 

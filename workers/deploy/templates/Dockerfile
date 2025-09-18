@@ -9,6 +9,8 @@ COPY workers/deploy/templates/requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN python -c "from transformers import AutoModel; AutoModel.from_pretrained('BAAI/bge-reranker-v2-m3')"
+
 COPY workers/deploy/templates/ .
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

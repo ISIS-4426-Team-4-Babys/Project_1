@@ -18,7 +18,6 @@ Tareas Pendientes:
         * Añadir señalización para saber cuando esta disponible un agente
         * Añadir que la cola nunca pare, revisar configuración
         * Añadir DQL y manejo de mensajes fallidos
-        * Revisar que hacer para que el sistema espere al contenedor de los agentes
         
     Frontend:
     
