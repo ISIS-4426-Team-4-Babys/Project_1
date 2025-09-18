@@ -79,7 +79,7 @@ def _dummy_for_type(ann, name=""):
 
     if ann in (_dt.datetime,):
         # ISO like the tests expect when serialized
-        return _dt.datetime.utcnow().replace(tzinfo=_dt.timezone.utc).isoformat()
+        return _dt.datetime.now(_dt.timezone.utc).replace(tzinfo=_dt.timezone.utc).isoformat()
     if ann in (_dt.date,):
         return _dt.date.today().isoformat()
 
