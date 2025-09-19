@@ -3,6 +3,7 @@ from rabbitmq import RabbitMQ
 import logging
 import os
 import json
+import asyncio
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -20,10 +21,10 @@ with open("prompt.txt", "r", encoding = "utf-8") as f:
     prompt = f.read()
 
 
-def callback(ch, method, properties, body):
+async def callback(message):
     try:
-        decoded_message = body.decode().strip()
-        logging.info(f"Message received with content = {body}")
+        decoded_message = message.body.decode().strip()
+        logging.info(f"Message received with content = {decoded_message}")
         
         payload = json.loads(decoded_message)
         filepath = payload.get("filepath")
@@ -53,11 +54,13 @@ def callback(ch, method, properties, body):
 
         with open(prompt_path, "w", encoding = "utf-8") as f:
             f.write(output)
-        
-        ch.basic_ack(method.delivery_tag)
     
     except Exception as e:
         logging.error(f"Error processing message: {e}")
-        ch.basic_nack(method.delivery_tag, requeue = True)
 
-rabbitmq.consume("prompt", callback)
+async def main():
+    await rabbitmq.consume("prompt", callback)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
