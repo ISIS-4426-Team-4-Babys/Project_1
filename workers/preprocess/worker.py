@@ -3,15 +3,16 @@ from rabbitmq import RabbitMQ
 import json
 import logging
 import os
+import asyncio
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 md_converter = MarkItDown(enable_plugins = True) # Set to True to enable plugins
 rabbitmq = RabbitMQ()
 
-def callback(ch, method, properties, body):
+async def callback(message):
     try:
-        decoded_message = body.decode().strip()
-        logging.info(f"Message received with content = {body}")
+        decoded_message = message.body.decode().strip()
+        logging.info(f"Message received with content = {decoded_message}")
 
         payload = json.loads(decoded_message)
         filepath = payload.get("filepath")
@@ -50,12 +51,17 @@ def callback(ch, method, properties, body):
             "total_docs": total_docs
         }
         
-        rabbitmq.publish("format", json.dumps(message))
-        ch.basic_ack(method.delivery_tag)
+        await rabbitmq.publish("format", json.dumps(message))
+
         logging.info(f"Markdown send with {markdown_path}")
     
     except Exception as e:
         logging.error(f"Error processing message: {e}")
-        ch.basic_nack(method.delivery_tag, requeue = True)
+        
 
-rabbitmq.consume("files", callback)
+async def main():
+    await rabbitmq.consume("files", callback)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+
