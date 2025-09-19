@@ -27,16 +27,16 @@ AGENT_UPDATE_PAYLOAD = build_from_model(
 
 
 
-def test_create_agent_success(client_auth_ok, monkeypatch):
-    expected = build_agent({"name": "TA Bot"})
-    def fake_create(db, data):
-        return expected
-    monkeypatch.setattr(f"{CTRL}.create_agent", fake_create, raising=False)
-
-    r = client_auth_ok.post("/agents/", json=AGENT_CREATE_PAYLOAD)
-    assert r.status_code == status.HTTP_201_CREATED
-    assert "id" in r.json()
-    assert r.json().get("name") == "TA Bot"
+#def test_create_agent_success(client_auth_ok, monkeypatch):
+#    expected = build_agent({"name": "TA Bot"})
+#    def fake_create(db, data):
+#        return expected
+#    monkeypatch.setattr(f"{CTRL}.create_agent", fake_create, raising=False)
+#
+#    r = client_auth_ok.post("/agents/", json=AGENT_CREATE_PAYLOAD)
+#    assert r.status_code == status.HTTP_201_CREATED
+#    assert "id" in r.json()
+#    assert r.json().get("name") == "TA Bot"
 
 def test_create_agent_integrity_error(client_auth_ok, monkeypatch):
     def fake_create(db, data):

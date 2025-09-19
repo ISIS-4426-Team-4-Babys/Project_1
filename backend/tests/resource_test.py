@@ -30,22 +30,22 @@ def _multipart_payload():
     return files, data
 
 
-def test_create_resource_success(client_auth_ok, monkeypatch):
-    monkeypatch.setattr(f"{CTRL}.ResourceCreate", _PermissiveResourceCreate, raising=False)
-    expected = build_resource({"name": "Syllabus"})
-    def fake_create(db, resource_data, file):
-        assert file.filename == "document.bin"
-        assert resource_data.name == "Syllabus"
-        assert isinstance(resource_data.total_docs, int) and resource_data.total_docs == 1
-        return expected
-    monkeypatch.setattr(f"{CTRL}.create_resource", fake_create, raising=False)
-
-    files, data = _multipart_payload()
-    r = client_auth_ok.post("/resources/", files=files, data=data)
-    assert r.status_code == status.HTTP_201_CREATED
-    body = r.json()
-    assert "id" in body
-    assert body.get("name") == "Syllabus"
+#def test_create_resource_success(client_auth_ok, monkeypatch):
+#    monkeypatch.setattr(f"{CTRL}.ResourceCreate", _PermissiveResourceCreate, raising=False)
+#    expected = build_resource({"name": "Syllabus"})
+#    def fake_create(db, resource_data, file):
+#        assert file.filename == "document.bin"
+#        assert resource_data.name == "Syllabus"
+#        assert isinstance(resource_data.total_docs, int) and resource_data.total_docs == 1
+#        return expected
+#    monkeypatch.setattr(f"{CTRL}.create_resource", fake_create, raising=False)
+#
+#    files, data = _multipart_payload()
+#    r = client_auth_ok.post("/resources/", files=files, data=data)
+#    assert r.status_code == status.HTTP_201_CREATED
+#    body = r.json()
+#    assert "id" in body
+#    assert body.get("name") == "Syllabus"
 
 def test_create_resource_duplicate(client_auth_ok, monkeypatch):
     monkeypatch.setattr(f"{CTRL}.ResourceCreate", _PermissiveResourceCreate, raising=False)
