@@ -14,7 +14,6 @@ Tareas Pendientes:
         * Añadir fuentes y citas del contenido usado para generar la respuesta
         * Añadir logica para eliminar agentes, casos que no esten manejados
         * Añadir señalización para saber cuando esta disponible un agente
-        * Añadir que la cola nunca pare, revisar configuración
         * Añadir DQL y manejo de mensajes fallidos
         
     Frontend:
