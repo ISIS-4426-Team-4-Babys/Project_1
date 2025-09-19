@@ -2,15 +2,16 @@ from barrier_notifier import BarrierNotifier
 from rabbitmq import RabbitMQ
 import logging
 import json
+import asyncio
 
 logging.basicConfig(level = logging.INFO, format = "%(asctime)s [%(levelname)s] %(message)s")
 rabbitmq = RabbitMQ()
 
 received_agents = set()
 
-def callback(ch, method, properties, body):
+async def callback(message):
     try:
-        decoded_message = body.decode().strip()
+        decoded_message = message.body.decode().strip()
         logging.info(f"Message received {decoded_message}")
 
         payload = json.loads(decoded_message)
@@ -26,15 +27,20 @@ def callback(ch, method, properties, body):
 
         if agent_id not in received_agents:
             logging.info(f"Creating barrier notifier for agent: {agent_id}")
-            BarrierNotifier(agent_id, total_docs).start_in_thread()
+            asyncio.create_task(BarrierNotifier(agent_id, total_docs).run())
             logging.info(f"Barrier notifier created for agent: {agent_id}")
             received_agents.add(agent_id)
 
-        rabbitmq.publish(agent_id, "Document Vectorized")
-        ch.basic_ack(method.delivery_tag)
+        await rabbitmq.publish(agent_id, "Document Vectorized")
+        
     
     except Exception as e:
         logging.error(f"Error processing message: {e}")
-        ch.basic_nack(method.delivery_tag, requeue = True)
+        
 
-rabbitmq.consume("control", callback)
+async def main():
+    await rabbitmq.consume("control", callback)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
