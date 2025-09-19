@@ -1,16 +1,23 @@
 from langchain.retrievers.document_compressors import CrossEncoderReranker
+from langchain_community.cross_encoders import HuggingFaceCrossEncoder
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain.output_parsers import PydanticToolsParser
 from langchain_core.prompts import ChatPromptTemplate
 from fastapi import FastAPI, HTTPException
 from langchain_chroma import Chroma
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import logging
 import sys
 import os
 
-from langchain_community.cross_encoders import HuggingFaceCrossEncoder
+class ParaphrasedQuery(BaseModel):
+    """Has realizado una expansión de la consulta para generar una paráfrasis de una pregunta."""
+
+    paraphrased_query: str = Field(
+        description="Una paráfrasis única de la pregunta original.",
+    )
 
 logging.basicConfig(level = logging.INFO,  format = "%(asctime)s | %(levelname)s | %(message)s")
 logger = logging.getLogger(__name__)
@@ -28,6 +35,16 @@ reranker = CrossEncoderReranker(model = hf_cross_encoder, top_n = 10)
 PROMPT = os.getenv("PROMPT", "")
 DB_PATH = "/app/database/"
 
+SYSTEM_REWRITE = """Eres un asistente útil que genera múltiples consultas de búsqueda a partir de una sola pregunta.
+Realiza expansión de consultas. Si existen varias formas comunes de formular la pregunta del usuario o sinónimos comunes de palabras clave en la pregunta, asegúrate de devolver varias versiones de la consulta con las diferentes formas de expresarlas.
+Si hay siglas o palabras que no conoces, no intentes reformularlas.
+Devuelve 2 versiones diferentes de la pregunta, sin cambiar el idioma original de la misma."""
+PROMPT_REWRITE = ChatPromptTemplate.from_messages(
+    [
+        ("system", SYSTEM_REWRITE),
+        ("human", "{question}"),
+    ]
+)
 
 app = FastAPI()
 
@@ -37,7 +54,9 @@ llm = ChatGoogleGenerativeAI(
         model = "gemini-2.5-flash-lite",
         temperature = 0.5,
     )
-  
+
+llm_with_tools = llm.bind_tools([ParaphrasedQuery])
+query_analizer = PROMPT_REWRITE | llm_with_tools | PydanticToolsParser(tools = [ParaphrasedQuery])
 
 
 def load_vector_store():
@@ -53,7 +72,7 @@ def load_vector_store():
 vector_store = load_vector_store()
 compression_retriever = None
 
-def create_compression_retriever(vector_store, reranker, k = 25, search_type = "similarity"):
+def create_compression_retriever(vector_store, reranker, k = 15, search_type = "similarity"):
     logger.info("Creando retriever base con search_type='%s' y k=%d", search_type, k)
 
     retriever = vector_store.as_retriever(
@@ -84,22 +103,40 @@ def ask_rag(question: str, prompt, llm, compression_retriever, k=5):
     logger.info("=== Nueva pregunta RAG ===")
     logger.info("Pregunta: %s", question)
 
-    retrieved_docs = compression_retriever.invoke(question)
-    logger.info("Documentos recuperados: %d", len(retrieved_docs))
+    queries = query_analizer.invoke({"question":question})
 
-    for i, doc in enumerate(retrieved_docs, start=1):
+    contexts = []
+    for query in queries:
+        logger.info("Pregunta: %s", query)
+        contexts = contexts + compression_retriever.invoke(query.paraphrased_query)
+    
+    contexts = contexts + compression_retriever.invoke(question)
+
+    seen = set()
+    unique_contexts = []
+    for doc in contexts:
+        if doc.page_content not in seen:
+            seen.add(doc.page_content)
+            unique_contexts.append(doc)
+
+    contexts = unique_contexts
+
+    #retrieved_docs = compression_retriever.invoke(question)
+    logger.info("Documentos unicos recuperados: %d", len(contexts))
+
+    for i, doc in enumerate(contexts, start=1):
         score = doc.metadata.get("relevance_score", "N/A")
         snippet = doc.page_content[:200].replace("\n", " ")
         logger.info("Doc #%d (score=%s, source=%s): %s...", 
                     i, score, doc.metadata.get("source_file", "unknown"), snippet)
 
-    for i, doc in enumerate(retrieved_docs, start=1):
+    for i, doc in enumerate(contexts, start=1):
         snippet = doc.page_content[:200].replace("\n", " ")
         logger.debug("Doc #%d (source=%s): %s...", 
                      i, doc.metadata.get("source_file", "unknown"), snippet)
 
     # Construir contexto
-    docs_content = "\n\n".join(doc.page_content for doc in retrieved_docs)
+    docs_content = "\n\n".join(doc.page_content for doc in contexts)
 
     messages = prompt.invoke({
         "question": question,
@@ -112,7 +149,7 @@ def ask_rag(question: str, prompt, llm, compression_retriever, k=5):
     return {
         "question": question,
         "answer": response.content,
-        "sources": [doc.metadata.get("source_file", "unknown") for doc in retrieved_docs]
+        "sources": [doc.metadata.get("source_file", "unknown") for doc in contexts]
     }
 
 
