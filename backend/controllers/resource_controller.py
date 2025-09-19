@@ -26,7 +26,7 @@ router = APIRouter(prefix="/resources", tags=["Resources"])
              dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))],
              responses = create_resource_responses,
              openapi_extra = openapi_extra)
-def create_resource_endpoint(db: Session = Depends(get_db), file: UploadFile = File(...), name: str = Form(...), consumed_by: str = Form(...), total_docs: str = Form(...)):
+async def create_resource_endpoint(db: Session = Depends(get_db), file: UploadFile = File(...), name: str = Form(...), consumed_by: str = Form(...), total_docs: str = Form(...)):
     
     resource_data = ResourceCreate(
         name = name,
@@ -39,7 +39,8 @@ def create_resource_endpoint(db: Session = Depends(get_db), file: UploadFile = F
     )
     
     try:
-        return create_resource(db, resource_data, file)
+        resource = await create_resource(db, resource_data, file)
+        return resource
     except DuplicateResourceError as e:
         raise HTTPException(status_code = status.HTTP_400_BAD_REQUEST, detail = str(e))
     except FileSizeError as e:

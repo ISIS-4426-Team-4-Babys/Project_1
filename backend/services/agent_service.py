@@ -16,8 +16,9 @@ UPLOAD_DIR = "backend/prompts"
 
 rabbitmq = RabbitMQ()
 
+
 # Create agent (POST)
-def create_agent(db: Session, agent_data: AgentCreate):
+async def create_agent(db: Session, agent_data: AgentCreate):
     logger.info("Creating new agent with name=%s", agent_data.name)
     
     # Verify associated course
@@ -56,7 +57,7 @@ def create_agent(db: Session, agent_data: AgentCreate):
             "filepath": filepath
         }
 
-        rabbitmq.publish("prompt", json.dumps(message))
+        await rabbitmq.publish("prompt", json.dumps(message))
         logger.info("Prompt path published in prompt topic")
 
         return agent

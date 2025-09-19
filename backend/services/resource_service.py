@@ -20,7 +20,7 @@ UPLOAD_DIR = "backend/data"
 rabbitmq = RabbitMQ()
 
 # Create resource (POST)
-def create_resource(db: Session, resource_data: ResourceCreate, file: UploadFile):
+async def create_resource(db: Session, resource_data: ResourceCreate, file: UploadFile):
     logger.info("Creating new resource with name=%s", resource_data.name)
     
     # Verify associated agent
@@ -87,7 +87,7 @@ def create_resource(db: Session, resource_data: ResourceCreate, file: UploadFile
         "total_docs": total_docs
     }
     
-    rabbitmq.publish("files", json.dumps(message))
+    await rabbitmq.publish("files", json.dumps(message))
     logger.info("Resource published in files topic")
 
     # Return full resoruce with agent loaded

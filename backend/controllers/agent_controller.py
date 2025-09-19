@@ -26,9 +26,9 @@ router = APIRouter(prefix = "/agents", tags = ["Agents"])
              status_code = status.HTTP_201_CREATED, 
              dependencies = [Depends(require_roles(UserRole.professor, UserRole.admin))],
              responses = create_agent_responses)
-def create_agent_endpoint(agent_data: AgentCreate, db: Session = Depends(get_db)):
+async def create_agent_endpoint(agent_data: AgentCreate, db: Session = Depends(get_db)):
     try:
-        agent = create_agent(db, agent_data)
+        agent = await create_agent(db, agent_data)
         return agent
     except IntegrityConstraintError as e:
         raise HTTPException(status_code = status.HTTP_409_CONFLICT, detail = str(e))
