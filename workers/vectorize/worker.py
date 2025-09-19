@@ -7,6 +7,7 @@ from pathlib import Path
 import logging
 import os
 import json
+import asyncio
 
 
 logging.basicConfig(level = logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -100,9 +101,9 @@ def load_to_chromadb(db_id: str, chunks, collection_name = "rag_docs"):
     return str(db_path)
 
 
-def callback(ch, method, properties, body):
+async def callback(message):
     try:
-        decoded_message = body.decode().strip()
+        decoded_message = message.body.decode().strip()
         logging.info(f"Message received: {decoded_message}")
 
         payload = json.loads(decoded_message)
@@ -128,15 +129,18 @@ def callback(ch, method, properties, body):
                 "total_docs": total_docs
             } 
 
-            rabbitmq.publish("control", json.dumps(message))
-            ch.basic_ack(method.delivery_tag)
+            await rabbitmq.publish("control", json.dumps(message))
             logging.info(f"Published message to control topic")
 
     except json.JSONDecodeError:
         logging.error("Failed to decode JSON message")
     except Exception as e:
         logging.error(f"Error processing message: {e}")
-        ch.basic_nack(method.delivery_tag, requeue = True)
 
 
-rabbitmq.consume("vectorize", callback)
+async def main():
+    await rabbitmq.consume("vectorize", callback)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

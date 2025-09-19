@@ -13,3 +13,4 @@ datasets
 pika
 sentence-transformers
 langchain-huggingface
+aio-pika
