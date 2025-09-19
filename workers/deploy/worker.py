@@ -3,6 +3,7 @@ import logging
 import subprocess
 import json
 import os
+import asyncio
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
@@ -12,10 +13,10 @@ BASE_PATH = os.getenv("BASE_PATH")
 rabbitmq = RabbitMQ()
 
 
-def callback(ch, method, properties, body):
+async def callback(message):
     try:
-        decoded_message = body.decode().strip()
-        logging.info(f"Message received with content = {body}")
+        decoded_message = message.body.decode().strip()
+        logging.info(f"Message received with content = {decoded_message}")
 
         payload = json.loads(decoded_message)
         agent_id = payload.get("agent_id")
@@ -50,11 +51,16 @@ def callback(ch, method, properties, body):
             image_name
         ], check = True)
 
-        ch.basic_ack(method.delivery_tag)
         logging.info(f"Agent deployed in http://localhost:{host_port} with ID {agent_id}")
 
     except Exception as e:
         logging.error(f"Error processing message: {e}")
-        ch.basic_nack(method.delivery_tag, requeue = True)
+        
 
-rabbitmq.consume("deploy", callback)
+# Main async
+async def main():
+    await rabbitmq.consume("deploy", callback)
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
