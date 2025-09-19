@@ -1,6 +1,6 @@
 from langchain.retrievers.document_compressors import CrossEncoderReranker
 from langchain.retrievers import ContextualCompressionRetriever
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from fastapi import FastAPI, HTTPException
@@ -15,7 +15,12 @@ from langchain_community.cross_encoders import HuggingFaceCrossEncoder
 logging.basicConfig(level = logging.INFO,  format = "%(asctime)s | %(levelname)s | %(message)s")
 logger = logging.getLogger(__name__)
 
-embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
+embeddings = HuggingFaceEmbeddings(
+    model_name = "sentence-transformers/all-mpnet-base-v2",
+    model_kwargs = {"device": "cpu"},
+    encode_kwargs = {"normalize_embeddings": True}
+)
+
 hf_cross_encoder = HuggingFaceCrossEncoder(model_name = "BAAI/bge-reranker-v2-m3")
 reranker = CrossEncoderReranker(model = hf_cross_encoder, top_n = 10)
 

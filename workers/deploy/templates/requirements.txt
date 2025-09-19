@@ -12,3 +12,4 @@ python-dotenv
 markdown
 datasets
 sentence-transformers
+langchain-huggingface

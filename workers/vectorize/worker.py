@@ -1,5 +1,5 @@
 from langchain.text_splitter import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain.schema import Document
 from rabbitmq import RabbitMQ
@@ -28,7 +28,11 @@ recursive_splitter = RecursiveCharacterTextSplitter(
 		]
 )
 
-embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
+embeddings = HuggingFaceEmbeddings(
+    model_name = "sentence-transformers/all-mpnet-base-v2",
+    model_kwargs = {"device": "cpu"},
+    encode_kwargs = {"normalize_embeddings": True}
+)
 
 BASE_DB_DIR = "databases"
 

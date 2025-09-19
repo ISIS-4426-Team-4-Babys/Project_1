@@ -11,3 +11,5 @@ markdown
 ragas 
 datasets
 pika
+sentence-transformers
+langchain-huggingface
