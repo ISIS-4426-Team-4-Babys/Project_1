@@ -1,103 +1,79 @@
-import threading
+from aio_pika import connect_robust, Message, ExchangeType
 import logging
-import json 
-import pika
+import json
 import os
 
-logging.basicConfig(level = logging.INFO, format = "%(asctime)s [%(levelname)s] %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
 class BarrierNotifier:
 
-    def __init__(self, agent_id: str, total_docs: int, ):
-        self.user = os.getenv('RABBITMQ_USER')
-        self.password = os.getenv('RABBITMQ_PASSWORD')
-        self.host = os.getenv('RABBITMQ_HOST')
-        self.port = int(os.getenv('RABBITMQ_PORT'))
-        self.connection = None
-        self.channel = None
-
+    def __init__(self, agent_id: str, total_docs: int):
         self.agent_id = agent_id
         self.total_docs = total_docs
         self.counter = 0
-    
-    def connect(self):
-        credentials = pika.PlainCredentials(self.user, self.password)
-        parameters = pika.ConnectionParameters(host = self.host, port = self.port, credentials = credentials, heartbeat = 600, blocked_connection_timeout = 300)
-        self.connection = pika.BlockingConnection(parameters)
-        self.channel = self.connection.channel()
+        self.connection = None
+        self.channel = None
+        self.queue = None
 
-    def close(self):
-        if self.connection and not self.connection.is_closed:
-            self.connection.close()
-    
-    def declare_barrier(self):
+        self.user = os.getenv('RABBITMQ_USER')
+        self.password = os.getenv('RABBITMQ_PASSWORD')
+        self.host = os.getenv('RABBITMQ_HOST')
+        self.port = int(os.getenv('RABBITMQ_PORT', 5672))
 
-        assert self.channel is not None
-        self.channel.queue_declare(
-            queue = self.agent_id,
+    async def connect(self):
+        self.connection = await connect_robust(
+            host = self.host,
+            port = self.port,
+            login = self.user,
+            password = self.password,
+            heartbeat = 60,
+        )
+        self.channel = await self.connection.channel()
+        await self.channel.set_qos(prefetch_count = 128)
+        logging.info("BarrierNotifier connected to RabbitMQ")
+
+    async def declare_barrier(self):
+        self.queue = await self.channel.declare_queue(
+            self.agent_id,
             durable = True,
-            auto_delete = False,
-        ) 
-
+            auto_delete = False
+        )
         logging.info("Barrier declared with name = %s", self.agent_id)
-    
-    def declare_control_exchange(self):
 
-        assert self.channel is not None
-        self.channel.exchange_declare(exchange = "control", exchange_type = "topic", durable = True)
+    async def declare_control_exchange(self):
+        self.exchange = await self.channel.declare_exchange(
+            "control",
+            ExchangeType.TOPIC,
+            durable = True
+        )
+        logging.info("Control exchange declared successfully")
 
-        logging.info("Control exchange declared succesfully")
+    async def on_tick(self, message):
+        async with message.process():
+            try:
+                self.counter += 1
+                logging.info("On tick barrier %s / %d", self.agent_id, self.counter)
 
-    def on_tick(self, ch, method, properties, body):
+                if self.counter == self.total_docs:
+                    evt = {
+                        "event": "completed",
+                        "agent_id": self.agent_id,
+                    }
 
-        try:
-            self.counter += 1
-            logging.info("On tick barrier %s / %d", self.agent_id, self.counter)
-            ch.basic_ack(method.delivery_tag)
-            
-            if self.counter == self.total_docs:
-
-                evt = {
-                    "event": "completed",
-                    "agent_id": self.agent_id,
-                }
-
-                self.channel.queue_declare(queue = "deploy", durable = True)
-                self.channel.basic_publish(
-                    exchange = '',
-                    routing_key = "deploy",
-                    body = json.dumps(evt).encode("utf-8"),
-                    properties = pika.BasicProperties(
-                        delivery_mode = 2  
+                    await self.channel.default_exchange.publish(
+                        Message(body=json.dumps(evt).encode("utf-8")),
+                        routing_key="deploy"
                     )
-                )
-                logging.info("Completed message published agent %s", self.agent_id)
-                
-                ch.stop_consuming()
 
-        except Exception as e:
-            logging.exception("Notifier error in _on_tick: %s", e)
-            ch.basic_nack(method.delivery_tag, requeue = True)
+                    logging.info("Completed message published agent %s", self.agent_id)
 
-    def run(self):
-        try:
-            self.connect()
-            self.declare_control_exchange()
-            self.declare_barrier()
+            except Exception as e:
+                logging.exception("Notifier error in _on_tick: %s", e)
 
-            self.channel.basic_qos(prefetch_count = 128)
-            self.channel.basic_consume(queue = self.agent_id, on_message_callback = self.on_tick, auto_ack = False)
-            self.channel.start_consuming()
-        
-        finally:
-            self.channel.queue_delete(queue = self.agent_id)
-            self.close()
-    
-    def start_in_thread(self):
-
-        thread = threading.Thread(target = self.run, name = self.agent_id, daemon = True)
-        thread.start()
-        return  thread
-
-
+    async def run(self):
+        await self.connect()
+        await self.declare_control_exchange()
+        await self.declare_barrier()
+        await self.queue.consume(self.on_tick)
+        logging.info(f"BarrierNotifier running for agent {self.agent_id}")
 
