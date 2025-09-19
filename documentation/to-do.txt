@@ -10,7 +10,6 @@ Tareas Pendientes:
     
         * Documentación, comentarios y estandarización del código
         * División de documentos largos para procesamiento
-        * Reescritura de query en el backend del agente
         * Añadir fuentes y citas del contenido usado para generar la respuesta
         * Añadir logica para eliminar agentes, casos que no esten manejados
         * Añadir señalización para saber cuando esta disponible un agente
