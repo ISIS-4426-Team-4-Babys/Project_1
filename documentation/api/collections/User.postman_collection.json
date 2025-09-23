@@ -1,0 +1,996 @@
+{
+	"info": {
+		"_postman_id": "7c287193-3674-4a5d-8ed8-d40875ae19d0",
+		"name": "User",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47552131",
+		"_collection_link": "https://nathaliaq16-620590.postman.co/workspace/Nathalia-Alexandra-Quiroga-Alfa~5b22ce91-e7f6-45ac-868e-e2a36efe4bf5/collection/47552131-7c287193-3674-4a5d-8ed8-d40875ae19d0?action=share&source=collection_link&creator=47552131"
+	},
+	"item": [
+		{
+			"name": "Create User (Professor)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"professor_id\", response.id);",
+							"",
+							"pm.test(\"Create Professor - Success\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    pm.response.to.be.json;",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData).to.have.property('id');",
+							"    pm.expect(responseData).to.have.property('email');",
+							"    pm.expect(responseData.role).to.equal('professor');",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Nathalia Quiroga\",\n    \"email\": \"n.quiroga@uniandes.edu.co\",\n    \"password\": \"Nath\",\n    \"role\": \"professor\",\n    \"profile_image\": \"https://www.instagram.com/sanguchedemortadela__/p/DBEj19gPnEM/?locale=es_LA\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/users",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create User (Professor)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Juan Andres Ariza\",\n    \"email\": \"ja.arizag@uniandes.edu.co\",\n    \"password\": \"Juan123\",\n    \"role\": \"professor\",\n    \"profile_image\": \"https://www.instagram.com/sanguchedemortadela__/p/DBEj19gPnEM/?locale=es_LA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{service_url}}/users",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:28:29 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "260"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"name\": \"Juan Andres Ariza\",\n    \"email\": \"ja.arizag@uniandes.edu.co\",\n    \"role\": \"professor\",\n    \"profile_image\": \"https://www.instagram.com/sanguchedemortadela__/p/DBEj19gPnEM/?locale=es_LA\",\n    \"id\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n    \"courses_taught\": [],\n    \"courses_taken\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Create User (Student)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"student_id\", response.id);",
+							"",
+							"pm.test(\"Create Student - Success\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    pm.response.to.be.json;",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData).to.have.property('id');",
+							"    pm.expect(responseData).to.have.property('email');",
+							"    pm.expect(responseData.role).to.equal('student');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Nicolas Bedoya Figueroa\",\n    \"email\": \"n.bedoyaf@uniandes.edu.co\",\n    \"password\": \"Nicolas123\",\n    \"role\": \"student\",\n    \"profile_image\": \"https://ideamosweb.com/shitpost-y-el-marketing-digital/\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/users",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create User (Student)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Nicolas Bedoya Figueroa\",\n    \"email\": \"n.bedoyaf@uniandes.edu.co\",\n    \"password\": \"Nicolas123\",\n    \"role\": \"student\",\n    \"profile_image\": \"https://ideamosweb.com/shitpost-y-el-marketing-digital/\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{service_url}}/users",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:33:06 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "244"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Nicolas Bedoya Figueroa\",\n    \"email\": \"n.bedoyaf@uniandes.edu.co\",\n    \"role\": \"student\",\n    \"profile_image\": \"https://ideamosweb.com/shitpost-y-el-marketing-digital/\",\n    \"id\": \"198a33d6-73ad-40d5-aeba-e60757f63aff\",\n    \"courses_taught\": [],\n    \"courses_taken\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Create User (Student) 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"student2_id\", response.id);",
+							"",
+							"pm.test(\"Create Student - Success\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    pm.response.to.be.json;",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData).to.have.property('id');",
+							"    pm.expect(responseData).to.have.property('email');",
+							"    pm.expect(responseData.role).to.equal('student');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Julián Contreras\",\n    \"email\": \"j.contreras@uniandes.edu.co\",\n    \"password\": \"contreras1\",\n    \"role\": \"student\",\n    \"profile_image\": \"https://ideamosweb.com/shitpost-y-el-marketing-digital/\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/users",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create User (Student)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Nicolas Bedoya Figueroa\",\n    \"email\": \"n.bedoyaf@uniandes.edu.co\",\n    \"password\": \"Nicolas123\",\n    \"role\": \"student\",\n    \"profile_image\": \"https://ideamosweb.com/shitpost-y-el-marketing-digital/\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{service_url}}/users",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:33:06 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "244"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Nicolas Bedoya Figueroa\",\n    \"email\": \"n.bedoyaf@uniandes.edu.co\",\n    \"role\": \"student\",\n    \"profile_image\": \"https://ideamosweb.com/shitpost-y-el-marketing-digital/\",\n    \"id\": \"198a33d6-73ad-40d5-aeba-e60757f63aff\",\n    \"courses_taught\": [],\n    \"courses_taken\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Create User (Delete)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"student_delete_id\", response.id);",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Manuel Porras Tascón\",\n    \"email\": \"mf.porras@uniandes.edu.co\",\n    \"password\": \"Manuel123\",\n    \"role\": \"student\",\n    \"profile_image\": \"https://www.redbubble.com/es/shop/shitpost+prints\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/users",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create User (Delete)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Manuel Porras Tascón\",\n    \"email\": \"mf.porras@uniandes.edu.co\",\n    \"password\": \"Manuel123\",\n    \"role\": \"student\",\n    \"profile_image\": \"https://www.redbubble.com/es/shop/shitpost+prints\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{service_url}}/users",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:40:57 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "236"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"name\": \"Manuel Porras Tascón\",\n    \"email\": \"mf.porras@uniandes.edu.co\",\n    \"role\": \"student\",\n    \"profile_image\": \"https://www.redbubble.com/es/shop/shitpost+prints\",\n    \"id\": \"affd2275-2d20-45f8-8723-f77ac38e8386\",\n    \"courses_taught\": [],\n    \"courses_taken\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Get All Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get All Users - Success\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.json;\r",
+							"    const responseData = pm.response.json();\r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/users",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get All Users",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/users",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:33:51 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "759"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "[\n    {\n        \"name\": \"Nicolas Rozo Fajardo\",\n        \"email\": \"n.rozo@uniandes.edu.co\",\n        \"role\": \"admin\",\n        \"profile_image\": \"https://revistaenraizada.com/wp-content/uploads/2021/08/Tamaulipas.jpg\",\n        \"id\": \"11b2c306-0bf3-43f7-89db-80e7a1e941e4\",\n        \"courses_taught\": [],\n        \"courses_taken\": []\n    },\n    {\n        \"name\": \"Juan Andres Ariza\",\n        \"email\": \"ja.arizag@uniandes.edu.co\",\n        \"role\": \"professor\",\n        \"profile_image\": \"https://www.instagram.com/sanguchedemortadela__/p/DBEj19gPnEM/?locale=es_LA\",\n        \"id\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n        \"courses_taught\": [],\n        \"courses_taken\": []\n    },\n    {\n        \"name\": \"Nicolas Bedoya Figueroa\",\n        \"email\": \"n.bedoyaf@uniandes.edu.co\",\n        \"role\": \"student\",\n        \"profile_image\": \"https://ideamosweb.com/shitpost-y-el-marketing-digital/\",\n        \"id\": \"198a33d6-73ad-40d5-aeba-e60757f63aff\",\n        \"courses_taught\": [],\n        \"courses_taken\": []\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Get User By ID (Professor)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get User By ID Professor - Success\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.json;\r",
+							"    const responseData = pm.response.json();\r",
+							"    pm.expect(responseData).to.have.property('id');\r",
+							"    pm.expect(responseData).to.have.property('email');\r",
+							"    pm.expect(responseData).to.have.property('role');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/users/{{professor_id}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"users",
+						"{{professor_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get User By ID (Professor)",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/{{professor_id}}",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"{{professor_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:36:59 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "271"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Juan Andrés Ariza Gacharná\",\n    \"email\": \"ja.arizag@uniandes.edu.co\",\n    \"role\": \"professor\",\n    \"profile_image\": \"https://www.instagram.com/sanguchedemortadela__/p/DBEj19gPnEM/?locale=es_LA\",\n    \"id\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n    \"courses_taught\": [],\n    \"courses_taken\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Get User By ID (Student)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get User By ID Student - Success\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.json;\r",
+							"    const responseData = pm.response.json();\r",
+							"    pm.expect(responseData).to.have.property('id');\r",
+							"    pm.expect(responseData).to.have.property('email');\r",
+							"    pm.expect(responseData).to.have.property('role');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/users/{{student_id}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"users",
+						"{{student_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get User By ID (Professor)",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/{{professor_id}}",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"{{professor_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:36:59 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "271"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Juan Andrés Ariza Gacharná\",\n    \"email\": \"ja.arizag@uniandes.edu.co\",\n    \"role\": \"professor\",\n    \"profile_image\": \"https://www.instagram.com/sanguchedemortadela__/p/DBEj19gPnEM/?locale=es_LA\",\n    \"id\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n    \"courses_taught\": [],\n    \"courses_taken\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Update User (Professor)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Update User - Success\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.json;\r",
+							"    const responseData = pm.response.json();\r",
+							"    pm.expect(responseData).to.have.property('id');\r",
+							"    pm.expect(responseData).to.have.property('email');\r",
+							"\r",
+							"    const requestData = JSON.parse(pm.request.body.raw);\r",
+							"    if (requestData.name) {\r",
+							"        pm.expect(responseData.name).to.equal(requestData.name);\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Nathalia Alexandra Quiroga Alfaro\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/users/{{professor_id}}",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"users",
+						"{{professor_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update User (Professor)",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Juan Andrés Ariza Gacharná\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/{{professor_id}}",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"{{professor_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:36:44 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "271"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Juan Andrés Ariza Gacharná\",\n    \"email\": \"ja.arizag@uniandes.edu.co\",\n    \"role\": \"professor\",\n    \"profile_image\": \"https://www.instagram.com/sanguchedemortadela__/p/DBEj19gPnEM/?locale=es_LA\",\n    \"id\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n    \"courses_taught\": [],\n    \"courses_taken\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete User - Success\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{service_url}}/users/{{student_delete_id}}",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"users",
+						"{{student_delete_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete User",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{service_url}}/users/{{student_delete_id}}",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"users",
+								"{{student_delete_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:41:33 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "236"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Manuel Porras Tascón\",\n    \"email\": \"mf.porras@uniandes.edu.co\",\n    \"role\": \"student\",\n    \"profile_image\": \"https://www.redbubble.com/es/shop/shitpost+prints\",\n    \"id\": \"affd2275-2d20-45f8-8723-f77ac38e8386\",\n    \"courses_taught\": [],\n    \"courses_taken\": []\n}"
+				}
+			]
+		}
+	]
+}

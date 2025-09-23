@@ -1,0 +1,902 @@
+{
+	"info": {
+		"_postman_id": "a985f9f9-1701-4a1f-b7a6-da2199dc5b0e",
+		"name": "Course",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47552131",
+		"_collection_link": "https://nathaliaq16-620590.postman.co/workspace/Nathalia-Alexandra-Quiroga-Alfa~5b22ce91-e7f6-45ac-868e-e2a36efe4bf5/collection/47552131-a985f9f9-1701-4a1f-b7a6-da2199dc5b0e?action=share&source=collection_link&creator=47552131"
+	},
+	"item": [
+		{
+			"name": "Create Course",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"course_id\", response.id);",
+							"",
+							"pm.test(\"Create Course2 - Success\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    pm.response.to.be.json;",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData).to.have.property('id');",
+							"    pm.expect(responseData).to.have.property('name');",
+							"    pm.expect(responseData).to.have.property('code');",
+							"    pm.expect(responseData).to.have.property('taught_by');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"DPO\",\n    \"code\": \"ISIS-1106\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"Java\",\n    \"taught_by\": \"{{professor_id}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/courses",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"courses"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Course",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Diseño y Aálisis de Algoritmos\",\n    \"code\": \"ISIS-1105\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"La mejor materia del pregrado\",\n    \"taught_by\": \"{{professor_id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{service_url}}/courses",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:45:29 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "413"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Diseño y Aálisis de Algoritmos\",\n    \"code\": \"ISIS-1105\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"La mejor materia del pregrado\",\n    \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"taught_by\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n    \"teacher\": {\n        \"id\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n        \"name\": \"Juan Andrés Ariza Gacharná\",\n        \"email\": \"ja.arizag@uniandes.edu.co\"\n    },\n    \"agents\": [],\n    \"students\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Course 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"course2_id\", response.id);",
+							"",
+							"pm.test(\"Create Course2 - Success\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    pm.response.to.be.json;",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData).to.have.property('id');",
+							"    pm.expect(responseData).to.have.property('name');",
+							"    pm.expect(responseData).to.have.property('code');",
+							"    pm.expect(responseData).to.have.property('taught_by');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"MEL\",\n    \"code\": \"ISIS-1107\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"La primera materia filtro\",\n    \"taught_by\": \"{{professor_id}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/courses",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"courses"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Course",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Diseño y Aálisis de Algoritmos\",\n    \"code\": \"ISIS-1105\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"La mejor materia del pregrado\",\n    \"taught_by\": \"{{professor_id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{service_url}}/courses",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:45:29 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "413"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Diseño y Aálisis de Algoritmos\",\n    \"code\": \"ISIS-1105\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"La mejor materia del pregrado\",\n    \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"taught_by\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n    \"teacher\": {\n        \"id\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n        \"name\": \"Juan Andrés Ariza Gacharná\",\n        \"email\": \"ja.arizag@uniandes.edu.co\"\n    },\n    \"agents\": [],\n    \"students\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Course Duplicate code",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"course_id\", response.id);",
+							"",
+							"pm.test(\"Create Course - Duplicate Code\", function () {",
+							"    if (pm.response.code === 400) {",
+							"        pm.response.to.be.json;",
+							"        const responseData = pm.response.json();",
+							"        pm.expect(responseData.detail).to.include('Duplicate course with code');",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"EDA\",\n    \"code\": \"ISIS-1105\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"La mejor materia del pregrado >)\",\n    \"taught_by\": \"{{professor_id}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/courses",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"courses"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Course",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Diseño y Aálisis de Algoritmos\",\n    \"code\": \"ISIS-1105\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"La mejor materia del pregrado\",\n    \"taught_by\": \"{{professor_id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{service_url}}/courses",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:45:29 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "413"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Diseño y Aálisis de Algoritmos\",\n    \"code\": \"ISIS-1105\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"La mejor materia del pregrado\",\n    \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"taught_by\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n    \"teacher\": {\n        \"id\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n        \"name\": \"Juan Andrés Ariza Gacharná\",\n        \"email\": \"ja.arizag@uniandes.edu.co\"\n    },\n    \"agents\": [],\n    \"students\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Course (Delete)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let response = pm.response.json();",
+							"pm.environment.set(\"course_delete_id\", response.id);",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Estructuras de Datos y Algoritmos\",\n    \"code\": \"ISIS-1225\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"Materia no tan chevere\",\n    \"taught_by\": \"{{professor_id}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/courses",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"courses"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Course (Delete)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Estructuras de Datos y Algoritmos\",\n    \"code\": \"ISIS-1225\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"Materia no tan chevere\",\n    \"taught_by\": \"{{professor_id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{service_url}}/courses",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:46:58 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "407"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Estructuras de Datos y Algoritmos\",\n    \"code\": \"ISIS-1225\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"Materia no tan chevere\",\n    \"id\": \"4ba842b6-dcf5-4484-82be-6c769805b9b7\",\n    \"taught_by\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n    \"teacher\": {\n        \"id\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n        \"name\": \"Juan Andrés Ariza Gacharná\",\n        \"email\": \"ja.arizag@uniandes.edu.co\"\n    },\n    \"agents\": [],\n    \"students\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Get All Courses",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get All Courses - Success\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.json;\r",
+							"    const responseData = pm.response.json();\r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/courses",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"courses"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get All Courses",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{service_url}}/courses",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"courses"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:47:29 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "823"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "[\n    {\n        \"name\": \"Diseño y Aálisis de Algoritmos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"La mejor materia del pregrado\",\n        \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n        \"taught_by\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n        \"teacher\": {\n            \"id\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n            \"name\": \"Juan Andrés Ariza Gacharná\",\n            \"email\": \"ja.arizag@uniandes.edu.co\"\n        },\n        \"agents\": [],\n        \"students\": []\n    },\n    {\n        \"name\": \"Estructuras de Datos y Algoritmos\",\n        \"code\": \"ISIS-1225\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"Materia no tan chevere\",\n        \"id\": \"4ba842b6-dcf5-4484-82be-6c769805b9b7\",\n        \"taught_by\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n        \"teacher\": {\n            \"id\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n            \"name\": \"Juan Andrés Ariza Gacharná\",\n            \"email\": \"ja.arizag@uniandes.edu.co\"\n        },\n        \"agents\": [],\n        \"students\": []\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Get Course By ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Get Course By ID - Success\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.json;\r",
+							"    const responseData = pm.response.json();\r",
+							"    pm.expect(responseData).to.have.property('id');\r",
+							"    pm.expect(responseData).to.have.property('name');\r",
+							"    pm.expect(responseData).to.have.property('code');\r",
+							"    pm.expect(responseData).to.have.property('taught_by');\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/courses/{{course2_id}}",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"courses",
+						"{{course2_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Course Copy",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{service_url}}/courses/{{course_id}}",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"courses",
+								"{{course_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:48:07 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "413"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Diseño y Aálisis de Algoritmos\",\n    \"code\": \"ISIS-1105\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"La mejor materia del pregrado\",\n    \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"taught_by\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n    \"teacher\": {\n        \"id\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n        \"name\": \"Juan Andrés Ariza Gacharná\",\n        \"email\": \"ja.arizag@uniandes.edu.co\"\n    },\n    \"agents\": [],\n    \"students\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Update Course",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Update Course - Success\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    pm.response.to.be.json;\r",
+							"    const responseData = pm.response.json();\r",
+							"    pm.expect(responseData).to.have.property('id');\r",
+							"    \r",
+							"    const requestData = JSON.parse(pm.request.body.raw);\r",
+							"    if (requestData.name) {\r",
+							"        pm.expect(responseData.name).to.equal(requestData.name);\r",
+							"    }\r",
+							"    if (requestData.code) {\r",
+							"        pm.expect(responseData.code).to.equal(requestData.code);\r",
+							"    }\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Fundamentos Matemáticos para Computación\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/courses/{{course2_id}}",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"courses",
+						"{{course2_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Update Course",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Diseño y Análisis de Algoritmos\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{service_url}}/courses/{{course_id}}",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"courses",
+								"{{course_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:49:15 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "414"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"name\": \"Diseño y Análisis de Algoritmos\",\n    \"code\": \"ISIS-1105\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"La mejor materia del pregrado\",\n    \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"taught_by\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n    \"teacher\": {\n        \"id\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n        \"name\": \"Juan Andrés Ariza Gacharná\",\n        \"email\": \"ja.arizag@uniandes.edu.co\"\n    },\n    \"agents\": [],\n    \"students\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Course",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Delete Course - Success\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/courses/{{course_delete_id}}",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"courses",
+						"{{course_delete_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Delete Course",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{service_url}}/courses/{{course_delete_id}}",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"courses",
+								"{{course_delete_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:49:53 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "407"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"name\": \"Estructuras de Datos y Algoritmos\",\n    \"code\": \"ISIS-1225\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"Materia no tan chevere\",\n    \"id\": \"4ba842b6-dcf5-4484-82be-6c769805b9b7\",\n    \"taught_by\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n    \"teacher\": {\n        \"id\": \"50862483-3d44-4a92-9d26-181addd4478b\",\n        \"name\": \"Juan Andrés Ariza Gacharná\",\n        \"email\": \"ja.arizag@uniandes.edu.co\"\n    },\n    \"agents\": [],\n    \"students\": []\n}"
+				}
+			]
+		}
+	]
+}
