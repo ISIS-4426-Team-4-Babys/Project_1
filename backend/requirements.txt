@@ -9,3 +9,4 @@ pika
 httpx
 pytest
 aio-pika
+anyio

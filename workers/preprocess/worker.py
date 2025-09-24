@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import asyncio
+import anyio
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 md_converter = MarkItDown(enable_plugins = True) # Set to True to enable plugins
@@ -41,8 +42,8 @@ async def callback(message):
 
         # Guardar el archivo .md
         markdown_path = os.path.join(markdown_dir, f"{name_without_ext}.md")
-        with open(markdown_path, "w", encoding="utf-8") as f:
-            f.write(markdown_text)
+        async with await anyio.open_file(markdown_path, "w", encoding="utf-8") as f:
+            await f.write(markdown_text)
 
         logging.info(f"Markdown file saved at {markdown_path}")
 

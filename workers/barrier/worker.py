@@ -27,7 +27,8 @@ async def callback(message):
 
         if agent_id not in received_agents:
             logging.info(f"Creating barrier notifier for agent: {agent_id}")
-            asyncio.create_task(BarrierNotifier(agent_id, total_docs).run())
+            task = asyncio.create_task(BarrierNotifier(agent_id, total_docs).run())
+            await task
             logging.info(f"Barrier notifier created for agent: {agent_id}")
             received_agents.add(agent_id)
 

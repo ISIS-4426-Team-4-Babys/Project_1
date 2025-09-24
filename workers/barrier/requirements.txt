@@ -1,2 +1,3 @@
 pika
 aio-pika
+anyio
