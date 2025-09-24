@@ -7,7 +7,7 @@ import asyncio
 logging.basicConfig(level = logging.INFO, format = "%(asctime)s [%(levelname)s] %(message)s")
 rabbitmq = RabbitMQ()
 
-received_agents = set()
+notifiers = {}
 
 async def callback(message):
     try:
@@ -25,11 +25,11 @@ async def callback(message):
         logging.info(f"Agent ID received: {agent_id}")
         logging.info(f"Total documents received: {total_docs}")
 
-        if agent_id not in received_agents:
-            logging.info(f"Creating barrier notifier for agent: {agent_id}")
-            asyncio.create_task(BarrierNotifier(agent_id, total_docs).run())
-            logging.info(f"Barrier notifier created for agent: {agent_id}")
-            received_agents.add(agent_id)
+        if agent_id not in notifiers or notifiers[agent_id].done():
+            logging.info(f"Spawning BarrierNotifier for agent: {agent_id}")
+            notifiers[agent_id] = asyncio.create_task(
+                BarrierNotifier(agent_id, total_docs).run()
+            )
 
         await rabbitmq.publish(agent_id, "Document Vectorized")
         

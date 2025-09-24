@@ -2,3 +2,4 @@ pika
 requests
 openai
 aio-pika
+anyio

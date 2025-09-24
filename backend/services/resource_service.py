@@ -8,8 +8,9 @@ from models.resource_model import Resource
 from config.rabbitmq import RabbitMQ
 from models.agent_model import Agent
 from fastapi import UploadFile
-import shutil
 import logging
+import shutil
+import anyio
 import json
 import os
 
@@ -18,6 +19,13 @@ MAX_FILE_SIZE = 100 * 1024 * 1024
 UPLOAD_DIR = "backend/data"
 
 rabbitmq = RabbitMQ()
+
+def copy_sync(src_fileobj, dst_path: str):
+    dst_dir = os.path.dirname(dst_path)
+    os.makedirs(dst_dir, exist_ok=True)
+    with open(dst_path, "wb") as out:
+        shutil.copyfileobj(src_fileobj, out)
+        out.flush()
 
 # Create resource (POST)
 async def create_resource(db: Session, resource_data: ResourceCreate, file: UploadFile):
@@ -44,23 +52,42 @@ async def create_resource(db: Session, resource_data: ResourceCreate, file: Uplo
     
     # Create agent folder
     agent_dir = os.path.join(UPLOAD_DIR, str(resource_data.consumed_by))
-    os.makedirs(agent_dir, exist_ok = True)
-    filepath = os.path.join(agent_dir, file.filename)
+    final_path = os.path.join(agent_dir, file.filename)
+    tmp_path = os.path.join(agent_dir, f".{file.filename}.part")  
 
-    # Save file
-    with open(filepath, "wb") as f:
-        shutil.copyfileobj(file.file, f)
-    file_size = os.path.getsize(filepath)
+    try:
+        try:
+            await file.seek(0)
+        except Exception:
+            pass
+        
+        await anyio.to_thread.run_sync(copy_sync, file.file, tmp_path)
 
+        file_size = os.path.getsize(tmp_path)
+        if file_size > MAX_FILE_SIZE:
+            try:
+                os.remove(tmp_path)
+            except FileNotFoundError:
+                pass
+            logger.warning("Resource with name=%s exceeds max file size", resource_data.name)
+            raise FileSizeError(file_size, MAX_FILE_SIZE)
 
-    if file_size > MAX_FILE_SIZE:
-        os.remove(filepath)
-        logger.warning("Resource with name=%s exceeds max file size", resource_data.name)
-        raise FileSizeError(file_size, MAX_FILE_SIZE)
+        # Rename atómico a nombre final
+        os.replace(tmp_path, final_path)
+
+    except Exception as e:
+        # Limpieza ante error
+        try:
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path)
+        except Exception:
+            pass
+        logger.error("Error while saving file: %s", e)
+        raise
     
 
     # Update data in the schema
-    resource_data.filepath = filepath
+    resource_data.filepath = final_path
     resource_data.size = file_size
 
     # Get total document information

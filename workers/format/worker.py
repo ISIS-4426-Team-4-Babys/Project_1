@@ -4,6 +4,7 @@ import logging
 import os
 import json
 import asyncio
+import anyio
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -16,61 +17,62 @@ client = AzureOpenAI(
 
 rabbitmq = RabbitMQ()
 
-prompt = ""
-with open("prompt.txt", "r", encoding = "utf-8") as f:
-    prompt = f.read()
+async def load_text(path: str) -> str:
+    async with await anyio.open_file(path, "r", encoding="utf-8") as f:
+        return await f.read()
 
 
-async def callback(message):
-    try:
-        decoded_message = message.body.decode().strip()
-        logging.info(f"Message received with content = {decoded_message}")
-        
-        payload = json.loads(decoded_message)
-        filepath = payload.get("filepath")
-        total_docs = payload.get("total_docs")
+def make_callback(prompt_text: str):
+    async def callback(message):
+        try:
+            decoded_message = message.body.decode().strip()
+            logging.info(f"Message received with content = {decoded_message}")
 
-        markdown_path = "/app/" + filepath
-        markdown_text = ""
+            payload = json.loads(decoded_message)
+            filepath = payload.get("filepath")
+            total_docs = payload.get("total_docs")
 
-        with open(markdown_path, "r", encoding = "utf-8") as f:
-            markdown_text = f.read()
+            markdown_path = "/app/" + filepath
 
-        response = client.chat.completions.create(
-            model = "gpt-5-nano-iau-ingenieria",
-            messages = [
-                {
-                    "role" : "system",
-                    "content" : prompt
-                },
-                {
-                    "role" : "user",
-                    "content" : markdown_text
-                }
-            ]
-        )
+            # Leer el markdown de forma asíncrona
+            async with await anyio.open_file(markdown_path, "r", encoding="utf-8") as f:
+                markdown_text = await f.read()
 
-        output = response.choices[0].message.content
-        logging.info("Format completed succesfully")
+            # Llamada al modelo (cliente síncrono de AzureOpenAI está bien aquí)
+            response = client.chat.completions.create(
+                model="gpt-5-nano-iau-ingenieria",
+                messages=[
+                    {"role": "system", "content": prompt_text},
+                    {"role": "user", "content": markdown_text},
+                ],
+            )
 
-        with open(markdown_path, "w", encoding = "utf-8") as f:
-            f.write(output)
-        
-        message = {
-            "db_id": markdown_path.split("/")[4], 
-            "file_path": markdown_path,
-            "total_docs": total_docs
-        }
+            output = response.choices[0].message.content
+            logging.info("Format completed succesfully")
 
-        await rabbitmq.publish("vectorize", json.dumps(message))
-        
-    
-    except Exception as e:
-        logging.error(f"Error processing message: {e}")
+            # Escribir el resultado de forma asíncrona
+            async with await anyio.open_file(markdown_path, "w", encoding="utf-8") as f:
+                await f.write(output)
+
+            message_out = {
+                "db_id": markdown_path.split("/")[4],
+                "file_path": markdown_path,
+                "total_docs": total_docs,
+            }
+
+            await rabbitmq.publish("vectorize", json.dumps(message_out))
+
+        except Exception as e:
+            logging.error(f"Error processing message: {e}")
+
+    return callback
         
 
 async def main():
-    await rabbitmq.consume("format", callback)
+    
+    prompt_text = await load_text("prompt.txt")
+
+    await rabbitmq.consume("format", make_callback(prompt_text))
 
 
 if __name__ == "__main__":

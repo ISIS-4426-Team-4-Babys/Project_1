@@ -4,6 +4,7 @@ import subprocess
 import json
 import os
 import asyncio
+import anyio
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
@@ -32,10 +33,10 @@ async def callback(message):
 
         prompt_path = f"/app/prompts/{agent_id}/prompt.txt" 
         PROMPT = ""
-        with open(prompt_path, "r") as f:
-            PROMPT += f.read()
+        async with await anyio.open_file(prompt_path, "r") as f:
+            PROMPT += await f.read()
 
-        subprocess.run([
+        await asyncio.create_subprocess_exec(
             "docker", 
             "run", 
             "-d", 
@@ -48,8 +49,11 @@ async def callback(message):
             "-e", f"VIRTUAL_PORT={container_port}",
             "-p", f"{host_port}:{container_port}", 
             "-v", f"{host_path}:{container_path}", 
-            image_name
-        ], check = True)
+            image_name,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,)
+        
+        
 
         logging.info(f"Agent deployed in http://localhost:{host_port} with ID {agent_id}")
 

@@ -8,6 +8,7 @@ import logging
 import os
 import json
 import asyncio
+import anyio
 
 
 logging.basicConfig(level = logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -38,7 +39,7 @@ embeddings = HuggingFaceEmbeddings(
 BASE_DB_DIR = "databases"
 
 
-def chunk_file(file_path: str):
+async def chunk_file(file_path: str):
     
     logging.info(f"Processing file: {file_path}")
 
@@ -46,14 +47,13 @@ def chunk_file(file_path: str):
         logging.error(f"The file {file_path} does not exist")
         return None
 
-    with open(file_path, "r", encoding = "utf-8") as f:
-        content = f.read()
+    async with await anyio.open_file(file_path, "r", encoding = "utf-8") as f:
+        content = await f.read()
     
     filename = os.path.basename(file_path)
 
     structured_chunks = markdown_splitter.split_text(content)
     logging.info(f"{len(structured_chunks)} structured chunks generated from file {filename}")
-
     final_chunks = []
     for chunk in structured_chunks:
         docs = recursive_splitter.split_text(chunk.page_content)
@@ -81,7 +81,7 @@ def load_to_chromadb(db_id: str, chunks, collection_name = "rag_docs"):
     os.makedirs(db_path, exist_ok = True)
 
     if not any(db_path.iterdir()):
-        vector_store = Chroma.from_documents(
+        Chroma.from_documents(
             collection_name = collection_name,
             documents = chunks, 
             embedding = embeddings,
@@ -119,7 +119,7 @@ async def callback(message):
         logging.info(f"Filepath received: {file_path}")
         logging.info(f"Total docs received: {total_docs}")
 
-        chunks = chunk_file(file_path)
+        chunks = await chunk_file(file_path)
         db_path = load_to_chromadb(db_id, chunks)
 
         if db_path:
@@ -130,7 +130,7 @@ async def callback(message):
             } 
 
             await rabbitmq.publish("control", json.dumps(message))
-            logging.info(f"Published message to control topic")
+            logging.info("Published message to control topic")
 
     except json.JSONDecodeError:
         logging.error("Failed to decode JSON message")

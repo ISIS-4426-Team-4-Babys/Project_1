@@ -99,7 +99,7 @@ else:
     sys.exit(0)
 
 
-def ask_rag(question: str, prompt, llm, compression_retriever, k=5):
+def ask_rag(question: str, prompt, llm, compression_retriever):
     logger.info("=== Nueva pregunta RAG ===")
     logger.info("Pregunta: %s", question)
 
@@ -121,7 +121,6 @@ def ask_rag(question: str, prompt, llm, compression_retriever, k=5):
 
     contexts = unique_contexts
 
-    #retrieved_docs = compression_retriever.invoke(question)
     logger.info("Documentos unicos recuperados: %d", len(contexts))
 
     for i, doc in enumerate(contexts, start=1):

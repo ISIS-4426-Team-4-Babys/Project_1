@@ -1,2 +1,4 @@
 pika
 aio-pika
+anyio
+asyncio

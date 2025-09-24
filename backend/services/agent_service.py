@@ -8,6 +8,7 @@ from models.course_model import Course
 from models.agent_model import Agent
 from config.rabbitmq import RabbitMQ
 import logging
+import anyio
 import json
 import os
 
@@ -50,8 +51,8 @@ async def create_agent(db: Session, agent_data: AgentCreate):
         os.makedirs(agent_dir, exist_ok = True)
         filepath = os.path.join(agent_dir, "prompt.txt")
 
-        with open(filepath, "w", encoding = "utf-8") as f:
-            f.write(agent.system_prompt)
+        async with await anyio.open_file(filepath, "w", encoding = "utf-8") as f:
+            await f.write(agent.system_prompt)
 
         message = {
             "filepath": filepath

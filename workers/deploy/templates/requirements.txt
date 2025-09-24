@@ -13,3 +13,4 @@ markdown
 datasets
 sentence-transformers
 langchain-huggingface
+anyio

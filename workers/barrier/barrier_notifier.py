@@ -1,5 +1,6 @@
 from aio_pika import connect_robust, Message, ExchangeType
 import logging
+import asyncio
 import json
 import os
 
@@ -14,6 +15,7 @@ class BarrierNotifier:
         self.connection = None
         self.channel = None
         self.queue = None
+        self.completed = asyncio.Event()
 
         self.user = os.getenv('RABBITMQ_USER')
         self.password = os.getenv('RABBITMQ_PASSWORD')
@@ -66,6 +68,8 @@ class BarrierNotifier:
                     )
 
                     logging.info("Completed message published agent %s", self.agent_id)
+                    
+                    self.completed.set()
 
             except Exception as e:
                 logging.exception("Notifier error in _on_tick: %s", e)
@@ -74,6 +78,29 @@ class BarrierNotifier:
         await self.connect()
         await self.declare_control_exchange()
         await self.declare_barrier()
-        await self.queue.consume(self.on_tick)
+        self.consumer_tag = await self.queue.consume(self.on_tick)
         logging.info(f"BarrierNotifier running for agent {self.agent_id}")
+        
+        await self.completed.wait()
+        
+        try:
+            if self.consumer_tag:
+                await self.queue.cancel(self.consumer_tag)
+        except Exception as e:
+            logging.warning("Failed to cancel consumer: %s", e)
+
+        try:
+            await self.queue.delete(if_unused=False, if_empty=False)
+            logging.info("Queue %s deleted", self.agent_id)
+        except Exception as e:
+            logging.warning("Failed to delete queue: %s", e)
+
+        try:
+            await self.channel.close()
+            await self.connection.close()
+        except Exception as e:
+            logging.warning("Failed to close the connection: %s", e)
+
+
+        logging.info("BarrierNotifier closed for agent %s", self.agent_id)
 
