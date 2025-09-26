@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "8579fd77-1625-46e9-a576-c2642a213f8a",
+		"_postman_id": "f12fb9fa-4c50-446f-a0d1-23ef4b8d7b8f",
 		"name": "Resource",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "47552131",
-		"_collection_link": "https://nathaliaq16-620590.postman.co/workspace/Nathalia-Alexandra-Quiroga-Alfa~5b22ce91-e7f6-45ac-868e-e2a36efe4bf5/collection/47552131-8579fd77-1625-46e9-a576-c2642a213f8a?action=share&source=collection_link&creator=47552131"
+		"_exporter_id": "47699141",
+		"_collection_link": "https://mrcheesyburgeru-3113691.postman.co/workspace/Nicolas-Rozo-Fajardo's-Workspac~d282d319-67a1-4bda-8570-f9f29991945d/collection/47548803-f12fb9fa-4c50-446f-a0d1-23ef4b8d7b8f?action=share&source=collection_link&creator=47699141"
 	},
 	"item": [
 		{
@@ -15,22 +15,7 @@
 					"script": {
 						"exec": [
 							"let response = pm.response.json();",
-							"pm.environment.set(\"resource_id\", response.id);",
-							"",
-							"pm.test(\"Create Resource - Success\", function () {",
-							"    pm.response.to.have.status(201);",
-							"    pm.response.to.be.json;",
-							"    const responseData = pm.response.json();",
-							"    pm.expect(responseData).to.have.property('id');",
-							"    pm.expect(responseData).to.have.property('name');",
-							"    pm.expect(responseData).to.have.property('filetype');",
-							"    pm.expect(responseData).to.have.property('filepath');",
-							"    pm.expect(responseData).to.have.property('size');",
-							"    pm.expect(responseData).to.have.property('timestamp');",
-							"    pm.expect(responseData).to.have.property('agent'); ",
-							"",
-							"    pm.expect(responseData.agent).to.be.an('object');",
-							"});"
+							"pm.environment.set(\"resource_id\", response.id);"
 						],
 						"type": "text/javascript",
 						"packages": {},
@@ -57,16 +42,16 @@
 						{
 							"key": "file",
 							"type": "file",
-							"src": "postman-cloud:///1f0982ad-a5af-4d90-a68f-1e5c59c4730e"
+							"src": "postman-cloud:///1f09315e-17c4-4760-80fd-659c991122c6"
 						},
 						{
 							"key": "name",
-							"value": "Pensum Ingeniería de Sistemas y Computación",
+							"value": "Parte 1 del artículo",
 							"type": "text"
 						},
 						{
 							"key": "consumed_by",
-							"value": "{{agent2_id}}",
+							"value": "{{agent_id}}",
 							"type": "text"
 						},
 						{
@@ -77,12 +62,13 @@
 					]
 				},
 				"url": {
-					"raw": "{{service_url}}/resources",
+					"raw": "{{service_url}}/resources/",
 					"host": [
 						"{{service_url}}"
 					],
 					"path": [
-						"resources"
+						"resources",
+						""
 					]
 				}
 			},
@@ -152,7 +138,7 @@
 							"path": ""
 						}
 					],
-					"body": "{\n    \"name\": \"Pensum Ingeniería de Sistemas y Computación\",\n    \"filetype\": \"application/pdf\",\n    \"filepath\": \"backend/data/36b4eec6-58f8-4801-a17d-69fc71e5a4c1/PENSUM INGENIERIA DE SISTEMAS.pdf\",\n    \"size\": 423103,\n    \"timestamp\": \"2025-08-29T21:06:45.423553\",\n    \"id\": \"be1763e6-38bf-42d1-8bbf-b09ee48387c6\",\n    \"consumed_by\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n    \"agent\": {\n        \"id\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n        \"name\": \"Agente Administrativo\",\n        \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n        \"is_working\": true,\n        \"model\": \"gpt-5\",\n        \"language\": \"es\"\n    }\n}"
+					"body": "{\n    \"name\": \"Parte 1 del artículo\",\n    \"filetype\": \"application/pdf\",\n    \"filepath\": \"backend/data/fa4a3d8a-20aa-48d5-9d63-28b04655f38e/CASO_HARVARD-1-4.pdf\",\n    \"size\": 471694,\n    \"timestamp\": \"2025-09-26T18:34:37.962382\",\n    \"id\": \"0660a59b-600b-4069-8f3e-60b31b4b140b\",\n    \"consumed_by\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n    \"agent\": {\n        \"id\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n        \"name\": \"Agente Articulo Caso Harvard 2\",\n        \"description\": \"Agente especializado en el articulo del caso harvard, con conocimiento técnico del mismo\",\n        \"is_working\": true,\n        \"model\": \"gpt-5\",\n        \"language\": \"es\"\n    }\n}"
 				}
 			]
 		},
@@ -164,304 +150,11 @@
 					"script": {
 						"exec": [
 							"let response = pm.response.json();",
-							"pm.environment.set(\"resource2_id\", response.id);",
-							"",
-							"pm.test(\"Create Resource - Success\", function () {",
-							"    pm.response.to.have.status(201);",
-							"    pm.response.to.be.json;",
-							"    const responseData = pm.response.json();",
-							"    pm.expect(responseData).to.have.property('id');",
-							"    pm.expect(responseData).to.have.property('name');",
-							"    pm.expect(responseData).to.have.property('filetype');",
-							"    pm.expect(responseData).to.have.property('filepath');",
-							"    pm.expect(responseData).to.have.property('size');",
-							"    pm.expect(responseData).to.have.property('timestamp');",
-							"    pm.expect(responseData).to.have.property('agent'); ",
-							"",
-							"    pm.expect(responseData.agent).to.be.an('object');",
-							"});"
+							"pm.environment.set(\"resource_delete_id\", response.id);"
 						],
 						"type": "text/javascript",
 						"packages": {},
 						"requests": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{auth_token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "file",
-							"type": "file",
-							"src": "postman-cloud:///1f0982ac-ff95-4e00-aebb-ec8a59557061"
-						},
-						{
-							"key": "name",
-							"value": "Pensum Ingeniería de Sistemas y Computación Preca",
-							"type": "text"
-						},
-						{
-							"key": "consumed_by",
-							"value": "{{agent2_id}}",
-							"type": "text"
-						},
-						{
-							"key": "total_docs",
-							"value": "2",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{service_url}}/resources",
-					"host": [
-						"{{service_url}}"
-					],
-					"path": [
-						"resources"
-					]
-				}
-			},
-			"response": [
-				{
-					"name": "Create Resource",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "file",
-									"type": "file",
-									"src": "/home/nico/ANDES/PENSUM INGENIERIA DE SISTEMAS.pdf"
-								},
-								{
-									"key": "name",
-									"value": "Pensum Ingeniería de Sistemas y Computación",
-									"type": "text"
-								},
-								{
-									"key": "consumed_by",
-									"value": "{{agent_id}}",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{service_url}}/resources",
-							"host": [
-								"{{service_url}}"
-							],
-							"path": [
-								"resources"
-							]
-						}
-					},
-					"status": "Created",
-					"code": 201,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "date",
-							"value": "Fri, 29 Aug 2025 21:06:45 GMT"
-						},
-						{
-							"key": "server",
-							"value": "uvicorn"
-						},
-						{
-							"key": "content-length",
-							"value": "545"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json",
-							"description": "",
-							"type": "text"
-						}
-					],
-					"cookie": [
-						{
-							"expires": "Invalid Date",
-							"domain": "",
-							"path": ""
-						}
-					],
-					"body": "{\n    \"name\": \"Pensum Ingeniería de Sistemas y Computación\",\n    \"filetype\": \"application/pdf\",\n    \"filepath\": \"backend/data/36b4eec6-58f8-4801-a17d-69fc71e5a4c1/PENSUM INGENIERIA DE SISTEMAS.pdf\",\n    \"size\": 423103,\n    \"timestamp\": \"2025-08-29T21:06:45.423553\",\n    \"id\": \"be1763e6-38bf-42d1-8bbf-b09ee48387c6\",\n    \"consumed_by\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n    \"agent\": {\n        \"id\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n        \"name\": \"Agente Administrativo\",\n        \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n        \"is_working\": true,\n        \"model\": \"gpt-5\",\n        \"language\": \"es\"\n    }\n}"
-				}
-			]
-		},
-		{
-			"name": "Create Resource Duplicate Name",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"let response = pm.response.json();",
-							"pm.environment.set(\"resource_id\", response.id);",
-							"",
-							"pm.test(\"Create Resource - Duplicate Name\", function () {",
-							"    if (pm.response.code === 400) {",
-							"        pm.response.to.be.json;",
-							"        const responseData = pm.response.json();",
-							"        pm.expect(responseData.detail).to.include('already exists');",
-							"    }",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{auth_token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "file",
-							"type": "file",
-							"src": "postman-cloud:///1f0904e0-6d95-42c0-83d4-46e2b0344fe0"
-						},
-						{
-							"key": "name",
-							"value": "Pensum Ingeniería de Sistemas y Computación",
-							"type": "text"
-						},
-						{
-							"key": "consumed_by",
-							"value": "{{agent_id}}",
-							"type": "text"
-						},
-						{
-							"key": "total_docs",
-							"value": "1",
-							"type": "text"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{service_url}}/resources",
-					"host": [
-						"{{service_url}}"
-					],
-					"path": [
-						"resources"
-					]
-				}
-			},
-			"response": [
-				{
-					"name": "Create Resource",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "file",
-									"type": "file",
-									"src": "/home/nico/ANDES/PENSUM INGENIERIA DE SISTEMAS.pdf"
-								},
-								{
-									"key": "name",
-									"value": "Pensum Ingeniería de Sistemas y Computación",
-									"type": "text"
-								},
-								{
-									"key": "consumed_by",
-									"value": "{{agent_id}}",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{service_url}}/resources",
-							"host": [
-								"{{service_url}}"
-							],
-							"path": [
-								"resources"
-							]
-						}
-					},
-					"status": "Created",
-					"code": 201,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "date",
-							"value": "Fri, 29 Aug 2025 21:06:45 GMT"
-						},
-						{
-							"key": "server",
-							"value": "uvicorn"
-						},
-						{
-							"key": "content-length",
-							"value": "545"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json",
-							"description": "",
-							"type": "text"
-						}
-					],
-					"cookie": [
-						{
-							"expires": "Invalid Date",
-							"domain": "",
-							"path": ""
-						}
-					],
-					"body": "{\n    \"name\": \"Pensum Ingeniería de Sistemas y Computación\",\n    \"filetype\": \"application/pdf\",\n    \"filepath\": \"backend/data/36b4eec6-58f8-4801-a17d-69fc71e5a4c1/PENSUM INGENIERIA DE SISTEMAS.pdf\",\n    \"size\": 423103,\n    \"timestamp\": \"2025-08-29T21:06:45.423553\",\n    \"id\": \"be1763e6-38bf-42d1-8bbf-b09ee48387c6\",\n    \"consumed_by\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n    \"agent\": {\n        \"id\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n        \"name\": \"Agente Administrativo\",\n        \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n        \"is_working\": true,\n        \"model\": \"gpt-5\",\n        \"language\": \"es\"\n    }\n}"
-				}
-			]
-		},
-		{
-			"name": "Create Resource (Delete)",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"let response = pm.response.json();",
-							"pm.environment.set(\"resource_delete_id\", response.id);",
-							"",
-							"pm.test(\"Status code is 201\", function () {",
-							"    pm.response.to.have.status(201);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
 					}
 				}
 			],
@@ -485,32 +178,33 @@
 							"key": "file",
 							"contentType": "",
 							"type": "file",
-							"src": "/Users/nathalia/Downloads/IIND  Pensum 2021 IngIndustrial (1).jpg"
+							"src": "postman-cloud:///1f09315f-3732-4010-ad5a-e1e5b72ce52c"
 						},
 						{
 							"key": "name",
-							"value": "Pensum Ingeniería Industrial",
+							"value": "Parte 2 del artículo",
 							"type": "text"
 						},
 						{
 							"key": "consumed_by",
-							"value": "{{agent2_id}}",
+							"value": "{{agent_id}}",
 							"type": "text"
 						},
 						{
 							"key": "total_docs",
-							"value": "1",
+							"value": "2",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{service_url}}/resources",
+					"raw": "{{service_url}}/resources/",
 					"host": [
 						"{{service_url}}"
 					],
 					"path": [
-						"resources"
+						"resources",
+						""
 					]
 				}
 			},
@@ -581,29 +275,149 @@
 							"path": ""
 						}
 					],
-					"body": "{\n    \"name\": \"Programa Biología Celular\",\n    \"filetype\": \"application/pdf\",\n    \"filepath\": \"backend/data/36b4eec6-58f8-4801-a17d-69fc71e5a4c1/PROGRAMA.pdf\",\n    \"size\": 231940,\n    \"timestamp\": \"2025-08-29T21:16:20.261558\",\n    \"id\": \"4e519fa8-ecb8-4ebe-95fc-81f5736e8cad\",\n    \"consumed_by\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n    \"agent\": {\n        \"id\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n        \"name\": \"Agente Administrativo\",\n        \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n        \"is_working\": true,\n        \"model\": \"gpt-5\",\n        \"language\": \"es\"\n    }\n}"
+					"body": "{\n    \"name\": \"Parte 2 del artículo\",\n    \"filetype\": \"application/pdf\",\n    \"filepath\": \"backend/data/fa4a3d8a-20aa-48d5-9d63-28b04655f38e/CASO_HARVARD-5-8.pdf\",\n    \"size\": 180571,\n    \"timestamp\": \"2025-09-26T18:34:53.417023\",\n    \"id\": \"6f52fbdb-2ea3-4309-a85f-4e5e482913fb\",\n    \"consumed_by\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n    \"agent\": {\n        \"id\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n        \"name\": \"Agente Articulo Caso Harvard 2\",\n        \"description\": \"Agente especializado en el articulo del caso harvard, con conocimiento técnico del mismo\",\n        \"is_working\": true,\n        \"model\": \"gpt-5\",\n        \"language\": \"es\"\n    }\n}"
 				}
 			]
 		},
 		{
-			"name": "Get All Resources",
+			"name": "Create Resource Duplicate Name",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Get All Resources - Success\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    pm.response.to.be.json;\r",
-							"    const responseData = pm.response.json();\r",
-							"    pm.expect(responseData).to.be.an('array');\r",
-							"});"
+							"let response = pm.response.json();",
+							"pm.environment.set(\"resource_delete_id\", response.id);"
 						],
 						"type": "text/javascript",
-						"packages": {}
+						"packages": {},
+						"requests": {}
 					}
 				}
 			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"contentType": "",
+							"type": "file",
+							"src": "postman-cloud:///1f09315f-3732-4010-ad5a-e1e5b72ce52c"
+						},
+						{
+							"key": "name",
+							"value": "Parte 2 del artículo",
+							"type": "text"
+						},
+						{
+							"key": "consumed_by",
+							"value": "{{agent_id}}",
+							"type": "text"
+						},
+						{
+							"key": "total_docs",
+							"value": "2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{service_url}}/resources/",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"resources",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Create Resource 2",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"contentType": "",
+									"type": "file",
+									"src": "postman-cloud:///1f0851d5-fe08-41e0-9df1-916c584ff240"
+								},
+								{
+									"key": "name",
+									"value": "Programa Biología Celular",
+									"type": "text"
+								},
+								{
+									"key": "consumed_by",
+									"value": "{{agent_id}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{service_url}}/resources",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"resources"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 21:16:20 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "505"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"detail\": \"Resource with name Parte 2 del artículo already consumed by the agent\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get All Resources",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -645,6 +459,15 @@
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{service_url}}/resources",
 							"host": [
@@ -685,37 +508,12 @@
 							"path": ""
 						}
 					],
-					"body": "[\n    {\n        \"name\": \"Pensum Ingeniería de Sistemas y Computación\",\n        \"filetype\": \"application/pdf\",\n        \"filepath\": \"backend/data/36b4eec6-58f8-4801-a17d-69fc71e5a4c1/PENSUM INGENIERIA DE SISTEMAS.pdf\",\n        \"size\": 423103,\n        \"timestamp\": \"2025-08-29T21:06:45.423553\",\n        \"id\": \"be1763e6-38bf-42d1-8bbf-b09ee48387c6\",\n        \"consumed_by\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n        \"agent\": {\n            \"id\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n            \"name\": \"Agente Administrativo\",\n            \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n            \"is_working\": true,\n            \"model\": \"gpt-5\",\n            \"language\": \"es\"\n        }\n    },\n    {\n        \"name\": \"Programa Biología Celular\",\n        \"filetype\": \"application/pdf\",\n        \"filepath\": \"backend/data/36b4eec6-58f8-4801-a17d-69fc71e5a4c1/PROGRAMA.pdf\",\n        \"size\": 231940,\n        \"timestamp\": \"2025-08-29T21:16:20.261558\",\n        \"id\": \"4e519fa8-ecb8-4ebe-95fc-81f5736e8cad\",\n        \"consumed_by\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n        \"agent\": {\n            \"id\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n            \"name\": \"Agente Administrativo\",\n            \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n            \"is_working\": true,\n            \"model\": \"gpt-5\",\n            \"language\": \"es\"\n        }\n    }\n]"
+					"body": "[\n    {\n        \"name\": \"Parte 1 del artículo\",\n        \"filetype\": \"application/pdf\",\n        \"filepath\": \"backend/data/fa4a3d8a-20aa-48d5-9d63-28b04655f38e/CASO_HARVARD-1-4.pdf\",\n        \"size\": 471694,\n        \"timestamp\": \"2025-09-26T18:34:37.962382\",\n        \"id\": \"0660a59b-600b-4069-8f3e-60b31b4b140b\",\n        \"consumed_by\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n        \"agent\": {\n            \"id\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n            \"name\": \"Agente Articulo Caso Harvard 2\",\n            \"description\": \"Agente especializado en el articulo del caso harvard, con conocimiento técnico del mismo\",\n            \"is_working\": true,\n            \"model\": \"gpt-5\",\n            \"language\": \"es\"\n        }\n    },\n    {\n        \"name\": \"Parte 2 del artículo\",\n        \"filetype\": \"application/pdf\",\n        \"filepath\": \"backend/data/fa4a3d8a-20aa-48d5-9d63-28b04655f38e/CASO_HARVARD-5-8.pdf\",\n        \"size\": 180571,\n        \"timestamp\": \"2025-09-26T18:34:53.417023\",\n        \"id\": \"6f52fbdb-2ea3-4309-a85f-4e5e482913fb\",\n        \"consumed_by\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n        \"agent\": {\n            \"id\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n            \"name\": \"Agente Articulo Caso Harvard 2\",\n            \"description\": \"Agente especializado en el articulo del caso harvard, con conocimiento técnico del mismo\",\n            \"is_working\": true,\n            \"model\": \"gpt-5\",\n            \"language\": \"es\"\n        }\n    }\n]"
 				}
 			]
 		},
 		{
 			"name": "Get Resource By ID",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Get Resource By ID - Success\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    pm.response.to.be.json;\r",
-							"    const responseData = pm.response.json();\r",
-							"    pm.expect(responseData).to.have.property('id');\r",
-							"    pm.expect(responseData).to.have.property('name');\r",
-							"    pm.expect(responseData).to.have.property('filetype');\r",
-							"    pm.expect(responseData).to.have.property('filepath');\r",
-							"    pm.expect(responseData).to.have.property('size');\r",
-							"    pm.expect(responseData).to.have.property('timestamp');\r",
-							"    pm.expect(responseData).to.have.property('agent'); \r",
-							"\r",
-							"    pm.expect(responseData.agent).to.be.an('object');\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -730,19 +528,19 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{service_url}}/resources/{{resource2_id}}",
+					"raw": "{{service_url}}/resources/{{resource_id}}",
 					"host": [
 						"{{service_url}}"
 					],
 					"path": [
 						"resources",
-						"{{resource2_id}}"
+						"{{resource_id}}"
 					]
 				}
 			},
 			"response": [
 				{
-					"name": "New Request",
+					"name": "Get Resource By ID",
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
@@ -787,26 +585,12 @@
 							"path": ""
 						}
 					],
-					"body": "{\n    \"name\": \"Pensum Ingeniería de Sistemas y Computación\",\n    \"filetype\": \"application/pdf\",\n    \"filepath\": \"backend/data/36b4eec6-58f8-4801-a17d-69fc71e5a4c1/PENSUM INGENIERIA DE SISTEMAS.pdf\",\n    \"size\": 423103,\n    \"timestamp\": \"2025-08-29T21:06:45.423553\",\n    \"id\": \"be1763e6-38bf-42d1-8bbf-b09ee48387c6\",\n    \"consumed_by\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n    \"agent\": {\n        \"id\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n        \"name\": \"Agente Administrativo\",\n        \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n        \"is_working\": true,\n        \"model\": \"gpt-5\",\n        \"language\": \"es\"\n    }\n}"
+					"body": "{\n    \"name\": \"Parte 1 del artículo\",\n    \"filetype\": \"application/pdf\",\n    \"filepath\": \"backend/data/fa4a3d8a-20aa-48d5-9d63-28b04655f38e/CASO_HARVARD-1-4.pdf\",\n    \"size\": 471694,\n    \"timestamp\": \"2025-09-26T18:34:37.962382\",\n    \"id\": \"0660a59b-600b-4069-8f3e-60b31b4b140b\",\n    \"consumed_by\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n    \"agent\": {\n        \"id\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n        \"name\": \"Agente Articulo Caso Harvard 2\",\n        \"description\": \"Agente especializado en el articulo del caso harvard, con conocimiento técnico del mismo\",\n        \"is_working\": true,\n        \"model\": \"gpt-5\",\n        \"language\": \"es\"\n    }\n}"
 				}
 			]
 		},
 		{
-			"name": "Delete Resource",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Delete Resource - Success\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
+			"name": "Get Resource By ID Resource Not Found",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -818,43 +602,43 @@
 						}
 					]
 				},
-				"method": "DELETE",
+				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{service_url}}/resources/{{resource_delete_id}}",
+					"raw": "{{service_url}}/resources/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
 					"host": [
 						"{{service_url}}"
 					],
 					"path": [
 						"resources",
-						"{{resource_delete_id}}"
+						"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
 					]
 				}
 			},
 			"response": [
 				{
-					"name": "Delete Resource",
+					"name": "Get Resource By ID",
 					"originalRequest": {
-						"method": "DELETE",
+						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{service_url}}/resources/{{resource_delete_id}}",
+							"raw": "{{service_url}}/resources/{{resource_id}}",
 							"host": [
 								"{{service_url}}"
 							],
 							"path": [
 								"resources",
-								"{{resource_delete_id}}"
+								"{{resource_id}}"
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
+					"status": "Not Found",
+					"code": 404,
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
 							"key": "date",
-							"value": "Fri, 29 Aug 2025 21:19:19 GMT"
+							"value": "Fri, 29 Aug 2025 21:17:45 GMT"
 						},
 						{
 							"key": "server",
@@ -862,7 +646,7 @@
 						},
 						{
 							"key": "content-length",
-							"value": "505"
+							"value": "545"
 						},
 						{
 							"key": "Content-Type",
@@ -871,8 +655,14 @@
 							"type": "text"
 						}
 					],
-					"cookie": [],
-					"body": "{\n    \"name\": \"Programa Biología Celular\",\n    \"filetype\": \"application/pdf\",\n    \"filepath\": \"backend/data/36b4eec6-58f8-4801-a17d-69fc71e5a4c1/PROGRAMA.pdf\",\n    \"size\": 231940,\n    \"timestamp\": \"2025-08-29T21:16:20.261558\",\n    \"id\": \"4e519fa8-ecb8-4ebe-95fc-81f5736e8cad\",\n    \"consumed_by\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n    \"agent\": {\n        \"id\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n        \"name\": \"Agente Administrativo\",\n        \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n        \"is_working\": true,\n        \"model\": \"gpt-5\",\n        \"language\": \"es\"\n    }\n}"
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"detail\": \"Resource not found with id=aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\"\n}"
 				}
 			]
 		}
