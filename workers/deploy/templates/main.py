@@ -52,7 +52,7 @@ app = FastAPI()
 prompt = ChatPromptTemplate.from_template(PROMPT)
 
 llm = ChatGoogleGenerativeAI(
-        model = "gemini-2.5-flash-lite",
+        model = "gemini-2.5-flash",
         temperature = 0.5,
     )
 
