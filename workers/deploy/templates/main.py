@@ -35,10 +35,11 @@ reranker = CrossEncoderReranker(model = hf_cross_encoder, top_n = 10)
 PROMPT = os.getenv("PROMPT", "")
 DB_PATH = "/app/database/"
 
-SYSTEM_REWRITE = """Eres un asistente útil que genera múltiples consultas de búsqueda a partir de una sola pregunta.
-Realiza expansión de consultas. Si existen varias formas comunes de formular la pregunta del usuario o sinónimos comunes de palabras clave en la pregunta, asegúrate de devolver varias versiones de la consulta con las diferentes formas de expresarlas.
-Si hay siglas o palabras que no conoces, no intentes reformularlas.
-Devuelve 2 versiones diferentes de la pregunta, sin cambiar el idioma original de la misma."""
+SYSTEM_REWRITE = """Eres un asistente útil que genera subconsultas a partir de una sola pregunta del usuario.
+Descompón la pregunta original en partes más pequeñas y específicas, de modo que cada subconsulta capture un aspecto clave de la intención del usuario.
+Si existen varias formas comunes de formular cada parte o sinónimos relevantes, incluye dichas variantes en las subconsultas.
+Si hay siglas o palabras que no conoces, no intentes reformularlas."""
+
 PROMPT_REWRITE = ChatPromptTemplate.from_messages(
     [
         ("system", SYSTEM_REWRITE),
