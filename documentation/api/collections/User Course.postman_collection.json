@@ -1,39 +1,14 @@
 {
 	"info": {
-		"_postman_id": "5aa390d2-5b81-436d-867e-651a184ce070",
+		"_postman_id": "a59cdba7-ad77-4a4e-a5d8-7bb919619d91",
 		"name": "User Course",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "47552131",
-		"_collection_link": "https://nathaliaq16-620590.postman.co/workspace/Nathalia-Alexandra-Quiroga-Alfa~5b22ce91-e7f6-45ac-868e-e2a36efe4bf5/collection/47552131-5aa390d2-5b81-436d-867e-651a184ce070?action=share&source=collection_link&creator=47552131"
+		"_exporter_id": "47699141",
+		"_collection_link": "https://mrcheesyburgeru-3113691.postman.co/workspace/Nicolas-Rozo-Fajardo's-Workspac~d282d319-67a1-4bda-8570-f9f29991945d/collection/47548803-a59cdba7-ad77-4a4e-a5d8-7bb919619d91?action=share&source=collection_link&creator=47699141"
 	},
 	"item": [
 		{
 			"name": "Enroll Student in Course",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Enroll Student in Course - Success\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    pm.response.to.be.json;\r",
-							"    const responseData = pm.response.json();\r",
-							"    // Verificar que el curso tenga estudiantes\r",
-							"    pm.expect(responseData).to.have.property('students');\r",
-							"    pm.expect(responseData.students).to.be.an('array');\r",
-							"    pm.expect(responseData.students.length).to.be.above(0);\r",
-							"\r",
-							"    const lastStudent = responseData.students[responseData.students.length - 1];\r",
-							"    pm.expect(lastStudent).to.have.property('id');\r",
-							"    pm.expect(lastStudent).to.have.property('name');\r",
-							"    pm.expect(lastStudent).to.have.property('email');\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -52,13 +27,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{service_url}}/courses/{{course2_id}}/students/{{student_id}}",
+					"raw": "{{service_url}}/courses/{{course_id}}/students/{{student_id}}",
 					"host": [
 						"{{service_url}}"
 					],
 					"path": [
 						"courses",
-						"{{course2_id}}",
+						"{{course_id}}",
 						"students",
 						"{{student_id}}"
 					]
@@ -89,7 +64,7 @@
 					},
 					"status": "OK",
 					"code": 200,
-					"_postman_previewlanguage": "Text",
+					"_postman_previewlanguage": "json",
 					"header": [
 						{
 							"key": "date",
@@ -104,42 +79,19 @@
 							"value": "864"
 						},
 						{
-							"key": "content-type",
-							"value": "application/json"
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"name\": \"Diseño y Análisis de Algoritmos\",\n    \"code\": \"ISIS-1105\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"La mejor materia del pregrado\",\n    \"id\": \"e8c90bed-339b-4238-94b4-29224f913a98\",\n    \"taught_by\": \"2e179a6f-8ca7-4fdb-9f29-8b2449114283\",\n    \"teacher\": {\n        \"id\": \"2e179a6f-8ca7-4fdb-9f29-8b2449114283\",\n        \"name\": \"Juan Andrés Ariza Gacharná\",\n        \"email\": \"ja.arizag@uniandes.edu.co\"\n    },\n    \"agents\": [\n        {\n            \"id\": \"eccbe5ef-ee38-4385-922e-6bc923f31161\",\n            \"name\": \"Agente Administrativo\",\n            \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n            \"is_working\": true,\n            \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n            \"model\": \"gpt-5\",\n            \"language\": \"es\",\n            \"retrieval_k\": 10\n        }\n    ],\n    \"students\": [\n        {\n            \"id\": \"49d2ff71-a4c2-4942-b2e6-f685f67ea3b1\",\n            \"name\": \"Nicolas Bedoya Figueroa\",\n            \"email\": \"n.bedoyaf@uniandes.edu.co\"\n        }\n    ]\n}"
+					"body": "{\n    \"name\": \"Diseño y Aálisis de Algorimtos\",\n    \"code\": \"ISIS-1105\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"Presentar conceptos básicos del diseño y análisis de algoritmos. Al finalizar el curso, el estudiante debe ser capaz de aplicar técnicas de desarrollo de algoritmos como dividir y conquistar, programación dinámica, utilizar diversos algoritmos de búsqueda y analizar su complejidad en tiempo y en espacio.\",\n    \"id\": \"f1ee32f2-c46d-4a58-b38e-b269b94b1ce7\",\n    \"taught_by\": \"f3d8f463-9a11-4436-808a-0b675a14792b\",\n    \"teacher\": {\n        \"id\": \"f3d8f463-9a11-4436-808a-0b675a14792b\",\n        \"name\": \"Juan Andres Ariza\",\n        \"email\": \"ja.arizag@uniandes.edu.co\"\n    },\n    \"agents\": [],\n    \"students\": [\n        {\n            \"id\": \"3eac66e1-b8d6-4cc1-abc3-3e5685ba586e\",\n            \"name\": \"Nicolas Bedoya Figueroa\",\n            \"email\": \"n.bedoyaf@uniandes.edu.co\"\n        }\n    ]\n}"
 				}
 			]
 		},
 		{
-			"name": "Enroll Student in Course 2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Enroll Student in Course - Success\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    pm.response.to.be.json;\r",
-							"    const responseData = pm.response.json();\r",
-							"    // Verificar que el curso tenga estudiantes\r",
-							"    pm.expect(responseData).to.have.property('students');\r",
-							"    pm.expect(responseData.students).to.be.an('array');\r",
-							"    pm.expect(responseData.students.length).to.be.above(0);\r",
-							"\r",
-							"    const lastStudent = responseData.students[responseData.students.length - 1];\r",
-							"    pm.expect(lastStudent).to.have.property('id');\r",
-							"    pm.expect(lastStudent).to.have.property('name');\r",
-							"    pm.expect(lastStudent).to.have.property('email');\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
+			"name": "Enroll Student in Course Invalid User Role",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -158,21 +110,21 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{service_url}}/courses/{{course2_id}}/students/{{student2_id}}",
+					"raw": "{{service_url}}/courses/{{course_id}}/students/{{professor_id}}",
 					"host": [
 						"{{service_url}}"
 					],
 					"path": [
 						"courses",
-						"{{course2_id}}",
+						"{{course_id}}",
 						"students",
-						"{{student2_id}}"
+						"{{professor_id}}"
 					]
 				}
 			},
 			"response": [
 				{
-					"name": "Enroll Student in Course",
+					"name": "Enroll Student in Course Invalid User Role",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
@@ -181,7 +133,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{service_url}}/courses/{{course_id}}/students/{{student_id}}",
+							"raw": "{{service_url}}/courses/{{course_id}}/students/{{professor_id}}",
 							"host": [
 								"{{service_url}}"
 							],
@@ -189,13 +141,13 @@
 								"courses",
 								"{{course_id}}",
 								"students",
-								"{{student_id}}"
+								"{{professor_id}}"
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "Text",
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
 					"header": [
 						{
 							"key": "date",
@@ -210,39 +162,104 @@
 							"value": "864"
 						},
 						{
-							"key": "content-type",
-							"value": "application/json"
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"name\": \"Diseño y Análisis de Algoritmos\",\n    \"code\": \"ISIS-1105\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"La mejor materia del pregrado\",\n    \"id\": \"e8c90bed-339b-4238-94b4-29224f913a98\",\n    \"taught_by\": \"2e179a6f-8ca7-4fdb-9f29-8b2449114283\",\n    \"teacher\": {\n        \"id\": \"2e179a6f-8ca7-4fdb-9f29-8b2449114283\",\n        \"name\": \"Juan Andrés Ariza Gacharná\",\n        \"email\": \"ja.arizag@uniandes.edu.co\"\n    },\n    \"agents\": [\n        {\n            \"id\": \"eccbe5ef-ee38-4385-922e-6bc923f31161\",\n            \"name\": \"Agente Administrativo\",\n            \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n            \"is_working\": true,\n            \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n            \"model\": \"gpt-5\",\n            \"language\": \"es\",\n            \"retrieval_k\": 10\n        }\n    ],\n    \"students\": [\n        {\n            \"id\": \"49d2ff71-a4c2-4942-b2e6-f685f67ea3b1\",\n            \"name\": \"Nicolas Bedoya Figueroa\",\n            \"email\": \"n.bedoyaf@uniandes.edu.co\"\n        }\n    ]\n}"
+					"body": "{\n    \"detail\": \"Invalid role UserRole.professor. Expected role student\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Enroll Student in Course Course not found",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{service_url}}/courses/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/students/{{student_id}}",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"courses",
+						"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+						"students",
+						"{{student_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Enroll Student in Course Invalid User Role",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{service_url}}/courses/{{course_id}}/students/{{professor_id}}",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"courses",
+								"{{course_id}}",
+								"students",
+								"{{professor_id}}"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Sat, 30 Aug 2025 01:44:11 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "864"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"detail\": \"Course not found with id=aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\"\n}"
 				}
 			]
 		},
 		{
 			"name": "Get Course Students",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Get Course Students - Success\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    pm.response.to.be.json;\r",
-							"    const responseData = pm.response.json();\r",
-							"    pm.expect(responseData).to.be.an('array');\r",
-							"    if (responseData.length > 0) {\r",
-							"        pm.expect(responseData[0]).to.have.property('id');\r",
-							"        pm.expect(responseData[0]).to.have.property('email');\r",
-							"        pm.expect(responseData[0]).to.have.property('role', 'student');\r",
-							"    }\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -264,13 +281,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{service_url}}/courses/{{course2_id}}/students",
+					"raw": "{{service_url}}/courses/{{course_id}}/students",
 					"host": [
 						"{{service_url}}"
 					],
 					"path": [
 						"courses",
-						"{{course2_id}}",
+						"{{course_id}}",
 						"students"
 					]
 				}
@@ -281,6 +298,10 @@
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{service_url}}/courses/{{course_id}}/students",
 							"host": [
@@ -295,7 +316,7 @@
 					},
 					"status": "OK",
 					"code": 200,
-					"_postman_previewlanguage": "Text",
+					"_postman_previewlanguage": "json",
 					"header": [
 						{
 							"key": "date",
@@ -310,39 +331,20 @@
 							"value": "353"
 						},
 						{
-							"key": "content-type",
-							"value": "application/json"
+							"key": "Content-Type",
+							"value": "application/json",
+							"name": "Content-Type",
+							"description": "",
+							"type": "text"
 						}
 					],
 					"cookie": [],
-					"body": "[\n    {\n        \"name\": \"Nicolas Bedoya Figueroa\",\n        \"email\": \"n.bedoyaf@uniandes.edu.co\",\n        \"role\": \"student\",\n        \"profile_image\": \"https://ideamosweb.com/shitpost-y-el-marketing-digital/\",\n        \"id\": \"49d2ff71-a4c2-4942-b2e6-f685f67ea3b1\",\n        \"courses_taught\": [],\n        \"courses_taken\": [\n            {\n                \"id\": \"e8c90bed-339b-4238-94b4-29224f913a98\",\n                \"name\": \"Diseño y Análisis de Algoritmos\",\n                \"code\": \"ISIS-1105\"\n            }\n        ]\n    }\n]"
+					"body": "[\n    {\n        \"name\": \"Nicolas Bedoya Figueroa\",\n        \"email\": \"n.bedoyaf@uniandes.edu.co\",\n        \"role\": \"student\",\n        \"profile_image\": \"https://ideamosweb.com/shitpost-y-el-marketing-digital/\",\n        \"id\": \"3eac66e1-b8d6-4cc1-abc3-3e5685ba586e\",\n        \"courses_taught\": [],\n        \"courses_taken\": [\n            {\n                \"id\": \"f1ee32f2-c46d-4a58-b38e-b269b94b1ce7\",\n                \"name\": \"Diseño y Aálisis de Algorimtos\",\n                \"code\": \"ISIS-1105\"\n            }\n        ]\n    }\n]"
 				}
 			]
 		},
 		{
 			"name": "Get Student Courses",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Get Student Courses - Success\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    pm.response.to.be.json;\r",
-							"    const responseData = pm.response.json();\r",
-							"    pm.expect(responseData).to.be.an('array');\r",
-							"    if (responseData.length > 0) {\r",
-							"        pm.expect(responseData[0]).to.have.property('id');\r",
-							"        pm.expect(responseData[0]).to.have.property('name');\r",
-							"        pm.expect(responseData[0]).to.have.property('code');\r",
-							"    }\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -381,6 +383,10 @@
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{service_url}}/users/student/{{student_id}}",
 							"host": [
@@ -395,7 +401,7 @@
 					},
 					"status": "OK",
 					"code": 200,
-					"_postman_previewlanguage": "Text",
+					"_postman_previewlanguage": "json",
 					"header": [
 						{
 							"key": "date",
@@ -410,39 +416,103 @@
 							"value": "866"
 						},
 						{
-							"key": "content-type",
-							"value": "application/json"
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
 						}
 					],
 					"cookie": [],
-					"body": "[\n    {\n        \"name\": \"Diseño y Análisis de Algoritmos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"La mejor materia del pregrado\",\n        \"id\": \"e8c90bed-339b-4238-94b4-29224f913a98\",\n        \"taught_by\": \"2e179a6f-8ca7-4fdb-9f29-8b2449114283\",\n        \"teacher\": {\n            \"id\": \"2e179a6f-8ca7-4fdb-9f29-8b2449114283\",\n            \"name\": \"Juan Andrés Ariza Gacharná\",\n            \"email\": \"ja.arizag@uniandes.edu.co\"\n        },\n        \"agents\": [\n            {\n                \"id\": \"eccbe5ef-ee38-4385-922e-6bc923f31161\",\n                \"name\": \"Agente Administrativo\",\n                \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n                \"is_working\": true,\n                \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n                \"model\": \"gpt-5\",\n                \"language\": \"es\",\n                \"retrieval_k\": 10\n            }\n        ],\n        \"students\": [\n            {\n                \"id\": \"49d2ff71-a4c2-4942-b2e6-f685f67ea3b1\",\n                \"name\": \"Nicolas Bedoya Figueroa\",\n                \"email\": \"n.bedoyaf@uniandes.edu.co\"\n            }\n        ]\n    }\n]"
+					"body": "[\n    {\n        \"name\": \"Diseño y Aálisis de Algorimtos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"Presentar conceptos básicos del diseño y análisis de algoritmos. Al finalizar el curso, el estudiante debe ser capaz de aplicar técnicas de desarrollo de algoritmos como dividir y conquistar, programación dinámica, utilizar diversos algoritmos de búsqueda y analizar su complejidad en tiempo y en espacio.\",\n        \"id\": \"f1ee32f2-c46d-4a58-b38e-b269b94b1ce7\",\n        \"taught_by\": \"f3d8f463-9a11-4436-808a-0b675a14792b\",\n        \"teacher\": {\n            \"id\": \"f3d8f463-9a11-4436-808a-0b675a14792b\",\n            \"name\": \"Juan Andres Ariza\",\n            \"email\": \"ja.arizag@uniandes.edu.co\"\n        },\n        \"agents\": [],\n        \"students\": [\n            {\n                \"id\": \"3eac66e1-b8d6-4cc1-abc3-3e5685ba586e\",\n                \"name\": \"Nicolas Bedoya Figueroa\",\n                \"email\": \"n.bedoyaf@uniandes.edu.co\"\n            }\n        ]\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "Get Student Courses Invalid User Role",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{service_url}}/users/student/{{professor_id}}",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"users",
+						"student",
+						"{{professor_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Get Student Courses",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{service_url}}/users/student/{{professor_id}}",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"users",
+								"student",
+								"{{professor_id}}"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Sat, 30 Aug 2025 01:44:21 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "866"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"detail\": \"Invalid role UserRole.professor. Expected role student\"\n}"
 				}
 			]
 		},
 		{
 			"name": "Get Taught Courses",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Get Taught Courses - Success\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    pm.response.to.be.json;\r",
-							"    const responseData = pm.response.json();\r",
-							"    pm.expect(responseData).to.be.an('array');\r",
-							"    if (responseData.length > 0) {\r",
-							"        pm.expect(responseData[0]).to.have.property('id');\r",
-							"        pm.expect(responseData[0]).to.have.property('name');\r",
-							"        pm.expect(responseData[0]).to.have.property('code');\r",
-							"    }\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -481,6 +551,10 @@
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{service_url}}/users/professor/{{professor_id}}",
 							"host": [
@@ -495,7 +569,7 @@
 					},
 					"status": "OK",
 					"code": 200,
-					"_postman_previewlanguage": "Text",
+					"_postman_previewlanguage": "json",
 					"header": [
 						{
 							"key": "date",
@@ -510,39 +584,22 @@
 							"value": "866"
 						},
 						{
-							"key": "content-type",
-							"value": "application/json"
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
 						}
 					],
 					"cookie": [],
-					"body": "[\n    {\n        \"name\": \"Diseño y Análisis de Algoritmos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"La mejor materia del pregrado\",\n        \"id\": \"e8c90bed-339b-4238-94b4-29224f913a98\",\n        \"taught_by\": \"2e179a6f-8ca7-4fdb-9f29-8b2449114283\",\n        \"teacher\": {\n            \"id\": \"2e179a6f-8ca7-4fdb-9f29-8b2449114283\",\n            \"name\": \"Juan Andrés Ariza Gacharná\",\n            \"email\": \"ja.arizag@uniandes.edu.co\"\n        },\n        \"agents\": [\n            {\n                \"id\": \"eccbe5ef-ee38-4385-922e-6bc923f31161\",\n                \"name\": \"Agente Administrativo\",\n                \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n                \"is_working\": true,\n                \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n                \"model\": \"gpt-5\",\n                \"language\": \"es\",\n                \"retrieval_k\": 10\n            }\n        ],\n        \"students\": [\n            {\n                \"id\": \"49d2ff71-a4c2-4942-b2e6-f685f67ea3b1\",\n                \"name\": \"Nicolas Bedoya Figueroa\",\n                \"email\": \"n.bedoyaf@uniandes.edu.co\"\n            }\n        ]\n    }\n]"
+					"body": "[\n    {\n        \"name\": \"Diseño y Aálisis de Algorimtos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"Presentar conceptos básicos del diseño y análisis de algoritmos. Al finalizar el curso, el estudiante debe ser capaz de aplicar técnicas de desarrollo de algoritmos como dividir y conquistar, programación dinámica, utilizar diversos algoritmos de búsqueda y analizar su complejidad en tiempo y en espacio.\",\n        \"id\": \"f1ee32f2-c46d-4a58-b38e-b269b94b1ce7\",\n        \"taught_by\": \"f3d8f463-9a11-4436-808a-0b675a14792b\",\n        \"teacher\": {\n            \"id\": \"f3d8f463-9a11-4436-808a-0b675a14792b\",\n            \"name\": \"Juan Andres Ariza\",\n            \"email\": \"ja.arizag@uniandes.edu.co\"\n        },\n        \"agents\": [],\n        \"students\": [\n            {\n                \"id\": \"3eac66e1-b8d6-4cc1-abc3-3e5685ba586e\",\n                \"name\": \"Nicolas Bedoya Figueroa\",\n                \"email\": \"n.bedoyaf@uniandes.edu.co\"\n            }\n        ]\n    }\n]"
 				}
 			]
 		},
 		{
-			"name": "Get Course Agents",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Get Course Agents - Success\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    pm.response.to.be.json;\r",
-							"    const responseData = pm.response.json();\r",
-							"    pm.expect(responseData).to.be.an('array');\r",
-							"    if (responseData.length > 0) {\r",
-							"        pm.expect(responseData[0]).to.have.property('id');\r",
-							"        pm.expect(responseData[0]).to.have.property('name');\r",
-							"        pm.expect(responseData[0]).to.have.property('course_id');\r",
-							"    }\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
+			"name": "Get Taught Courses Invalid User Role",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -556,43 +613,51 @@
 				},
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
-					"raw": "{{service_url}}/courses/{{course2_id}}/agents",
+					"raw": "{{service_url}}/users/professor/{{student_id}}",
 					"host": [
 						"{{service_url}}"
 					],
 					"path": [
-						"courses",
-						"{{course2_id}}",
-						"agents"
+						"users",
+						"professor",
+						"{{student_id}}"
 					]
 				}
 			},
 			"response": [
 				{
-					"name": "Get Course Agents",
+					"name": "Get Taught Courses Invalid User Role",
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
-							"raw": "{{service_url}}/courses/{{course_id}}/agents",
+							"raw": "{{service_url}}/users/professor/{{student_id}}",
 							"host": [
 								"{{service_url}}"
 							],
 							"path": [
-								"courses",
-								"{{course_id}}",
-								"agents"
+								"users",
+								"professor",
+								"{{student_id}}"
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "Text",
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
 					"header": [
 						{
 							"key": "date",
-							"value": "Sat, 30 Aug 2025 01:44:40 GMT"
+							"value": "Sat, 30 Aug 2025 01:44:27 GMT"
 						},
 						{
 							"key": "server",
@@ -600,34 +665,22 @@
 						},
 						{
 							"key": "content-length",
-							"value": "869"
+							"value": "866"
 						},
 						{
-							"key": "content-type",
-							"value": "application/json"
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
 						}
 					],
 					"cookie": [],
-					"body": "[\n    {\n        \"name\": \"Agente Administrativo\",\n        \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n        \"is_working\": true,\n        \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n        \"model\": \"gpt-5\",\n        \"language\": \"es\",\n        \"retrieval_k\": 10,\n        \"id\": \"eccbe5ef-ee38-4385-922e-6bc923f31161\",\n        \"associated_course\": \"e8c90bed-339b-4238-94b4-29224f913a98\",\n        \"course\": {\n            \"id\": \"e8c90bed-339b-4238-94b4-29224f913a98\",\n            \"name\": \"Diseño y Análisis de Algoritmos\",\n            \"code\": \"ISIS-1105\",\n            \"department\": \"Ingeniería de Sistemas y Computación\",\n            \"description\": \"La mejor materia del pregrado\"\n        },\n        \"resources\": [\n            {\n                \"id\": \"c256506c-7146-47dc-b0af-4e7e8ef46a41\",\n                \"name\": \"Pensum Ingeniería de Sistemas y Computación\",\n                \"filetype\": \"application/pdf\",\n                \"filepath\": \"backend/data/eccbe5ef-ee38-4385-922e-6bc923f31161/PENSUM INGENIERIA DE SISTEMAS.pdf\",\n                \"size\": 423103\n            }\n        ]\n    }\n]"
+					"body": "{\n    \"detail\": \"Invalid role UserRole.student. Expected role teacher\"\n}"
 				}
 			]
 		},
 		{
 			"name": "Unenroll Student of Course",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Unenroll Student from Course - Success\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -646,13 +699,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{service_url}}/courses/{{course2_id}}/students/{{student_id}}",
+					"raw": "{{service_url}}/courses/{{course_id}}/students/{{student_id}}",
 					"host": [
 						"{{service_url}}"
 					],
 					"path": [
 						"courses",
-						"{{course2_id}}",
+						"{{course_id}}",
 						"students",
 						"{{student_id}}"
 					]
@@ -683,7 +736,7 @@
 					},
 					"status": "OK",
 					"code": 200,
-					"_postman_previewlanguage": "Text",
+					"_postman_previewlanguage": "json",
 					"header": [
 						{
 							"key": "date",
@@ -698,12 +751,180 @@
 							"value": "750"
 						},
 						{
-							"key": "content-type",
-							"value": "application/json"
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"name\": \"Diseño y Análisis de Algoritmos\",\n    \"code\": \"ISIS-1105\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"La mejor materia del pregrado\",\n    \"id\": \"e8c90bed-339b-4238-94b4-29224f913a98\",\n    \"taught_by\": \"2e179a6f-8ca7-4fdb-9f29-8b2449114283\",\n    \"teacher\": {\n        \"id\": \"2e179a6f-8ca7-4fdb-9f29-8b2449114283\",\n        \"name\": \"Juan Andrés Ariza Gacharná\",\n        \"email\": \"ja.arizag@uniandes.edu.co\"\n    },\n    \"agents\": [\n        {\n            \"id\": \"eccbe5ef-ee38-4385-922e-6bc923f31161\",\n            \"name\": \"Agente Administrativo\",\n            \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n            \"is_working\": true,\n            \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n            \"model\": \"gpt-5\",\n            \"language\": \"es\",\n            \"retrieval_k\": 10\n        }\n    ],\n    \"students\": []\n}"
+					"body": "{\n    \"name\": \"Diseño y Aálisis de Algorimtos\",\n    \"code\": \"ISIS-1105\",\n    \"department\": \"Ingeniería de Sistemas y Computación\",\n    \"description\": \"Presentar conceptos básicos del diseño y análisis de algoritmos. Al finalizar el curso, el estudiante debe ser capaz de aplicar técnicas de desarrollo de algoritmos como dividir y conquistar, programación dinámica, utilizar diversos algoritmos de búsqueda y analizar su complejidad en tiempo y en espacio.\",\n    \"id\": \"f1ee32f2-c46d-4a58-b38e-b269b94b1ce7\",\n    \"taught_by\": \"f3d8f463-9a11-4436-808a-0b675a14792b\",\n    \"teacher\": {\n        \"id\": \"f3d8f463-9a11-4436-808a-0b675a14792b\",\n        \"name\": \"Juan Andres Ariza\",\n        \"email\": \"ja.arizag@uniandes.edu.co\"\n    },\n    \"agents\": [],\n    \"students\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Unenroll Student of Course Invalid User Role",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{service_url}}/courses/{{course_id}}/students/{{professor_id}}",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"courses",
+						"{{course_id}}",
+						"students",
+						"{{professor_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Unenroll Student of Course",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{service_url}}/courses/{{course_id}}/students/{{professor_id}}",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"courses",
+								"{{course_id}}",
+								"students",
+								"{{professor_id}}"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Sat, 30 Aug 2025 01:44:47 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "750"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"detail\": \"Invalid role UserRole.professor. Expected role student\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Unenroll Student of Course Course not found",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{service_url}}/courses/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/students/{{student_id}}",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"courses",
+						"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+						"students",
+						"{{student_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Unenroll Student of Course Course not found",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{service_url}}/courses/{{course_id}}/students/{{student_id}}",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"courses",
+								"{{course_id}}",
+								"students",
+								"{{student_id}}"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Sat, 30 Aug 2025 01:44:47 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "750"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"detail\": \"Course not found with id=aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\"\n}"
 				}
 			]
 		}

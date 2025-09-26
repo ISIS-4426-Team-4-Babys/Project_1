@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "44aad9b7-9f2e-4a04-9ebe-d0586859f06f",
+		"_postman_id": "0f48017c-b9d4-4b26-8b3f-2a1ba52932b0",
 		"name": "Agent",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "47552131",
-		"_collection_link": "https://nathaliaq16-620590.postman.co/workspace/Nathalia-Alexandra-Quiroga-Alfa~5b22ce91-e7f6-45ac-868e-e2a36efe4bf5/collection/47552131-44aad9b7-9f2e-4a04-9ebe-d0586859f06f?action=share&source=collection_link&creator=47552131"
+		"_exporter_id": "47699141",
+		"_collection_link": "https://mrcheesyburgeru-3113691.postman.co/workspace/Nicolas-Rozo-Fajardo's-Workspac~d282d319-67a1-4bda-8570-f9f29991945d/collection/47548803-0f48017c-b9d4-4b26-8b3f-2a1ba52932b0?action=share&source=collection_link&creator=47699141"
 	},
 	"item": [
 		{
@@ -15,28 +15,7 @@
 					"script": {
 						"exec": [
 							"let response = pm.response.json();",
-							"pm.environment.set(\"agent_id\", response.id);",
-							"",
-							"pm.test(\"Create Agent - Success\", function () {",
-							"    pm.response.to.have.status(201);",
-							"    pm.response.to.be.json;",
-							"    const responseData = pm.response.json();",
-							"    pm.expect(responseData).to.have.property('id');",
-							"    pm.expect(responseData).to.have.property('name');",
-							"    pm.expect(responseData).to.have.property('system_prompt');",
-							"    pm.expect(responseData).to.have.property('associated_course');",
-							"    pm.expect(responseData.course).to.be.an('object');",
-							"    pm.expect(responseData.course).to.have.property('id');",
-							"    pm.expect(responseData.course).to.have.property('name');",
-							"    pm.expect(responseData.course).to.have.property('code');",
-							"",
-							"    pm.expect(responseData).to.have.property('is_working');",
-							"    pm.expect(responseData.is_working).to.be.a('boolean');",
-							"    pm.expect(responseData).to.have.property('language');",
-							"    pm.expect(responseData.language).to.be.oneOf(['es', 'en']);",
-							"    ",
-							"",
-							"});"
+							"pm.environment.set(\"agent_id\", response.id);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -58,354 +37,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Agente Administrativo\",\n    \"description\": \"Agente con conocimiento del programa 2\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"associated_course\": \"{{course_id}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{service_url}}/agents",
-					"host": [
-						"{{service_url}}"
-					],
-					"path": [
-						"agents"
-					]
-				}
-			},
-			"response": [
-				{
-					"name": "Create Agent",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Agente Administrativo\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"associated_course\": \"{{course_id}}\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{service_url}}/agents",
-							"host": [
-								"{{service_url}}"
-							],
-							"path": [
-								"agents"
-							]
-						}
-					},
-					"status": "Created",
-					"code": 201,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "date",
-							"value": "Fri, 29 Aug 2025 20:51:49 GMT"
-						},
-						{
-							"key": "server",
-							"value": "uvicorn"
-						},
-						{
-							"key": "content-length",
-							"value": "626"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json",
-							"description": "",
-							"type": "text"
-						}
-					],
-					"cookie": [
-						{
-							"expires": "Invalid Date",
-							"domain": "",
-							"path": ""
-						}
-					],
-					"body": "{\n    \"name\": \"Agente Administrativo\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"id\": \"2258d9d1-e0cf-43b5-8994-a6cfabdb5f35\",\n    \"associated_course\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"course\": {\n        \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n        \"name\": \"Diseño y Análisis de Algoritmos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"La mejor materia del pregrado\"\n    },\n    \"resources\": []\n}"
-				}
-			]
-		},
-		{
-			"name": "Create Agent 2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"let response = pm.response.json();",
-							"pm.environment.set(\"agent2_id\", response.id);",
-							"",
-							"pm.test(\"Create Agent - Success\", function () {",
-							"    pm.response.to.have.status(201);",
-							"    pm.response.to.be.json;",
-							"    const responseData = pm.response.json();",
-							"    pm.expect(responseData).to.have.property('id');",
-							"    pm.expect(responseData).to.have.property('name');",
-							"    pm.expect(responseData).to.have.property('system_prompt');",
-							"    pm.expect(responseData).to.have.property('associated_course');",
-							"    pm.expect(responseData.course).to.be.an('object');",
-							"    pm.expect(responseData.course).to.have.property('id');",
-							"    pm.expect(responseData.course).to.have.property('name');",
-							"    pm.expect(responseData.course).to.have.property('code');",
-							"",
-							"    pm.expect(responseData).to.have.property('is_working');",
-							"    pm.expect(responseData.is_working).to.be.a('boolean');",
-							"    pm.expect(responseData).to.have.property('language');",
-							"    pm.expect(responseData.language).to.be.oneOf(['es', 'en']);",
-							"    ",
-							"",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{auth_token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"Agente Administrativo 2\",\n    \"description\": \"Agente con conocimiento del programa\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento recomienda la próxima materia que el estudiante debería ver.\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"associated_course\": \"{{course_id}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{service_url}}/agents",
-					"host": [
-						"{{service_url}}"
-					],
-					"path": [
-						"agents"
-					]
-				}
-			},
-			"response": [
-				{
-					"name": "Create Agent",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Agente Administrativo\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"associated_course\": \"{{course_id}}\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{service_url}}/agents",
-							"host": [
-								"{{service_url}}"
-							],
-							"path": [
-								"agents"
-							]
-						}
-					},
-					"status": "Created",
-					"code": 201,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "date",
-							"value": "Fri, 29 Aug 2025 20:51:49 GMT"
-						},
-						{
-							"key": "server",
-							"value": "uvicorn"
-						},
-						{
-							"key": "content-length",
-							"value": "626"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json",
-							"description": "",
-							"type": "text"
-						}
-					],
-					"cookie": [
-						{
-							"expires": "Invalid Date",
-							"domain": "",
-							"path": ""
-						}
-					],
-					"body": "{\n    \"name\": \"Agente Administrativo\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"id\": \"2258d9d1-e0cf-43b5-8994-a6cfabdb5f35\",\n    \"associated_course\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"course\": {\n        \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n        \"name\": \"Diseño y Análisis de Algoritmos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"La mejor materia del pregrado\"\n    },\n    \"resources\": []\n}"
-				}
-			]
-		},
-		{
-			"name": "Create Agent Bad retrieval_k",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"let response = pm.response.json();",
-							"pm.environment.set(\"agent_id\", response.id);",
-							"",
-							"pm.test(\"Status code is 422\", function () {",
-							"    pm.response.to.have.status(422);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{auth_token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"Agente De Parciales\",\n    \"description\": \"Agente con conocimiento del curso de forma tecnica\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el parcial del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": \"s\",\n    \"associated_course\": \"{{course_id}}\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{service_url}}/agents",
-					"host": [
-						"{{service_url}}"
-					],
-					"path": [
-						"agents"
-					]
-				}
-			},
-			"response": [
-				{
-					"name": "Create Agent",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Agente Administrativo\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"associated_course\": \"{{course_id}}\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{service_url}}/agents",
-							"host": [
-								"{{service_url}}"
-							],
-							"path": [
-								"agents"
-							]
-						}
-					},
-					"status": "Created",
-					"code": 201,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "date",
-							"value": "Fri, 29 Aug 2025 20:51:49 GMT"
-						},
-						{
-							"key": "server",
-							"value": "uvicorn"
-						},
-						{
-							"key": "content-length",
-							"value": "626"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json",
-							"description": "",
-							"type": "text"
-						}
-					],
-					"cookie": [
-						{
-							"expires": "Invalid Date",
-							"domain": "",
-							"path": ""
-						}
-					],
-					"body": "{\n    \"name\": \"Agente Administrativo\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"id\": \"2258d9d1-e0cf-43b5-8994-a6cfabdb5f35\",\n    \"associated_course\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"course\": {\n        \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n        \"name\": \"Diseño y Análisis de Algoritmos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"La mejor materia del pregrado\"\n    },\n    \"resources\": []\n}"
-				}
-			]
-		},
-		{
-			"name": "Create Agent Bad language",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"let response = pm.response.json();",
-							"pm.environment.set(\"agent_id\", response.id);",
-							"",
-							"pm.test(\"Status code is 422\", function () {",
-							"    pm.response.to.have.status(422);",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{auth_token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"Agente Administrativo 2\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"it\",\n    \"retrieval_k\": 5,\n    \"associated_course\": \"{{course_id}}\"\n}",
+					"raw": "{\n    \"name\": \"Agente Articulo Caso Harvard 2\",\n    \"description\": \"Agente especializado en el articulo del caso harvard, con conocimiento técnico del mismo\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente especializado en el caso de estudio Managing the move to the cloud - analyzing the risk and oportunities of cloud based accounting information systems. Tu labor es responder documentación técnica, usando tanto el conocimiento del caso como tu conocimiento propio general de las estrategia basadas en nube. Para responder cada pregunta que te hagan, manten un tono técnico y basate en el contexto proporcionado, usa tu conocimiento cuando veas que es necesario pero no inventes información.\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"associated_course\": \"{{course_id}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -489,11 +121,7 @@
 					"script": {
 						"exec": [
 							"let response = pm.response.json();",
-							"pm.environment.set(\"agent_delete_id\", response.id);",
-							"",
-							"pm.test(\"Status code is 201\", function () {",
-							"    pm.response.to.have.status(201);",
-							"});"
+							"pm.environment.set(\"agent_delete_id\", response.id);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -515,7 +143,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Agente Administrativo 3\",\n    \"description\": \"Agente con conocimiento de la estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando el conocimiento de los documentos guía al estudiante en la estructura del curso.\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"associated_course\": \"{{course_id}}\"\n}",
+					"raw": "{\n    \"name\": \"Agente Administrativo 2\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando el conocimiento de los documentos guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"associated_course\": \"{{course_id}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -593,23 +221,6 @@
 		},
 		{
 			"name": "Get All Agents",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Get All Agents - Success\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    pm.response.to.be.json;\r",
-							"    const responseData = pm.response.json();\r",
-							"    pm.expect(responseData).to.be.an('array');\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -646,6 +257,10 @@
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{service_url}}/agents",
 							"host": [
@@ -686,33 +301,6 @@
 		},
 		{
 			"name": "Get Agent By ID",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Get Agent By ID - Success\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    pm.response.to.be.json;\r",
-							"    const responseData = pm.response.json();\r",
-							"    pm.expect(responseData).to.have.property('id');\r",
-							"    pm.expect(responseData).to.have.property('name');\r",
-							"    pm.expect(responseData).to.have.property('system_prompt');\r",
-							"    pm.expect(responseData).to.have.property('associated_course');\r",
-							"    pm.expect(responseData.course).to.be.an('object');\r",
-							"    pm.expect(responseData.course).to.have.property('id');\r",
-							"    pm.expect(responseData.course).to.have.property('name');\r",
-							"    pm.expect(responseData.course).to.have.property('code');\r",
-							"\r",
-							"    pm.expect(responseData).to.have.property('is_working');\r",
-							"    pm.expect(responseData.is_working).to.be.a('boolean');\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -734,13 +322,13 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{service_url}}/agents/{{agent2_id}}",
+					"raw": "{{service_url}}/agents/{{agent_id}}",
 					"host": [
 						"{{service_url}}"
 					],
 					"path": [
 						"agents",
-						"{{agent2_id}}"
+						"{{agent_id}}"
 					]
 				}
 			},
@@ -750,6 +338,10 @@
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{service_url}}/agents/{{agent_id}}",
 							"host": [
@@ -796,33 +388,95 @@
 			]
 		},
 		{
-			"name": "Update Agent",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Update Agent - Success\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"    pm.response.to.be.json;\r",
-							"    const responseData = pm.response.json();\r",
-							"    pm.expect(responseData).to.have.property('id');\r",
-							"    \r",
-							"    // Verify updated fields match request\r",
-							"    const requestData = JSON.parse(pm.request.body.raw);\r",
-							"    if (requestData.name) {\r",
-							"        pm.expect(responseData.name).to.equal(requestData.name);\r",
-							"    }\r",
-							"    if (requestData.system_prompt) {\r",
-							"        pm.expect(responseData.system_prompt).to.equal(requestData.system_prompt);\r",
-							"    }\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
+			"name": "Get Agent By ID Agent not found",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{service_url}}/agents/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"agents",
+						"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+					]
 				}
-			],
+			},
+			"response": [
+				{
+					"name": "Get Agent By ID Agent not found",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{service_url}}/agents/{{agent_id}}",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"agents",
+								"{{agent_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:55:02 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "626"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"detail\": \"Agent not found with id=aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Update Agent",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -846,13 +500,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{service_url}}/agents/{{agent2_id}}",
+					"raw": "{{service_url}}/agents/{{agent_id}}",
 					"host": [
 						"{{service_url}}"
 					],
 					"path": [
 						"agents",
-						"{{agent2_id}}"
+						"{{agent_id}}"
 					]
 				}
 			},
@@ -884,7 +538,7 @@
 					},
 					"status": "OK",
 					"code": 200,
-					"_postman_previewlanguage": "Text",
+					"_postman_previewlanguage": null,
 					"header": [
 						{
 							"key": "date",
@@ -904,26 +558,12 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"name\": \"Agente Administrativo\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando tu conocimiento guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 10,\n    \"id\": \"36b4eec6-58f8-4801-a17d-69fc71e5a4c1\",\n    \"associated_course\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"course\": {\n        \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n        \"name\": \"Diseño y Análisis de Algoritmos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"La mejor materia del pregrado\"\n    },\n    \"resources\": []\n}"
+					"body": "{\n    \"name\": \"Agente Articulo Caso Harvard 2\",\n    \"description\": \"Agente especializado en el articulo del caso harvard, con conocimiento técnico del mismo\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente especializado en el caso de estudio Managing the move to the cloud - analyzing the risk and oportunities of cloud based accounting information systems. Tu labor es responder documentación técnica, usando tanto el conocimiento del caso como tu conocimiento propio general de las estrategia basadas en nube. Para responder cada pregunta que te hagan, manten un tono técnico y basate en el contexto proporcionado, usa tu conocimiento cuando veas que es necesario pero no inventes información.\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 10,\n    \"id\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n    \"associated_course\": \"f1ee32f2-c46d-4a58-b38e-b269b94b1ce7\",\n    \"course\": {\n        \"id\": \"f1ee32f2-c46d-4a58-b38e-b269b94b1ce7\",\n        \"name\": \"Diseño y Análisis de Algoritmos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"Presentar conceptos básicos del diseño y análisis de algoritmos. Al finalizar el curso, el estudiante debe ser capaz de aplicar técnicas de desarrollo de algoritmos como dividir y conquistar, programación dinámica, utilizar diversos algoritmos de búsqueda y analizar su complejidad en tiempo y en espacio.\"\n    },\n    \"resources\": []\n}"
 				}
 			]
 		},
 		{
-			"name": "Delete Agent",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Delete Agent - Success\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
+			"name": "Update Agent Agent not found",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -935,51 +575,61 @@
 						}
 					]
 				},
-				"method": "DELETE",
+				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"retrieval_k\": 10\n}"
+					"raw": "{\n    \"retrieval_k\": 10\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
 				"url": {
-					"raw": "{{service_url}}/agents/{{agent_delete_id}}",
+					"raw": "{{service_url}}/agents/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
 					"host": [
 						"{{service_url}}"
 					],
 					"path": [
 						"agents",
-						"{{agent_delete_id}}"
+						"aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
 					]
 				}
 			},
 			"response": [
 				{
-					"name": "Delete Agent",
+					"name": "Update Agent",
 					"originalRequest": {
-						"method": "DELETE",
+						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"retrieval_k\": 10\n}"
+							"raw": "{\n    \"retrieval_k\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
-							"raw": "{{service_url}}/agents/{{agent_delete_id}}",
+							"raw": "{{service_url}}/agents/{{agent_id}}",
 							"host": [
 								"{{service_url}}"
 							],
 							"path": [
 								"agents",
-								"{{agent_delete_id}}"
+								"{{agent_id}}"
 							]
 						}
 					},
 					"status": "OK",
 					"code": 200,
-					"_postman_previewlanguage": "json",
+					"_postman_previewlanguage": null,
 					"header": [
 						{
 							"key": "date",
-							"value": "Fri, 29 Aug 2025 21:01:41 GMT"
+							"value": "Fri, 29 Aug 2025 20:55:53 GMT"
 						},
 						{
 							"key": "server",
@@ -987,42 +637,20 @@
 						},
 						{
 							"key": "content-length",
-							"value": "646"
+							"value": "627"
 						},
 						{
-							"key": "Content-Type",
-							"value": "application/json",
-							"description": "",
-							"type": "text"
+							"key": "content-type",
+							"value": "application/json"
 						}
 					],
-					"cookie": [
-						{
-							"expires": "Invalid Date",
-							"domain": "",
-							"path": ""
-						}
-					],
-					"body": "{\n    \"name\": \"Agente Administrativo 2\",\n    \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n    \"is_working\": true,\n    \"system_prompt\": \"Eres un agente administrativo. Usando el conocimiento de los documentos guía al estudiante en el programa del curso\",\n    \"model\": \"gpt-5\",\n    \"language\": \"es\",\n    \"retrieval_k\": 5,\n    \"id\": \"5e9aa5e7-4eea-4fed-9df9-8de4e3395939\",\n    \"associated_course\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n    \"course\": {\n        \"id\": \"f6309e88-d164-48ba-a624-6b861c10ebf5\",\n        \"name\": \"Diseño y Análisis de Algoritmos\",\n        \"code\": \"ISIS-1105\",\n        \"department\": \"Ingeniería de Sistemas y Computación\",\n        \"description\": \"La mejor materia del pregrado\"\n    },\n    \"resources\": []\n}"
+					"cookie": [],
+					"body": "{\n    \"detail\": \"Agent not found with id=aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee\"\n}"
 				}
 			]
 		},
 		{
 			"name": "Get Resources",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {\r",
-							"    pm.response.to.have.status(200);\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -1044,13 +672,13 @@
 					"raw": "{\n    \"retrieval_k\": 10\n}"
 				},
 				"url": {
-					"raw": "{{service_url}}/agents/{{agent2_id}}/resources",
+					"raw": "{{service_url}}/agents/{{agent_id}}/resources",
 					"host": [
 						"{{service_url}}"
 					],
 					"path": [
 						"agents",
-						"{{agent2_id}}",
+						"{{agent_id}}",
 						"resources"
 					]
 				}
@@ -1061,6 +689,10 @@
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"retrieval_k\": 10\n}"
+						},
 						"url": {
 							"raw": "{{service_url}}/agents/{{agent_id}}/resources",
 							"host": [
@@ -1075,7 +707,7 @@
 					},
 					"status": "OK",
 					"code": 200,
-					"_postman_previewlanguage": "Text",
+					"_postman_previewlanguage": "json",
 					"header": [
 						{
 							"key": "date",
@@ -1090,12 +722,14 @@
 							"value": "547"
 						},
 						{
-							"key": "content-type",
-							"value": "application/json"
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
 						}
 					],
 					"cookie": [],
-					"body": "[\n    {\n        \"name\": \"Pensum Ingeniería de Sistemas y Computación\",\n        \"filetype\": \"application/pdf\",\n        \"filepath\": \"backend/data/eccbe5ef-ee38-4385-922e-6bc923f31161/PENSUM INGENIERIA DE SISTEMAS.pdf\",\n        \"size\": 423103,\n        \"timestamp\": \"2025-08-30T01:43:46.036999\",\n        \"id\": \"c256506c-7146-47dc-b0af-4e7e8ef46a41\",\n        \"consumed_by\": \"eccbe5ef-ee38-4385-922e-6bc923f31161\",\n        \"agent\": {\n            \"id\": \"eccbe5ef-ee38-4385-922e-6bc923f31161\",\n            \"name\": \"Agente Administrativo\",\n            \"description\": \"Agente con conocimiento del programa y estructura del curso\",\n            \"is_working\": true,\n            \"model\": \"gpt-5\",\n            \"language\": \"es\"\n        }\n    }\n]"
+					"body": "[\n    {\n        \"name\": \"Parte 1 del artículo\",\n        \"filetype\": \"application/pdf\",\n        \"filepath\": \"backend/data/fa4a3d8a-20aa-48d5-9d63-28b04655f38e/CASO_HARVARD-1-4.pdf\",\n        \"size\": 471694,\n        \"timestamp\": \"2025-09-26T18:34:37.962382\",\n        \"id\": \"0660a59b-600b-4069-8f3e-60b31b4b140b\",\n        \"consumed_by\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n        \"agent\": {\n            \"id\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n            \"name\": \"Agente Articulo Caso Harvard 2\",\n            \"description\": \"Agente especializado en el articulo del caso harvard, con conocimiento técnico del mismo\",\n            \"is_working\": true,\n            \"model\": \"gpt-5\",\n            \"language\": \"es\"\n        }\n    },\n    {\n        \"name\": \"Parte 2 del artículo\",\n        \"filetype\": \"application/pdf\",\n        \"filepath\": \"backend/data/fa4a3d8a-20aa-48d5-9d63-28b04655f38e/CASO_HARVARD-5-8.pdf\",\n        \"size\": 180571,\n        \"timestamp\": \"2025-09-26T18:34:53.417023\",\n        \"id\": \"6f52fbdb-2ea3-4309-a85f-4e5e482913fb\",\n        \"consumed_by\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n        \"agent\": {\n            \"id\": \"fa4a3d8a-20aa-48d5-9d63-28b04655f38e\",\n            \"name\": \"Agente Articulo Caso Harvard 2\",\n            \"description\": \"Agente especializado en el articulo del caso harvard, con conocimiento técnico del mismo\",\n            \"is_working\": true,\n            \"model\": \"gpt-5\",\n            \"language\": \"es\"\n        }\n    }\n]"
 				}
 			]
 		}

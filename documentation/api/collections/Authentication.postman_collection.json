@@ -1,34 +1,14 @@
 {
 	"info": {
-		"_postman_id": "2eef98a5-dfb8-4534-b292-26a7968f9f53",
+		"_postman_id": "a576a2f0-9315-461b-a185-ea171c6fa813",
 		"name": "Authentication",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "47552131",
-		"_collection_link": "https://nathaliaq16-620590.postman.co/workspace/Nathalia-Alexandra-Quiroga-Alfa~5b22ce91-e7f6-45ac-868e-e2a36efe4bf5/collection/47552131-2eef98a5-dfb8-4534-b292-26a7968f9f53?action=share&source=collection_link&creator=47552131"
+		"_exporter_id": "47699141",
+		"_collection_link": "https://mrcheesyburgeru-3113691.postman.co/workspace/Nicolas-Rozo-Fajardo's-Workspac~d282d319-67a1-4bda-8570-f9f29991945d/collection/47548803-a576a2f0-9315-461b-a185-ea171c6fa813?action=share&source=collection_link&creator=47699141"
 	},
 	"item": [
 		{
 			"name": "Register User (Admin)",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Register Admin - Success\", function () {\r",
-							"    pm.response.to.have.status(201);\r",
-							"    pm.response.to.be.json;\r",
-							"    const responseData = pm.response.json();\r",
-							"    pm.expect(responseData).to.have.property('id');\r",
-							"    pm.expect(responseData).to.have.property('email');\r",
-							"    pm.expect(responseData.role).to.equal('admin');\r",
-							"    \r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -121,25 +101,7 @@
 			]
 		},
 		{
-			"name": "Register User (Admin) Duplicate Email",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Register Admin - Duplicate Email\", function () {\r",
-							"    if (pm.response.code === 400) {\r",
-							"        pm.response.to.be.json;\r",
-							"        const responseData = pm.response.json();\r",
-							"        pm.expect(responseData.detail).to.include('Duplicate user with email');\r",
-							"    }\r",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
+			"name": "Register User Duplicate Email",
 			"request": {
 				"auth": {
 					"type": "noauth"
@@ -148,7 +110,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"Juan Andres Ariza\",\n    \"email\": \"n.rozo@uniandes.edu.co\",\n    \"role\": \"admin\",\n    \"password\": \"hola123\",\n    \"profile_image\": \"https://revistaenraizada.com/wp-content/uploads/2021/08/Tamaulipas.jpg\"\n}",
+					"raw": "{\n    \"name\": \"Nicolas Rozo Fajardo\",\n    \"email\": \"n.rozo@uniandes.edu.co\",\n    \"role\": \"admin\",\n    \"password\": \"admin123\",\n    \"profile_image\": \"https://revistaenraizada.com/wp-content/uploads/2021/08/Tamaulipas.jpg\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -197,8 +159,8 @@
 							]
 						}
 					},
-					"status": "Created",
-					"code": 201,
+					"status": "Bad Request",
+					"code": 400,
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
@@ -227,36 +189,21 @@
 							"path": ""
 						}
 					],
-					"body": "{\n    \"name\": \"Nicolas Rozo Fajardo\",\n    \"email\": \"n.rozo@uniandes.edu.co\",\n    \"role\": \"admin\",\n    \"profile_image\": \"https://revistaenraizada.com/wp-content/uploads/2021/08/Tamaulipas.jpg\",\n    \"id\": \"11b2c306-0bf3-43f7-89db-80e7a1e941e4\",\n    \"courses_taught\": [],\n    \"courses_taken\": []\n}"
+					"body": "{\n    \"detail\": \"Duplicate user with email=n.rozo@uniandes.edu.co\"\n}"
 				}
 			]
 		},
 		{
-			"name": "Login User (Admin) Incorrect",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Login - Invalid Credentials\", function () {",
-							"    if (pm.response.code === 401) {",
-							"        pm.response.to.be.json;",
-							"        const responseData = pm.response.json();",
-							"        pm.expect(responseData.detail).to.include('Incorrect email or password');",
-							"    }",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
+			"name": "Register User Duplicate Name",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"n.rozo@uniandes.edu.co\",\n    \"password\": \"admin123\"\n}",
+					"raw": "{\n    \"name\": \"Nicolas Rozo Fajardo\",\n    \"email\": \"n.rozo2@uniandes.edu.co\",\n    \"role\": \"admin\",\n    \"password\": \"admin123\",\n    \"profile_image\": \"https://revistaenraizada.com/wp-content/uploads/2021/08/Tamaulipas.jpg\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -264,25 +211,25 @@
 					}
 				},
 				"url": {
-					"raw": "{{service_url}}/auth/login",
+					"raw": "{{service_url}}/auth/register",
 					"host": [
 						"{{service_url}}"
 					],
 					"path": [
 						"auth",
-						"login"
+						"register"
 					]
 				}
 			},
 			"response": [
 				{
-					"name": "Login User (Admin)",
+					"name": "Register User Duplicate Name",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"n.rozo@uniandes.edu.co\",\n    \"password\": \"admin123\"\n}",
+							"raw": "{\n    \"name\": \"Nicolas Rozo Fajardo\",\n    \"email\": \"n.rozo2@uniandes.edu.co\",\n    \"role\": \"admin\",\n    \"password\": \"admin123\",\n    \"profile_image\": \"https://revistaenraizada.com/wp-content/uploads/2021/08/Tamaulipas.jpg\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -290,23 +237,28 @@
 							}
 						},
 						"url": {
-							"raw": "{{service_url}}/auth/login",
+							"raw": "http://127.0.0.1:8000/auth/register",
+							"protocol": "http",
 							"host": [
-								"{{service_url}}"
+								"127",
+								"0",
+								"0",
+								"1"
 							],
+							"port": "8000",
 							"path": [
 								"auth",
-								"login"
+								"register"
 							]
 						}
 					},
-					"status": "OK",
-					"code": 200,
+					"status": "Bad Request",
+					"code": 400,
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
 							"key": "date",
-							"value": "Fri, 29 Aug 2025 20:25:41 GMT"
+							"value": "Fri, 29 Aug 2025 20:21:53 GMT"
 						},
 						{
 							"key": "server",
@@ -314,7 +266,7 @@
 						},
 						{
 							"key": "content-length",
-							"value": "249"
+							"value": "251"
 						},
 						{
 							"key": "Content-Type",
@@ -323,8 +275,14 @@
 							"type": "text"
 						}
 					],
-					"cookie": [],
-					"body": "{\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMWIyYzMwNi0wYmYzLTQzZjctODlkYi04MGU3YTFlOTQxZTQiLCJpYXQiOjE3NTY0OTkxNDIsImV4cCI6MTc1NjUwNjM0Miwicm9sZSI6ImFkbWluIn0.9OB7jXgrws9am0Pqa22F-fkmFbsEExhzOyEC8fG_3dI\",\n    \"token_type\": \"bearer\"\n}"
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": "{\n    \"detail\": \"Duplicate user with name=Nicolas Rozo Fajardo\"\n}"
 				}
 			]
 		},
@@ -336,15 +294,7 @@
 					"script": {
 						"exec": [
 							"let response = pm.response.json();",
-							"pm.environment.set(\"auth_token\", response.access_token);",
-							"",
-							"pm.test(\"Login - Success\", function () {",
-							"    pm.response.to.have.status(200);",
-							"    pm.response.to.be.json;",
-							"    const responseData = pm.response.json();",
-							"    pm.expect(responseData).to.have.property('access_token');",
-							"    pm.expect(responseData).to.have.property('token_type', 'bearer');",
-							"});"
+							"pm.environment.set(\"auth_token\", response.access_token);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -425,6 +375,98 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMWIyYzMwNi0wYmYzLTQzZjctODlkYi04MGU3YTFlOTQxZTQiLCJpYXQiOjE3NTY0OTkxNDIsImV4cCI6MTc1NjUwNjM0Miwicm9sZSI6ImFkbWluIn0.9OB7jXgrws9am0Pqa22F-fkmFbsEExhzOyEC8fG_3dI\",\n    \"token_type\": \"bearer\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Login User Invalid Credentials",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"n.rozo@uniandes.edu.co\",\n    \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{service_url}}/auth/login",
+					"host": [
+						"{{service_url}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Login User Invalid Credentials",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"n.rozo@uniandes.edu.co\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{service_url}}/auth/login",
+							"host": [
+								"{{service_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 29 Aug 2025 20:25:41 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "249"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"detail\": \"Invalid email or password\"\n}"
 				}
 			]
 		}
