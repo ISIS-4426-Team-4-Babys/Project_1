@@ -88,8 +88,12 @@ async def format_chunk(system_prompt: str, chunk_text: str, idx: int, total: int
             ],
         )
 
-    resp = await anyio.to_thread.run_sync(_sync)
-    return resp.choices[0].message.content or ""
+    try:
+        resp = await anyio.to_thread.run_sync(_sync)
+        return resp.choices[0].message.content or ""
+    except Exception as e:
+        logging.error(f"Chunk {idx+1}/{total} falló: {e}")
+        return chunk_text  
 
 async def format_large_markdown(markdown_path: str, system_prompt: str) -> str:
     chunks = await chunk_markdown_lines(markdown_path)
